@@ -1,0 +1,75 @@
+/* Layout container */
+.live-dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.navbar button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #1976d2;
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.navbar button:hover {
+  background-color: #135ba1;
+}
+
+.navbar button.active {
+  background-color: #004a99;
+}
+
+/* Match card styling */
+.match-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.match-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.match-card h3 {
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.match-card p {
+  margin: 4px 0;
+  color: #555;
+}
+
+/* Status-based color coding */
+strong.Live {
+  color: green;
+  font-weight: bold;
+}
+
+strong.Upcoming {
+  color: orange;
+  font-weight: bold;
+}
+
+strong.Finished {
+  color: red;
+  font-weight: bold;
+}
