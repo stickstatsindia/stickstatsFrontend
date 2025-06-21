@@ -1,3 +1,33 @@
+.navbar {
+  background-color: #2c3e50;
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s, border-bottom 0.3s;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar a:hover {
+  color: #1abc9c;
+  border-bottom: 2px solid #1abc9c;
+}
+
+.navbar a.active {
+  color: #1abc9c;
+  border-bottom: 2px solid #1abc9c;
+}
+
 /* Added by Suneha */
 
 
