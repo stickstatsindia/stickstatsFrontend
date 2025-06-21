@@ -1,0 +1,131 @@
+/* Base container */
+.profile-container {
+  background: linear-gradient(to right, #e0f7fa, #f1f8ff); /* Light pastel gradient */
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #34495e;
+}
+
+/* Card Styling */
+.card {
+  border-radius: 14px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Form Card */
+.profile-form {
+  max-width: 800px;
+  margin: auto;
+  padding: 2.5rem;
+  background-color: #fefefe;
+  border-left: 6px solid #a7c7e7;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Profile Summary */
+.profile-summary {
+  background: linear-gradient(to bottom right, #a7c7e7, #d7c8f2);
+  max-width: 700px;
+  margin: 3rem auto;
+  border-radius: 20px;
+  padding: 2.5rem;
+  color: #2c3e50;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #a7c7e7;
+  border: none;
+  color: #2c3e50;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #91bde2;
+  box-shadow: 0 4px 10px rgba(167, 199, 231, 0.6);
+}
+
+.btn-outline-light {
+  border: 2px solid #a7c7e7;
+  color: #2c3e50;
+  background-color: transparent;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-outline-light:hover {
+  background-color: #a7c7e7;
+  color: white;
+  box-shadow: 0 4px 10px rgba(167, 199, 231, 0.5);
+}
+
+/* Section Title */
+.section-title {
+  text-align: center;
+  color: #5c6f8c;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.5px;
+}
+
+/* Typography */
+label {
+  font-weight: 600;
+  color: #5c6f8c;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Profile Picture */
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border: 3px solid #ffffff;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Banner Styling */
+.pro-banner {
+  background: #fff8e1;
+  border: 1px solid #ffeaa7;
+  padding: 1.5rem;
+  max-width: 700px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  text-align: center;
+  color: #8d6e63;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(255, 234, 167, 0.4);
+}
+
+/* Progress Bar */
+.progress-bar {
+  transition: width 0.6s ease;
+  background-color: #a7c7e7;
+  height: 1rem;
+  border-radius: 6px;
+}
+
+/* Image Preview */
+.preview-pic {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid #a7c7e7;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(167, 199, 231, 0.5);
+}
