@@ -15,7 +15,9 @@ export const routes: Routes = [
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
   { path: 'live-dashboard', component: LiveDashboardComponent },
-  { path: '**', redirectTo: '' },
-  { path: 'add tournament', component: AddTournamentComponent }
+  { path: 'add-tournament', component: AddTournamentComponent },
+
+  //Add new path before this
+  { path: '**', redirectTo: '' }
   
 ];
