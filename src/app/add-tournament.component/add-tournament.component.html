@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Add Hockey Tournament</h2>
+
+  <!-- Tournament Category -->
+  <div class="mb-3">
+    <label class="form-label">Tournament Category</label>
+    <div class="d-flex flex-wrap gap-2">
+      <button 
+        *ngFor="let category of tournamentCategory" 
+        class="btn"
+        [ngClass]="selectedCategories.includes(category) ? 'btn-primary' : 'btn-outline-primary'"
+        (click)="toggleCategory(category)">
+        {{ category }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Ground Type -->
+  <div class="mb-3">
+    <label class="form-label">Ground Type</label>
+    <select class="form-select" [(ngModel)]="selectedGroundType">
+      <option value="" disabled selected>Select Ground Type</option>
+      <option *ngFor="let ground of groundTypes" [value]="ground">{{ ground }}</option>
+    </select>
+  </div>
+
+  <!-- Match Type -->
+  <div class="mb-3">
+    <label class="form-label">Match Type</label>
+    <select class="form-select" [(ngModel)]="selectedMatchType">
+      <option value="" disabled selected>Select Match Type</option>
+      <option *ngFor="let type of matchTypes" [value]="type">{{ type }}</option>
+    </select>
+  </div>
+
+  <!-- Options -->
+  <div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" id="lastBatter" [(ngModel)]="lastBatterRule" />
+    <label class="form-check-label" for="lastBatter">Apply Last Batter Rule</label>
+  </div>
+
+  <div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" id="moreTeams" [(ngModel)]="needMoreTeams" />
+    <label class="form-check-label" for="moreTeams">Looking for more teams</label>
+  </div>
+
+  <div class="form-check mb-4">
+    <input class="form-check-input" type="checkbox" id="needOfficials" [(ngModel)]="needOfficials" />
+    <label class="form-check-label" for="needOfficials">Need officials</label>
+  </div>
+
+  <button class="btn btn-success w-100" (click)="registerTournament()">Submit Tournament</button>
+</div>
