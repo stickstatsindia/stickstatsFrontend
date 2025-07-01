@@ -1,8 +1,154 @@
-.container {
-  max-width: 700px;
-  margin: auto;
-  background-color: #f8f9fa;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.form-section {
+  padding: 32px 24px;
+  max-width: 900px;
+  margin: 40px auto;
+  background: #f8fafc;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(60, 72, 88, 0.08);
+}
+
+.section-title,
+h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #233142;
+  letter-spacing: 1px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #233142;
+  margin-bottom: 6px;
+}
+
+.form-group {
+  margin-bottom: 16px; /* reduce spacing between form fields */
+}
+
+input.form-control,
+select.form-select {
+  border-radius: 8px;
+  border: 1px solid #cfd8dc;
+  padding: 10px 14px;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+input.form-control:focus,
+select.form-select:focus {
+  border-color: #3a4b57;
+  box-shadow: 0 0 0 2px #e0e7ef;
+}
+
+.btn-toggle,
+.btn {
+  margin: 4px 6px 4px 0;
+  border-radius: 22px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+  border: none;
+}
+
+.btn-toggle,
+.btn-primary,
+.btn-success,
+.btn-warning {
+  color: #fff;
+}
+
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-warning {
+  background: #fff;
+  color: #3a4b57;
+  border: 1.5px solid #3a4b57;
+}
+
+.btn-primary,
+.btn-toggle.btn-primary {
+  background: #3a4b57;
+}
+
+.btn-success,
+.btn-toggle.btn-success {
+  background: #2e7d32;
+}
+
+.btn-warning,
+.btn-toggle.btn-warning {
+  background: #f9a825;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover {
+  background: #e0e7ef;
+  color: #233142;
+}
+
+.btn-toggle:hover,
+.btn-primary:hover,
+.btn-success:hover,
+.btn-warning:hover {
+  filter: brightness(0.92);
+  box-shadow: 0 2px 8px rgba(60, 72, 88, 0.08);
+}
+
+.form-check-label {
+  margin-left: 8px;
+  font-size: 1rem;
+  color: #233142;
+}
+
+.text-center {
+  margin-top: 24px;
+}
+
+input[type="date"].form-control {
+  max-width: 200px;
+  display: inline-block;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+}
+
+/* Reduce spacing between date fields */
+.date-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px; /* tighter spacing */
+}
+
+/* Override Bootstrap's default spacing if needed */
+.col-md-6 {
+  margin-bottom: 12px; /* reduced from default */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-section,
+  .container {
+    padding: 16px 4px;
+    max-width: 100%;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-6 {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .date-row {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
