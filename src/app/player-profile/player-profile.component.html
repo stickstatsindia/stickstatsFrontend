@@ -1,38 +1,32 @@
-
-<div class="profile-header">
-  <div class="left-section">
-    <img src="assets/player.jpg" alt="Player Photo" class="player-photo" />
-    <div class="player-info">
-      <h2>{{ player.name }} <span class="pro-badge">PRO</span></h2>
-      <p>{{ player.location }} • {{ player.views }} Views</p>
-      <p>{{ player.role }}</p>
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-left">
+      <img [src]="profile.imageUrl" class="profile-img" alt="Profile" />
+      <div class="profile-details">
+        <div class="name-row">
+          <h2>{{ profile.name }}</h2>
+          <span *ngIf="profile.isPro" class="pro-badge">PRO</span>
+        </div>
+        <p>{{ profile.location }} • {{ profile.views }} Views</p>
+        <p>{{ profile.battingStyle }}</p>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-box">
+        <div class="stat-value">{{ profile.matches }}</div>
+        <div class="stat-label">MATCHES</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">{{ profile.runs }}</div>
+        <div class="stat-label">GOALS</div>
+      </div>
+      
     </div>
   </div>
 
-  <div class="stats-section">
-    <div class="stat-box">
-      <h1>{{ player.stats.matches }}</h1>
-      <p>MATCHES</p>
-    </div>
-    <div class="stat-box">
-      <h1>{{ player.stats.runs }}</h1>
-      <p>RUNS</p>
-    </div>
-    <div class="stat-box">
-      <h1>{{ player.stats.wickets }}</h1>
-      <p>WICKETS</p>
+  <div class="nav-tabs">
+    <div *ngFor="let item of menu" class="nav-tab" [class.active]="item === 'MATCHES'">
+      {{ item }}
     </div>
   </div>
-</div>
-
-<div class="tab-bar">
-  <button>
-    text
-  </button>
-  <button
-    *ngFor="let tab of tabs"
-    [class.active]="selectedTab === tab"
-    (click)="selectTab(tab)">
-    {{ tab }}
-  </button>
 </div>
