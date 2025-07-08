@@ -1,0 +1,98 @@
+
+/* Header Styling */
+.profile-header {
+  background-color: #b31313;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Left Side */
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.player-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 20px;
+}
+
+.player-info h2 {
+  font-size: 24px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pro-badge {
+  background-color: #00e1a0;
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.player-info p {
+  margin: 3px 0;
+}
+
+/* Right Side Stats */
+.stats-section {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stat-box {
+  background-color: #911010;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.stat-box h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.stat-box p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Tabs */
+.tab-bar {
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: 2px solid yellow;
+}
+
+.tab-bar button {
+  background: none;
+  border: none;
+  font-weight: bold;
+  color: #a00;
+  font-size: 14px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  border: 2px solid yellow;
+}
+
+.tab-bar button.active {
+  color: #fdda00;
+  border-bottom: 3px solid #fdda00;
+}
