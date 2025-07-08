@@ -36,17 +36,19 @@
 }
 
 .match-card {
-  padding: 1rem;
-  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border: 1px solid #c95c5c;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #fcfafa;
 }
+
+
 
 strong.live {
   color: green;
 }
 strong.upcoming {
-  color: orange;
+  color: green;
 }
 strong.finished {
   color: red;
@@ -57,7 +59,7 @@ strong.finished {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(182, 49, 49, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,12 +67,12 @@ strong.finished {
 }
 
 .modal {
-  background: white;
+  background: rgb(233, 194, 194);
   padding: 2rem;
   border-radius: 10px;
   max-width: 400px;
-  width: 90%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(163, 134, 134, 0.25);
   position: relative;
 }
 

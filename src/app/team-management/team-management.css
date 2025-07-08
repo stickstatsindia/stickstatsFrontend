@@ -1,0 +1,46 @@
+.team-card {
+  display: flex;
+  width: 100%;
+  height: 300px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #7f5af0, #ff6ec4); /* Attractive gradient */
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 1.1rem; /* Slightly broader text */
+  color: white; /* Ensures readability on dark background */
+}
+
+.logo-section {
+  flex: 0 0 150px;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-section img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.info-section {
+  padding: 20px;
+  flex: 1;
+}
+
+.team-name {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+
+
+
+
+
+
+
