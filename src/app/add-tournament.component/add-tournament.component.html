@@ -1,53 +1,102 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Add Hockey Tournament</h2>
-
-  <!-- Tournament Category -->
-  <div class="mb-3">
-    <label class="form-label">Tournament Category</label>
-    <div class="d-flex flex-wrap gap-2">
-      <button 
-        *ngFor="let category of tournamentCategory" 
-        class="btn"
-        [ngClass]="selectedCategories.includes(category) ? 'btn-primary' : 'btn-outline-primary'"
-        (click)="toggleCategory(category)">
-        {{ category }}
-      </button>
+  <h2 class="mb-4 text-center">Add New Tournament</h2>
+  <form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Tournament Name & Category -->
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="tournamentName" class="form-label">Tournament Name*</label>
+        <input type="text" id="tournamentName" class="form-control" formControlName="tournamentName" placeholder="Enter Tournament Name">
+      </div>
+      <div class="col-md-6 form-group">
+        <label class="form-label">Tournament Category*</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button"
+                  *ngFor="let cat of tournamentCategories"
+                  class="btn"
+                  [ngClass]="{'btn-primary': selectedCategories.has(cat), 'btn-outline-primary': !selectedCategories.has(cat)}"
+                  (click)="toggleCategory(cat)">
+            {{cat}}
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Ground Type -->
-  <div class="mb-3">
-    <label class="form-label">Ground Type</label>
-    <select class="form-select" [(ngModel)]="selectedGroundType">
-      <option value="" disabled selected>Select Ground Type</option>
-      <option *ngFor="let ground of groundTypes" [value]="ground">{{ ground }}</option>
-    </select>
-  </div>
+    <!-- City & Ground Type -->
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="city" class="form-label">City*</label>
+        <input type="text" id="city" class="form-control" formControlName="city" placeholder="Enter City">
+      </div>
+      <div class="col-md-6 form-group">
+        <label class="form-label">Ground Type*</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button"
+                  *ngFor="let type of groundTypes"
+                  class="btn"
+                  [ngClass]="{'btn-success': selectedGroundTypes.has(type), 'btn-outline-success': !selectedGroundTypes.has(type)}"
+                  (click)="toggleGroundType(type)">
+            {{type}}
+          </button>
+        </div>
+      </div>
+    </div>
 
-  <!-- Match Type -->
-  <div class="mb-3">
-    <label class="form-label">Match Type</label>
-    <select class="form-select" [(ngModel)]="selectedMatchType">
-      <option value="" disabled selected>Select Match Type</option>
-      <option *ngFor="let type of matchTypes" [value]="type">{{ type }}</option>
-    </select>
-  </div>
+    <!-- Organiser Name & Match Type -->
+    <div class="row">
+      <div class="col-md-6 form-group">
+        <label for="organiserName" class="form-label">Organiser Name*</label>
+        <input type="text" id="organiserName" class="form-control" formControlName="organiserName" placeholder="Enter Organiser Name">
+      </div>
+      <div class="col-md-6 form-group">
+        <label class="form-label">Match Type*</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button"
+                  *ngFor="let mt of matchTypes"
+                  class="btn"
+                  [ngClass]="{'btn-warning': selectedMatchTypes.has(mt), 'btn-outline-warning': !selectedMatchTypes.has(mt)}"
+                  (click)="toggleMatchType(mt)">
+            {{mt}}
+          </button>
+        </div>
+      </div>
+    </div>
 
-  <!-- Options -->
-  <div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" id="lastBatter" [(ngModel)]="lastBatterRule" />
-    <label class="form-check-label" for="lastBatter">Apply Last Batter Rule</label>
-  </div>
+    <!-- Country Code & Organiser Contact -->
+    <div class="row">
+      <div class="col-md-6 form-group d-flex gap-2">
+        <div class="flex-grow-1">
+          <label for="countryCode" class="form-label">Country Code*</label>
+          <input type="text" id="countryCode" class="form-control" formControlName="countryCode" placeholder="+91">
+        </div>
+        <div class="flex-grow-1">
+          <label for="organiserContact" class="form-label">Organiser Contact*</label>
+          <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact" placeholder="Phone Number">
+        </div>
+      </div>
+    </div>
 
-  <div class="form-check mb-2">
-    <input class="form-check-input" type="checkbox" id="moreTeams" [(ngModel)]="needMoreTeams" />
-    <label class="form-check-label" for="moreTeams">Looking for more teams</label>
-  </div>
+    <!-- Allow Contact Checkbox -->
+    <div class="form-group form-check mb-2">
+      <input type="checkbox" class="form-check-input" id="allowContact" formControlName="allowContact">
+      <label class="form-check-label" for="allowContact">Allow players to contact me for Team Registration</label>
+    </div>
 
-  <div class="form-check mb-4">
-    <input class="form-check-input" type="checkbox" id="needOfficials" [(ngModel)]="needOfficials" />
-    <label class="form-check-label" for="needOfficials">Need officials</label>
-  </div>
+    <!-- Start Date & End Date -->
+    <div class="row date-row">
+      <div class="col-md-6 form-group">
+        <label for="startDate" class="form-label">Start Date*</label>
+        <input type="date" id="startDate" class="form-control" formControlName="startDate">
+      </div>
+      <div class="col-md-6 form-group">
+        <label for="endDate" class="form-label">End Date*</label>
+        <input type="date" id="endDate" class="form-control" formControlName="endDate">
+      </div>
+    </div>
 
-  <button class="btn btn-success w-100" (click)="registerTournament()">Submit Tournament</button>
+    <!-- Submit Button -->
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary px-5">Submit</button>
+    </div>
+  </form>
 </div>

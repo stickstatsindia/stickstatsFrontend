@@ -1,47 +1,77 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-tournament',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule],
   templateUrl: './add-tournament.component.html',
   styleUrls: ['./add-tournament.component.css']
 })
 export class AddTournamentComponent {
-  tournamentCategory: string[] = ['OPEN', 'CORPORATE', 'COMMUNITY', 'SCHOOL', 'OTHER', 'SERIES', 'COLLEGE', 'UNIVERSITY'];
-  selectedCategories: string[] = [];
+  tournamentForm: FormGroup;
 
-  groundTypes: string[] = ['ASTROTURF', 'GRASS'];
-  selectedGroundType: string = '';
+  tournamentCategories = ['OPEN', 'CORPORATE', 'COMMUNITY', 'SCHOOL', 'BOX'];
+  cities = []; // Extend as needed
+  groundTypes = ['ASTROTURF', 'GRASS'];
+  matchTypes = ['7-A SIDE', '11-A SIDE', '5-A SIDE'];
 
-  matchTypes: string[] = ['7-A SIDE', '11-A SIDE', '5-A SIDE'];
-  selectedMatchType: string = '';
+  selectedCategories = new Set<string>();
+  selectedGroundTypes = new Set<string>();
+  selectedMatchTypes = new Set<string>();
 
-  lastBatterRule = false;
-  needMoreTeams = false;
-  needOfficials = false;
+  constructor(private fb: FormBuilder) {
+    this.tournamentForm = this.fb.group({
+      tournamentName: ['', Validators.required],
+      tournamentCategory: [[]],
+      city: ['', Validators.required],
+      ground: ['', Validators.required],
+      groundType: [[]],
+      matchType: [[]],
+      organiserName: ['', Validators.required],
+      countryCode: ['', Validators.required],
+      organiserContact: ['', Validators.required],
+      allowContact: [false],
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required]
+    });
+  }
 
-  toggleCategory(category: string) {
-    const index = this.selectedCategories.indexOf(category);
-    if (index > -1) {
-      this.selectedCategories.splice(index, 1);
+  toggleCategory(category: string): void {
+    this.toggleSelection(this.selectedCategories, category);
+    this.tournamentForm.patchValue({
+      tournamentCategory: Array.from(this.selectedCategories)
+    });
+  }
+
+  toggleGroundType(type: string): void {
+    this.toggleSelection(this.selectedGroundTypes, type);
+    this.tournamentForm.patchValue({
+      groundType: Array.from(this.selectedGroundTypes)
+    });
+  }
+
+  toggleMatchType(type: string): void {
+    this.toggleSelection(this.selectedMatchTypes, type);
+    this.tournamentForm.patchValue({
+      matchType: Array.from(this.selectedMatchTypes)
+    });
+  }
+
+  private toggleSelection(set: Set<string>, value: string): void {
+    if (set.has(value)) {
+      set.delete(value);
     } else {
-      this.selectedCategories.push(category);
+      set.add(value);
     }
   }
 
-  registerTournament() {
-    const data = {
-      categories: this.selectedCategories,
-      groundType: this.selectedGroundType,
-      matchType: this.selectedMatchType,
-      lastBatterRule: this.lastBatterRule,
-      needMoreTeams: this.needMoreTeams,
-      needOfficials: this.needOfficials
-    };
-    console.log('Tournament Registered:', data);
-    alert('Tournament submitted!');
+  onSubmit(): void {
+    if (this.tournamentForm.valid) {
+      console.log('Tournament Form Submitted:', this.tournamentForm.value);
+      // TODO: handle submission logic
+    } else {
+      this.tournamentForm.markAllAsTouched();
+    }
   }
 }

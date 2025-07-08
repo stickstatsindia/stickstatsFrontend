@@ -9,7 +9,7 @@ import {  FormsModule } from '@angular/forms'; // Importing FormsModule for ngMo
 
 @Component({
   selector: 'app-root',
-   imports: [RouterOutlet, RouterLink, RouterLinkWithHref, Navbar,FormsModule],
+   imports: [RouterOutlet, Navbar,FormsModule],
   standalone: true,
   // imports: [RouterOutlet],
   templateUrl: './app.html',
