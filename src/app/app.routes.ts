@@ -6,13 +6,11 @@ import { ProfileForm } from './profile-form/profile-form';
 import { LiveDashboardComponent } from './liveDashboard/live-dashboard/live-dashboard';
 import { AddTournamentComponent } from './add-tournament.component/add-tournament.component';
 import { PlayerProfileComponent } from './player-profile/player-profile.component';
-// import { PlayerProfile } from './player-profile/player-profile.component';
-// import { PlayerProfile }
 import { TeamManagementComponent } from './team-management/team-management';
+import { AddNewRoundsComponent } from './add-new-rounds/add-new-rounds.component';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  // { path: '', redirectTo: 'profile', pathMatch: 'full' },
   { path: 'profile-form', component: ProfileForm },
   { path: 'about', component: About },
   { path: 'player-profile', component: PlayerProfileComponent },
@@ -20,7 +18,8 @@ export const routes: Routes = [
   { path: 'live-dashboard', component: LiveDashboardComponent },
   { path: 'add-tournament', component: AddTournamentComponent },
   { path: 'tournament-details', component: TeamManagementComponent },
+  {path: 'add-new-rounds', component: AddNewRoundsComponent},
   //Add new path before this
   { path: '**', redirectTo: '' }
-  
+   
 ];

@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Add Rounds</h2>
+  <button class="back-button">Back to Tournament Rounds List</button>
+ 
+  <section>
+    <h3>Round Robin</h3>
+    <div class="rounds-grid">
+      <div
+        *ngFor="let round of roundRobinRounds"
+        class="round-tile"
+        [class.selected]="isSelected(round)"
+        (click)="toggleRound(round)"
+      >
+        {{ round }}
+      </div>
+    </div>
+  </section>
+ 
+  <section>
+    <h3>Knock Out</h3>
+    <div class="rounds-grid">
+      <div
+        *ngFor="let round of knockOutRounds"
+        class="round-tile"
+        [class.selected]="isSelected(round)"
+        (click)="toggleRound(round)"
+      >
+        {{ round }}
+      </div>
+    </div>
+  </section>
+ 
+  <div class="actions">
+    <button class="cancel">Cancel</button>
+    <button class="add">Add Round</button>
+  </div>
+</div>
