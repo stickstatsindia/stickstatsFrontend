@@ -1,0 +1,101 @@
+<div class="header">
+  <h2>Scorer Interface – Japan vs China</h2>
+  <div class="match-info">
+    <p><strong>Score:</strong> {{ scoreA }} - {{ scoreB }}</p>
+    <p><strong>Quarter:</strong> {{ currentQuarter }}</p>
+    <p><strong>Timer:</strong> {{ displayTime }}</p>
+  </div>
+</div>
+ 
+<!-- Timer Control -->
+<div class="section green">
+  <h3>Timer Control</h3>
+  <div>
+    <label>Quarter:</label>
+    <button *ngFor="let q of quarters" (click)="setQuarter(q)">{{ q }}</button>
+    <label>Set Time:</label>
+    <span>[ {{ timerSet }} ]</span>
+  </div>
+  <div class="controls">
+    <button (click)="startTimer()">Start</button>
+    <button (click)="pauseTimer()">Pause</button>
+    <button (click)="resumeTimer()">Resume</button>
+    <button (click)="stopTimer()">Stop</button>
+  </div>
+</div>
+ 
+<!-- Add Match Event -->
+<div class="section">
+  <h3>Add Match Event</h3>
+  <label>Team:</label>
+  <select [(ngModel)]="eventTeam" (change)="onTeamChange()">
+    <option *ngFor="let team of teams">{{ team }}</option>
+  </select>
+ 
+  <label>Player:</label>
+  <select [(ngModel)]="eventPlayer">
+    <option *ngFor="let player of players[eventTeam]">{{ player }}</option>
+  </select>
+ 
+  <label>Quarter:</label>
+  <select [(ngModel)]="eventQuarter">
+    <option *ngFor="let q of quarters">{{ q }}</option>
+  </select>
+ 
+  <label>Time:</label>
+  <input [(ngModel)]="eventTime" type="text" placeholder="12:30" />
+ 
+  <label>Event Type:</label>
+  <select [(ngModel)]="eventType">
+    <option>Goal</option>
+    <option>PC Earned</option>
+    <option>Card</option>
+    <option>PS</option>
+  </select>
+ 
+  <button (click)="addMatchEvent()">Add Event</button>
+</div>
+ 
+<!-- Match Events Log -->
+<div class="section purple">
+  <h3>Match Events Log</h3>
+  <ul>
+    <li *ngFor="let event of matchEvents">
+{{ event.quarter }} - {{ event.time }} - {{ event.team }} - {{ event.player || '-' }} - {{ event.type }}
+    </li>
+  </ul>
+</div>
+ 
+<!-- Penalty Shootout -->
+<div class="section yellow">
+  <h3>Penalty Shootout (only if Match Tied)</h3>
+ 
+  <label>Team:</label>
+  <select [(ngModel)]="psTeam">
+    <option *ngFor="let team of teams">{{ team }}</option>
+  </select>
+ 
+  <label>Player:</label>
+  <select [(ngModel)]="psPlayer">
+    <option *ngFor="let player of players[psTeam]">{{ player }}</option>
+  </select>
+ 
+  <label>Result:</label>
+  <select [(ngModel)]="psResult">
+    <option>Scored</option>
+    <option>Missed</option>
+    <option>Saved</option>
+  </select>
+ 
+  <label>Time:</label>
+  <input [(ngModel)]="psTime" type="text" placeholder="00:00" />
+ 
+  <button (click)="addShootoutEvent()">Add Shootout Event</button>
+ 
+  <h4>Shootout Log</h4>
+  <ul>
+    <li *ngFor="let ps of shootoutEvents">
+{{ ps.team }} - {{ ps.player }} - {{ ps.result }}
+    </li>
+  </ul>
+</div>

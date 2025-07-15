@@ -1,0 +1,50 @@
+
+.section {
+  background-color: #f5f5f5;
+  padding: 15px;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+ 
+.green {
+  background-color: #e7f7e7;
+}
+ 
+.purple {
+  background-color: #f2e6ff;
+}
+ 
+.yellow {
+  background-color: #fff9e6;
+}
+ 
+.header {
+  background-color: #dff4ff;
+  padding: 15px;
+  border-radius: 10px;
+}
+ 
+.match-info p {
+  margin: 0;
+  font-weight: bold;
+}
+ 
+button {
+  margin: 5px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+ 
+.controls {
+  margin-top: 10px;
+}
+ 
+select, input {
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}

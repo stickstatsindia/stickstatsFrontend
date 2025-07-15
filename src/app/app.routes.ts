@@ -8,6 +8,7 @@ import { AddTournamentComponent } from './add-tournament.component/add-tournamen
 import { PlayerProfileComponent } from './player-profile/player-profile.component';
 import { TeamManagementComponent } from './team-management/team-management';
 import { AddNewRoundsComponent } from './add-new-rounds/add-new-rounds.component';
+import { ScorerComponent } from './scorer/scorer.component';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -18,7 +19,8 @@ export const routes: Routes = [
   { path: 'live-dashboard', component: LiveDashboardComponent },
   { path: 'add-tournament', component: AddTournamentComponent },
   { path: 'tournament-details', component: TeamManagementComponent },
-  {path: 'add-new-rounds', component: AddNewRoundsComponent},
+  { path: 'add-new-rounds', component: AddNewRoundsComponent},
+  { path: 'scorer', component: ScorerComponent },
   //Add new path before this
   { path: '**', redirectTo: '' }
    
