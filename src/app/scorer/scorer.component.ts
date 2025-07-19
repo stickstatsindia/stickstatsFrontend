@@ -1,92 +1,101 @@
-import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // ✅ Important for *ngFor, *ngIf, etc.
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
  
 @Component({
   selector: 'app-scorer',
   standalone: true, // ✅ very important
-  imports: [CommonModule, FormsModule], // ✅ include CommonModule here
+  imports: [CommonModule,FormsModule], // ✅ include CommonModule here
   templateUrl: './scorer.component.html',
   styleUrls: ['./scorer.component.css']
 })
 export class ScorerComponent {
-  scoreA = 1;
-  scoreB = 1;
-  currentQuarter = 'Q4';
-  displayTime = '00:00';
-  timerSet = '15:00';
-  timer: any;
-  timeSeconds = 0;
+  timerInterval: any;
+  timerSet: string = "00:00";
+  displayTime: string = "00:00";
+  seconds: number = 0;
+  isRunning = false;
  
-  quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
-  teams = ['Japan', 'China'];
-  players: any = {
-    Japan: ['Player A', 'Player B'],
-    China: ['Player 1', 'Player 2']
+  // Set Time
+  setMinutes: number = 0;
+  setSeconds: number = 0;
+ 
+  // Match Events
+  teams: string[] = ['Team A', 'Team B'];
+  players: { [key: string]: string[] } = {
+    'Team A': ['Player A1', 'Player A2'],
+    'Team B': ['Player B1', 'Player B2']
   };
+  quarters = [1, 2, 3, 4];
  
-  eventTeam = 'Japan';
-  eventPlayer = 'Player A';
-  eventQuarter = 'Q1';
-  eventTime = '';
-  eventType = 'Goal';
+  eventTeam = '';
+  eventPlayer = '';
+  selectedQuarter = 1;
+  matchEvents: string[] = [];
  
-  matchEvents: any[] = [];
- 
-  psTeam = 'Japan';
-  psPlayer = 'Player A';
-  psResult = 'Scored';
-  psTime = '';
-  shootoutEvents: any[] = [];
- 
-  onTeamChange() {
-    this.eventPlayer = this.players[this.eventTeam][0];
-  }
- 
-  setQuarter(q: string) {
-    this.currentQuarter = q;
-  }
+  // Penalty Shootout
+  penaltyTeam = '';
+  penaltyPlayer = '';
+  penaltyShootouts: string[] = [];
  
   startTimer() {
-    this.timeSeconds = 0;
-    this.timer = setInterval(() => {
-      this.timeSeconds++;
-      const mins = Math.floor(this.timeSeconds / 60).toString().padStart(2, '0');
-      const secs = (this.timeSeconds % 60).toString().padStart(2, '0');
-      this.displayTime = `${mins}:${secs}`;
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.timerInterval = setInterval(() => {
+      this.seconds++;
+      this.updateDisplayTime();
     }, 1000);
   }
  
   pauseTimer() {
-    clearInterval(this.timer);
+    clearInterval(this.timerInterval);
+    this.isRunning = false;
   }
  
   resumeTimer() {
-    this.startTimer();
+    if (!this.isRunning) this.startTimer();
   }
  
   stopTimer() {
-    clearInterval(this.timer);
-    this.displayTime = '00:00';
+    clearInterval(this.timerInterval);
+    this.isRunning = false;
+    this.seconds = 0;
+    this.updateDisplayTime();
   }
  
-  addMatchEvent() {
-    this.matchEvents.push({
-      team: this.eventTeam,
-      player: this.eventType === 'PC Earned' ? '' : this.eventPlayer,
-      quarter: this.eventQuarter,
-      time: this.eventTime,
-      type: this.eventType
-    });
+  setTime() {
+    this.seconds = this.setMinutes * 60 + this.setSeconds;
+    this.updateDisplayTime();
   }
  
-  addShootoutEvent() {
-    this.shootoutEvents.push({
-      team: this.psTeam,
-      player: this.psPlayer,
-      result: this.psResult,
-      time: this.psTime
-    });
+  updateDisplayTime() {
+    const min = Math.floor(this.seconds / 60);
+    const sec = this.seconds % 60;
+    this.displayTime = `${this.pad(min)}:${this.pad(sec)}`;
+  }
+ 
+  pad(num: number): string {
+    return num < 10 ? '0' + num : num.toString();
+  }
+ 
+  onTeamChange() {
+    this.eventPlayer = '';
+  }
+ 
+  addEvent(eventType: string) {
+    const team = this.eventTeam;
+    const player = this.eventPlayer;
+    const event = player
+      ? `${eventType} by ${player} (Q${this.selectedQuarter})`
+      : `${eventType} (Q${this.selectedQuarter})`;
+    this.matchEvents.push(`${team}: ${event}`);
+  }
+ 
+  recordPenalty() {
+    if (this.penaltyTeam && this.penaltyPlayer) {
+      this.penaltyShootouts.push(`${this.penaltyTeam}: Shootout by ${this.penaltyPlayer}`);
+    }
   }
 }
  
+
