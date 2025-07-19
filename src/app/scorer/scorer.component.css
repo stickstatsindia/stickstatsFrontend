@@ -1,4 +1,4 @@
-.scorer-container {
+/* .scorer-container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
@@ -31,4 +31,68 @@ input, select {
   border-radius: 4px;
   border: 1px solid #ccc;
 } 
+ */
 
+
+
+ .container {
+  max-width: 800px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e6f0ff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.team-score {
+  font-size: 24px;
+  color: #004080;
+}
+
+.vs {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.box {
+  background-color: #f0f8ff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+
+button {
+  margin: 3px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+select, input {
+  margin: 5px;
+  padding: 5px;
+}

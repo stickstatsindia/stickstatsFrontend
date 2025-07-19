@@ -1,5 +1,5 @@
 
-<div class="scorer-container">
+<!-- <div class="scorer-container">
   <div class="timer-section">
     <h2>Match Timer: {{ displayTime }}</h2>
     <input type="number" [(ngModel)]="setMinutes" placeholder="Min" />
@@ -57,4 +57,77 @@
   </div>
 </div>
 
+ -->
 
+
+ <div class="container">
+  <!-- Team Names & Scores -->
+  <div class="scoreboard">
+    <div class="team-info">
+      <span class="team-name">{{ team1Name }}</span>
+      <span class="team-score">{{ totalScore.team1 }}</span>
+    </div>
+    <div class="vs">VS</div>
+    <div class="team-info">
+      <span class="team-name">{{ team2Name }}</span>
+      <span class="team-score">{{ totalScore.team2 }}</span>
+    </div>
+  </div>
+
+  <!-- Timer -->
+  <div class="box">
+    <h4>Match Timer: {{ displayMinutes }}:{{ displaySeconds }}</h4>
+    <input type="number" [(ngModel)]="minutes" min="0" />
+    <input type="number" [(ngModel)]="seconds" min="0" />
+    <button (click)="setTime()">Set Time</button>
+    <button (click)="startTimer()">Start</button>
+    <button (click)="pauseTimer()">Pause</button>
+    <button (click)="resumeTimer()">Resume</button>
+    <button (click)="stopTimer()">Stop</button>
+    <select [(ngModel)]="currentQuarter">
+      <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
+    </select>
+  </div>
+
+  <!-- Add Match Event -->
+  <div class="box">
+    <h4>Add Match Event</h4>
+    <select [(ngModel)]="selectedTeam">
+      <option [value]="team1Name">{{ team1Name }}</option>
+      <option [value]="team2Name">{{ team2Name }}</option>
+    </select>
+    <select [(ngModel)]="selectedPlayer">
+      <option *ngFor="let player of players" [value]="player">{{ player }}</option>
+    </select>
+    <select [(ngModel)]="currentQuarter">
+      <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
+    </select>
+    <button (click)="addEvent('Goal')">Goal</button>
+    <button (click)="addEvent('Penalty Corner Earned')">Penalty Corner Earned</button>
+    <button (click)="addEvent('PC Scored')">PC Scored</button>
+    <button (click)="addEvent('Green Card')">Green Card</button>
+  </div>
+
+  <!-- Match Events -->
+  <div class="box">
+    <h4>Match Events</h4>
+    <ul>
+      <li *ngFor="let event of matchEvents">
+        {{ event.time }} - {{ event.team }} - {{ event.player }} - {{ event.type }} ({{ event.quarter }})
+      </li>
+    </ul>
+  </div>
+
+  <!-- Penalty Shootout -->
+  <div class="box">
+    <h4>Penalty Shootout</h4>
+    <select [(ngModel)]="penaltyShootoutTeam">
+      <option [value]="team1Name">{{ team1Name }}</option>
+      <option [value]="team2Name">{{ team2Name }}</option>
+    </select>
+    <select [(ngModel)]="penaltyShootoutPlayer">
+      <option *ngFor="let player of players" [value]="player">{{ player }}</option>
+    </select>
+    <button (click)="recordPenalty()">Record Penalty</button>
+  </div>
+</div>
