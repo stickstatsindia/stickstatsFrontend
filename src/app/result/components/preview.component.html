@@ -1,0 +1,16 @@
+
+<h3>Team Members</h3>
+<div class="team-members">
+  <div>
+    <h4>{{ data.teams.home.name }}</h4>
+    <ul>
+      <li *ngFor="let player of data.teams.home.players">{{ player.name }} (Age: {{ player.age }})</li>
+    </ul>
+  </div>
+  <div>
+    <h4>{{ data.teams.away.name }}</h4>
+    <ul>
+      <li *ngFor="let player of data.teams.away.players">{{ player.name }} (Age: {{ player.age }})</li>
+    </ul>
+  </div>
+</div>

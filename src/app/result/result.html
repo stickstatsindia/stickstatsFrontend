@@ -1,0 +1,109 @@
+<div *ngIf="matchData" class="match-center-container">
+  <h2 class="title">{{ matchData.tournament }}</h2>
+  <div class="meta-row">
+    <span class="date">{{ matchData.date }}</span>
+    <span class="venue">{{ matchData.venue }}</span>
+  </div>
+  <div class="teams-row">
+    <div class="team-block">
+      <img [src]="matchData.teams.home.logo" [alt]="matchData.teams.home.name" class="team-logo" />
+      <div class="team-name">{{ matchData.teams.home.name }}</div>
+      <div class="team-score">{{ matchData.score.home }}</div>
+      <div class="team-data">
+        <div *ngIf="matchData.teams.home.coach">Coach: {{ matchData.teams.home.coach }}</div>
+        <div *ngIf="matchData.teams.home.captain">Captain: {{ matchData.teams.home.captain }}</div>
+        <div *ngIf="matchData.teams.home.stats">PC: {{ matchData.teams.home.stats.PCS || 0 }}</div>
+      </div>
+    </div>
+    <span class="vs-text">vs</span>
+    <div class="flex-vertical-center">
+<table class="ps-quarter-table">
+      <thead>
+        <tr>
+          <th>Q1</th>
+          <th>Q2</th>
+          <th>Q3</th>
+          <th>Q4</th>
+          <th>PEN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ matchData.teams.home.q1 }}</td>
+          <td>{{ matchData.teams.home.q2 }}</td>
+          <td>{{ matchData.teams.home.q3 }}</td>
+          <td>{{ matchData.teams.home.q4 }}</td>
+          <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.homeScore : '' }}</td>
+        </tr>
+        <tr>
+          <td>{{ matchData.teams.away.q1 }}</td>
+          <td>{{ matchData.teams.away.q2 }}</td>
+          <td>{{ matchData.teams.away.q3 }}</td>
+          <td>{{ matchData.teams.away.q4 }}</td>
+          <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.awayScore : '' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    
+    <div class="team-block">
+      <img [src]="matchData.teams.away.logo" [alt]="matchData.teams.away.name" class="team-logo" />
+      <div class="team-name">{{ matchData.teams.away.name }}</div>
+      <div class="team-score">{{ matchData.score.away }}</div>
+      <div class="team-data">
+        <div *ngIf="matchData.teams.away.coach">Coach: {{ matchData.teams.away.coach }}</div>
+        <div *ngIf="matchData.teams.away.captain">Captain: {{ matchData.teams.away.captain }}</div>
+        <div *ngIf="matchData.teams.away.stats">PC: {{ matchData.teams.away.stats.PCS || 0 }}</div>
+      </div>
+    </div>
+  </div>
+    
+   <div class="status-row">
+    <span>Status: {{ matchData.status }}</span>
+  </div>
+  <app-penaltyshootout [data]="matchData"></app-penaltyshootout>
+  <!-- Match Events inside card, after penalty shootout -->
+  <div class="match-events-flex">
+    <div class="match-events-col">
+      <div class="match-events-title">MATCH EVENTS</div>
+      <div *ngFor="let ev of matchData.eventsHome" class="match-event-row">
+        <span class="event-player">{{ ev.player }}</span>
+        <span class="event-time">{{ ev.minute }}</span>
+        <ng-container [ngSwitch]="ev.type">
+          <span *ngSwitchCase="'Yellow'" class="event-icon event-yellow">&#9724;</span>
+          <span *ngSwitchCase="'Green'" class="event-icon event-green">&#9724;</span>
+          <span *ngSwitchCase="'PC'" class="event-icon event-pc">PC</span>
+          <span *ngSwitchDefault class="event-icon">&#9679;</span>
+        </ng-container>
+      </div>
+    </div>
+    <div class="match-events-col">
+      <div class="match-events-title">MATCH EVENTS</div>
+      <div *ngFor="let ev of matchData.eventsAway" class="match-event-row match-event-row-away">
+        <ng-container [ngSwitch]="ev.type">
+          <span *ngSwitchCase="'Yellow'" class="event-icon event-yellow">&#9724;</span>
+          <span *ngSwitchCase="'Green'" class="event-icon event-green">&#9724;</span>
+          <span *ngSwitchCase="'PC'" class="event-icon event-pc">PC</span>
+          <span *ngSwitchDefault class="event-icon">&#9679;</span>
+        </ng-container>
+        <span class="event-time">{{ ev.minute }}</span>
+        <span class="event-player">{{ ev.player }}</span>
+      </div>
+    </div>
+  </div>
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button *ngFor="let tab of tabs; let i = index" [class.active]="selectedTab === i" (click)="selectedTab = i">{{ tab }}</button>
+  </div>
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <ng-container [ngSwitch]="selectedTab">
+      <app-preview *ngSwitchCase="0" [data]="matchData"></app-preview>
+      <app-boxscore *ngSwitchCase="1" [data]="matchData" [stats]="boxScoreStats"></app-boxscore>
+      <app-timeline *ngSwitchCase="2" [data]="matchData"></app-timeline>
+      <app-analysis *ngSwitchCase="3"></app-analysis>
+      <app-leaders *ngSwitchCase="4"></app-leaders>
+    </ng-container>
+  </div>
+</div>
+<div *ngIf="!matchData">Loading...</div>

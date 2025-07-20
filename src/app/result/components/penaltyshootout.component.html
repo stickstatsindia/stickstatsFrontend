@@ -1,0 +1,34 @@
+<h3 class="ps-title">Penalty Shootout</h3>
+<div class="ps-shootout-flex">
+  <div class="ps-team-block ps-team-block-home">
+    <div class="ps-team-name">{{ data.teams.home.name }}</div>
+    <div class="ps-score-big">{{ homeShootoutScore }}</div>
+    <div class="ps-shooters-list">
+      <div *ngFor="let shot of data.penaltyShootout.home; let i = index" class="ps-shooter-row ps-shooter-row-home">
+        <span class="ps-player">{{ shot.player }}</span>
+        <span class="ps-icon" [ngClass]="shot.scored ? 'scored' : 'missed'">
+          <ng-container *ngIf="shot.scored; else missed">&#9679;</ng-container>
+          <ng-template #missed>&#10006;</ng-template>
+        </span>
+        <span class="ps-num">{{ i + 1 }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="ps-vs-block">
+    <div class="ps-score-vs">-</div>
+  </div>
+  <div class="ps-team-block ps-team-block-away">
+    <div class="ps-team-name">{{ data.teams.away.name }}</div>
+    <div class="ps-score-big">{{ awayShootoutScore }}</div>
+    <div class="ps-shooters-list">
+      <div *ngFor="let shot of data.penaltyShootout.away; let i = index" class="ps-shooter-row ps-shooter-row-away">
+        <span class="ps-num">{{ i + 1 }}</span>
+        <span class="ps-icon" [ngClass]="shot.scored ? 'scored' : 'missed'">
+          <ng-container *ngIf="shot.scored; else missed2">&#9679;</ng-container>
+          <ng-template #missed2>&#10006;</ng-template>
+        </span>
+        <span class="ps-player">{{ shot.player }}</span>
+      </div>
+    </div>
+  </div>
+</div>

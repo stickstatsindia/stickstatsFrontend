@@ -1,0 +1,29 @@
+<h3>Timeline</h3>
+<div class="timeline-events-flex">
+  <div class="timeline-events-col">
+    <div class="timeline-events-title">MATCH EVENTS</div>
+    <div *ngFor="let ev of data.eventsHome" class="timeline-event-row">
+      <span class="timeline-event-player">{{ ev.player }}</span>
+      <span class="timeline-event-time">{{ ev.minute }}</span>
+      <ng-container [ngSwitch]="ev.type">
+        <span *ngSwitchCase="'Yellow'" class="timeline-event-icon timeline-event-yellow">&#9724;</span>
+        <span *ngSwitchCase="'Green'" class="timeline-event-icon timeline-event-green">&#9724;</span>
+        <span *ngSwitchCase="'PC'" class="timeline-event-icon timeline-event-pc">PC</span>
+        <span *ngSwitchDefault class="timeline-event-icon">&#9679;</span>
+      </ng-container>
+    </div>
+  </div>
+  <div class="timeline-events-col">
+    <div class="timeline-events-title">MATCH EVENTS</div>
+    <div *ngFor="let ev of data.eventsAway" class="timeline-event-row timeline-event-row-away">
+      <ng-container [ngSwitch]="ev.type">
+        <span *ngSwitchCase="'Yellow'" class="timeline-event-icon timeline-event-yellow">&#9724;</span>
+        <span *ngSwitchCase="'Green'" class="timeline-event-icon timeline-event-green">&#9724;</span>
+        <span *ngSwitchCase="'PC'" class="timeline-event-icon timeline-event-pc">PC</span>
+        <span *ngSwitchDefault class="timeline-event-icon">&#9679;</span>
+      </ng-container>
+      <span class="timeline-event-time">{{ ev.minute }}</span>
+      <span class="timeline-event-player">{{ ev.player }}</span>
+    </div>
+  </div>
+</div>

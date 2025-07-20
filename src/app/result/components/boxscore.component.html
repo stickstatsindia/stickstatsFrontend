@@ -1,0 +1,13 @@
+<h3>Box Score</h3>
+<table class="box-score-table">
+  <tr>
+    <th></th>
+    <th>{{ data.teams.home.name }}</th>
+    <th>{{ data.teams.away.name }}</th>
+  </tr>
+  <tr *ngFor="let stat of stats">
+    <td>{{ stat.label }}</td>
+    <td>{{ data.teams.home.stats[stat.key] }}</td>
+    <td>{{ data.teams.away.stats[stat.key] }}</td>
+  </tr>
+</table>

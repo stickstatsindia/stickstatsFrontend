@@ -1,0 +1,70 @@
+/* Timeline Tab: FIH-style two-column event list */
+.timeline-events-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 120px;
+  margin: 32px auto 0 auto;
+  max-width: 1000px;
+}
+.timeline-events-col {
+  flex: 1 1 0;
+  min-width: 220px;
+  max-width: 340px;
+  text-align: center;
+}
+.timeline-events-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #888;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.timeline-event-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.08rem;
+  margin: 0.18em 0;
+  gap: 8px;
+  color: #222;
+}
+.timeline-event-row-away {
+  justify-content: flex-end;
+}
+.timeline-event-player {
+  font-weight: 400;
+  min-width: 90px;
+}
+.timeline-event-time {
+  color: #888;
+  font-size: 1em;
+  margin: 0 4px;
+}
+.timeline-event-icon {
+  font-size: 1.1em;
+  margin: 0 2px;
+}
+.timeline-event-yellow {
+  color: #ffeb3b;
+}
+.timeline-event-green {
+  color: #4caf50;
+}
+.timeline-event-pc {
+  color: #1976d2;
+  font-weight: bold;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 1.1em;
+}
+@media (max-width: 900px) {
+  .timeline-events-flex {
+    gap: 18px;
+    max-width: 99vw;
+  }
+  .timeline-events-col {
+    min-width: 120px;
+    max-width: 180px;
+  }
+}

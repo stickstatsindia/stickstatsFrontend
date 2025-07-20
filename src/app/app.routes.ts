@@ -9,6 +9,7 @@ import { PlayerProfileComponent } from './player-profile/player-profile.componen
 import { TeamManagementComponent } from './team-management/team-management';
 import { AddNewRoundsComponent } from './add-new-rounds/add-new-rounds.component';
 import { ScorerComponent } from './scorer/scorer.component';
+import { Result } from './result/result';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'tournament-details', component: TeamManagementComponent },
   { path: 'add-new-rounds', component: AddNewRoundsComponent},
   { path: 'scorer', component: ScorerComponent },
+  { path: 'result', component: Result },
   //Add new path before this
   { path: '**', redirectTo: '' }
    
