@@ -1,0 +1,29 @@
+<div class="rounds-page">
+  <div class="rounds-table-wrapper">
+    <h2 class="rounds-heading">Rounds</h2>
+    <button class="add-rounds-btn">Add New Rounds</button>
+    <table class="rounds-table">
+      <thead>
+        <tr>
+          <th class="rounds-col">Rounds</th>
+          <th class="actions-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let round of rounds">
+          <td class="rounds-col">{{ round.name }}</td>
+          <td class="actions-col">
+            <button class="delete-btn" (click)="deleteRound(round)">
+              <span class="delete-icon">🗑️</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="arrow-btn" (click)="prevPage()">&#8592;</button>
+      <span class="page-num">{{ currentPage }}</span>
+      <button class="arrow-btn" (click)="nextPage()">&#8594;</button>
+    </div>
+  </div>
+</div>

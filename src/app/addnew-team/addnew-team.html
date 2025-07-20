@@ -1,0 +1,21 @@
+<div class="add-team-page">
+  <h2 class="add-team-heading">Add New Team</h2>
+  <div class="add-team-container">
+    <div class="left">
+      <label for="logoInput" style="cursor:pointer;">
+        <img [src]="logoUrl || 'https://via.placeholder.com/200x200'" alt="Team" />
+      </label>
+      <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" style="display:none;" />
+    </div>
+    <div class="right">
+      <label>Team Name:</label>
+      <input type="text" [(ngModel)]="teamName" />
+
+      <label>City:</label>
+      <select [(ngModel)]="city">
+        <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+      </select>
+      <button type="submit" style="margin: 2rem auto 0 auto; display: block;">Submit</button>
+    </div>
+  </div>
+</div>

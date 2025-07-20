@@ -1,0 +1,91 @@
+.add-team-page {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: #f0f4f8;
+  padding-top: 40px;
+}
+.add-team-heading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  letter-spacing: 1px;
+}
+.add-team-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid #131111;
+  width: 700px;
+  height: 400px;
+  margin: 40px auto;
+  background: #f5f7fa;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e3e8ee;
+  height: 100%;
+}
+.left img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  border-radius: 50%; /* Make it a circle */
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: block;
+}
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  height: 100%;
+  padding: 2rem 1.5rem;
+}
+.right label {
+  font-weight: 500;
+  color: #333;
+  align-self: flex-start;
+}
+.right input, .right select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+  background: #f8fafc;
+}
+.right button {
+  background: #4ba3c7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1.5rem;
+  transition: background 0.2s;
+}
+.right button:hover {
+  background: #357ca5;
+}

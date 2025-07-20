@@ -10,6 +10,8 @@ import { TeamManagementComponent } from './team-management/team-management';
 import { AddNewRoundsComponent } from './add-new-rounds/add-new-rounds.component';
 import { ScorerComponent } from './scorer/scorer.component';
 import { Result } from './result/result';
+import { AddTeamComponent } from './addnew-team/addnew-team';
+import { RoundsDetailsComponent } from './rounds-details/rounds-details';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -23,6 +25,9 @@ export const routes: Routes = [
   { path: 'add-new-rounds', component: AddNewRoundsComponent},
   { path: 'scorer', component: ScorerComponent },
   { path: 'result', component: Result },
+  { path: 'addnew-team', component:AddTeamComponent },
+  { path: 'rounds-details', component:RoundsDetailsComponent },
+
   //Add new path before this
   { path: '**', redirectTo: '' }
    
