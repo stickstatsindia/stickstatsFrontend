@@ -1,0 +1,43 @@
+<!-- group-manager.component.html -->
+<div class="group-container">
+  <h2 class="section-title">Manage Groups</h2>
+
+  <div class="group-actions">
+    <button class="btn-primary" (click)="createGroup()">Create Group</button>
+    <button class="btn-outline-light" (click)="joinGroup()">Join Group</button>
+  </div>
+
+  <div *ngIf="groups.length > 0" class="group-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Round Name</th>
+          <th>Group Name</th>
+          <th>Teams</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of groups">
+          <td>{{ group.roundName }}</td>
+
+          <td>
+            <div *ngIf="!group.isEditing">{{ group.name }}</div>
+            <input *ngIf="group.isEditing" [(ngModel)]="group.name" type="text" />
+          </td>
+
+          <td>
+            <div *ngFor="let team of group.teams">{{ team.name }}</div>
+          </td>
+
+          <td>
+            <button class="btn-outline-light" (click)="toggleEdit(group)">
+              {{ group.isEditing ? 'Save' : 'Edit' }}
+            </button>
+            <button class="btn-outline-light" (click)="deleteGroup(group)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

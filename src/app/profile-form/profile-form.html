@@ -22,6 +22,8 @@
       <p><strong>DOB:</strong> {{ user.dob }}</p>
       <p><strong>Position:</strong> {{ user.position }}</p>
       <p><strong>Stick Hand:</strong> {{ user.stickHand }}</p>
+      <p><strong>Gender:</strong> {{ user.gender }}</p>
+      <p><strong>Jersey Number:</strong> {{ user.jerseyNumber }}</p>
       <p><strong>PIN:</strong> ****</p>
     </div>
 
@@ -106,6 +108,21 @@
             <option>Right-handed</option>
             <option>Left-handed</option>
           </select>
+        </div>
+
+        <div class="col-md-6">
+          <label>Gender</label>
+          <select class="form-select" name="gender" [(ngModel)]="user.gender" required>
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label>Jersey Number</label>
+          <input type="number" class="form-control" name="jerseyNumber" [(ngModel)]="user.jerseyNumber" required min="0" />
         </div>
 
         <div class="col-md-6">

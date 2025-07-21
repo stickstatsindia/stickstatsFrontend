@@ -22,6 +22,8 @@ export class ProfileForm {
     dob: '',
     email: '',
     pin: '',
+    gender: '',
+    jerseyNumber: '',
     followers: 0,
     profileViews: 0,
     profileImage: ''
@@ -48,9 +50,11 @@ export class ProfileForm {
       this.user.dob,
       this.user.position,
       this.user.stickHand,
+      this.user.gender,
+      this.user.jerseyNumber,
       this.user.pin
     ];
-    const filled = fields.filter(f => f && f.trim() !== '').length;
+    const filled = fields.filter(f => f && f.toString().trim() !== '').length;
     return Math.round((filled / fields.length) * 100);
   }
 
