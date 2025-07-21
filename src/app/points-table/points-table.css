@@ -1,0 +1,134 @@
+.points-table-outer {
+  min-height: 100vh;
+  background: #f5f6fa;
+  padding: 40px 0;
+}
+.points-table-container {
+  width: 98vw;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.10);
+  padding: 2rem 2rem 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.points-table-header {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: #f7f7f7;
+  padding: 1.2rem 1.5rem 0.5rem 1.5rem;
+  border-radius: 10px 10px 0 0;
+}
+.by-label, .stage-label {
+  font-weight: 600;
+  color: #222;
+  font-size: 1.1rem;
+  margin-right: 0.7rem;
+}
+.points-table-controls {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+.by-select, .stage-select {
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  background: #fff;
+  color: #2c3e50;
+  transition: border 0.2s;
+}
+.by-select:focus, .stage-select:focus {
+  border: 1.5px solid #1abc9c;
+  outline: none;
+}
+.points-table-content {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.pool-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #222;
+  background: #f7f7f7;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  margin-top: 2rem;
+  margin-bottom: 0.2rem;
+}
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+}
+.styled-table th, .styled-table td {
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1rem;
+}
+.styled-table th {
+  background: #f7f7f7;
+  color: #2c3e50;
+  font-weight: 700;
+}
+.styled-table tr:last-child td {
+  border-bottom: none;
+}
+.flag {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+.team-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.res-badges {
+  display: flex;
+  gap: 0.2rem;
+  justify-content: center;
+}
+.res-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 700;
+}
+.res-badge.win { background: #4caf50; }
+.res-badge.draw { background: #ffc107; color: #222; }
+.res-badge.lose { background: #f44336; }
+@media (max-width: 900px) {
+  .points-table-container {
+    padding: 1rem 0.2rem;
+    max-width: 100vw;
+  }
+  .points-table-header {
+    flex-direction: column;
+    align-items: flex-start;    
+    gap: 0.7rem;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+  }
+  .pool-title {
+    padding: 0.7rem 0.5rem;
+  }
+}
