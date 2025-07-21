@@ -1,7 +1,7 @@
 <div class="container mt-4">
-  <h2 class="mb-4 text-center">Add New Tournament</h2>
+  <h2 class="mb-4 text-center">Add Tournament</h2>
   <form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()">
-    
+
     <!-- Tournament Name & Category -->
     <div class="row">
       <div class="col-md-6 form-group">
@@ -53,7 +53,7 @@
         <div class="d-flex flex-wrap gap-2">
           <button type="button"
                   *ngFor="let mt of matchTypes"
-                  class="btn"
+                  class="btn btn-toggle"
                   [ngClass]="{'btn-warning': selectedMatchTypes.has(mt), 'btn-outline-warning': !selectedMatchTypes.has(mt)}"
                   (click)="toggleMatchType(mt)">
             {{mt}}
@@ -62,16 +62,26 @@
       </div>
     </div>
 
-    <!-- Country Code & Organiser Contact -->
+    <!-- Country Code, Organiser Contact & Tournament Format -->
     <div class="row">
-      <div class="col-md-6 form-group d-flex gap-2">
-        <div class="flex-grow-1">
-          <label for="countryCode" class="form-label">Country Code*</label>
-          <input type="text" id="countryCode" class="form-control" formControlName="countryCode" placeholder="+91">
-        </div>
-        <div class="flex-grow-1">
-          <label for="organiserContact" class="form-label">Organiser Contact*</label>
-          <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact" placeholder="Phone Number">
+      <div class="col-md-4 form-group">
+        <label for="countryCode" class="form-label">Country Code*</label>
+        <input type="text" id="countryCode" class="form-control" formControlName="countryCode" placeholder="+91">
+      </div>
+      <div class="col-md-4 form-group">
+        <label for="organiserContact" class="form-label">Organiser Contact*</label>
+        <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact" placeholder="Phone Number">
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label d-block">Tournament Format*</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button"
+                  *ngFor="let format of tournamentFormats"
+                  class="btn btn-toggle"
+                  [ngClass]="{'btn-warning': selectedFormats.has(format), 'btn-outline-warning': !selectedFormats.has(format)}"
+                  (click)="toggleFormat(format)">
+            {{format}}
+          </button>
         </div>
       </div>
     </div>
@@ -95,7 +105,7 @@
     </div>
 
     <!-- Submit Button -->
-    <div class="text-center">
+    <div class="text-center mt-3">
       <button type="submit" class="btn btn-primary px-5">Submit</button>
     </div>
   </form>

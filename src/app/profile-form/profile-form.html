@@ -7,7 +7,7 @@
       <div class="ms-3">
         <h3>{{ user.name }}</h3>
         <p><i class="bi bi-geo-alt-fill"></i> {{ user.location }}</p>
-        <p>Since {{ user.joinDate }}</p> <!--required-->
+        <p>Since {{ user.joinDate }}</p>
       </div>
     </div>
 
@@ -21,7 +21,6 @@
       <p><strong>Mobile:</strong> {{ user.mobile }}</p>
       <p><strong>DOB:</strong> {{ user.dob }}</p>
       <p><strong>Position:</strong> {{ user.position }}</p>
-      <p><strong>Role:</strong> {{ user.playingRole }}</p>
       <p><strong>Stick Hand:</strong> {{ user.stickHand }}</p>
       <p><strong>PIN:</strong> ****</p>
     </div>
@@ -84,12 +83,20 @@
 
         <div class="col-md-6">
           <label>Position</label>
-          <input class="form-control" name="position" [(ngModel)]="user.position" required />
-        </div>
-
-        <div class="col-md-6">
-          <label>Playing Role</label>
-          <input class="form-control" name="playingRole" [(ngModel)]="user.playingRole" required />
+          <select class="form-select" name="position" [(ngModel)]="user.position" required>
+            <option value="">None</option>
+            <option>Goalkeeper (GK)</option>
+            <option>Left Back (LB)</option>
+            <option>Right Back (RB)</option>
+            <option>Center Midfielder (CM)</option>
+            <option>Left Half (LH)</option>
+            <option>Right Half (RH)</option>
+            <option>Center Forward (CF)</option>
+            <option>Left Wing (LW)</option>
+            <option>Right Wing (RW)</option>
+            <option>Inside Forward Left (IFL)</option>
+            <option>Inside Forward Right (IFR)</option>
+          </select>
         </div>
 
         <div class="col-md-6">

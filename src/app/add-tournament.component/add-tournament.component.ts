@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 @Component({
   selector: 'app-add-tournament',
-  imports: [CommonModule,FormsModule,ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './add-tournament.component.html',
   styleUrls: ['./add-tournament.component.css']
 })
@@ -12,13 +13,14 @@ export class AddTournamentComponent {
   tournamentForm: FormGroup;
 
   tournamentCategories = ['OPEN', 'CORPORATE', 'COMMUNITY', 'SCHOOL', 'BOX'];
-  cities = []; // Extend as needed
   groundTypes = ['ASTROTURF', 'GRASS'];
   matchTypes = ['7-A SIDE', '11-A SIDE', '5-A SIDE'];
+  tournamentFormats = ['KNOCKOUT', 'LEAGUE']; // ✅ NEW
 
   selectedCategories = new Set<string>();
   selectedGroundTypes = new Set<string>();
   selectedMatchTypes = new Set<string>();
+  selectedFormats = new Set<string>(); // ✅ NEW
 
   constructor(private fb: FormBuilder) {
     this.tournamentForm = this.fb.group({
@@ -28,6 +30,7 @@ export class AddTournamentComponent {
       ground: ['', Validators.required],
       groundType: [[]],
       matchType: [[]],
+      tournamentFormat: [[], Validators.required], // ✅ NEW
       organiserName: ['', Validators.required],
       countryCode: ['', Validators.required],
       organiserContact: ['', Validators.required],
@@ -35,6 +38,14 @@ export class AddTournamentComponent {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required]
     });
+  }
+
+  toggleSelection(set: Set<string>, value: string): void {
+    if (set.has(value)) {
+      set.delete(value);
+    } else {
+      set.add(value);
+    }
   }
 
   toggleCategory(category: string): void {
@@ -58,18 +69,18 @@ export class AddTournamentComponent {
     });
   }
 
-  private toggleSelection(set: Set<string>, value: string): void {
-    if (set.has(value)) {
-      set.delete(value);
-    } else {
-      set.add(value);
-    }
+  toggleFormat(format: string): void {
+    this.selectedFormats.clear(); // Only one selectable
+    this.selectedFormats.add(format);
+    this.tournamentForm.patchValue({
+      tournamentFormat: [format]
+    });
   }
 
   onSubmit(): void {
     if (this.tournamentForm.valid) {
       console.log('Tournament Form Submitted:', this.tournamentForm.value);
-      // TODO: handle submission logic
+      // Add submission logic here
     } else {
       this.tournamentForm.markAllAsTouched();
     }

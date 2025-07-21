@@ -18,7 +18,6 @@ export class ProfileForm {
     joinDate: new Date().toLocaleDateString(),
     mobile: '',
     position: '',
-    playingRole: '',
     stickHand: '',
     dob: '',
     email: '',
@@ -48,7 +47,6 @@ export class ProfileForm {
       this.user.location,
       this.user.dob,
       this.user.position,
-      this.user.playingRole,
       this.user.stickHand,
       this.user.pin
     ];
