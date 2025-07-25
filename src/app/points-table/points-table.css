@@ -62,7 +62,9 @@
   border-radius: 8px 8px 0 0;
   margin-top: 2rem;
   margin-bottom: 0.2rem;
+  
 }
+
 .styled-table {
   width: 100%;
   border-collapse: collapse;
@@ -70,6 +72,7 @@
   border-radius: 0 0 10px 10px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+  padding: 0% 0.5rem;
 }
 .styled-table th, .styled-table td {
   padding: 0.7rem 0.5rem;

@@ -1,21 +1,49 @@
 <div class="add-team-page">
   <h2 class="add-team-heading">Add New Team</h2>
-  <div class="add-team-container">
-    <div class="left">
-      <label for="logoInput" style="cursor:pointer;">
-        <img [src]="logoUrl || 'https://via.placeholder.com/200x200'" alt="Team" />
-      </label>
-      <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" style="display:none;" />
+
+  <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="add-team-container">
+    <div>
+
+
+      <div class="left">
+
+        <label for="logoInput" style="cursor:pointer;">
+          <img [src]="logoUrl || 'https://via.placeholder.com/200x200'" alt="Team" />
+        </label>
+
+        <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" style="display: none;" />
+      </div>
+      <label style="margin-left: 25px;" for="logoInput" class="upload-label">Upload Team Logo</label>
     </div>
     <div class="right">
-      <label>Team Name:</label>
-      <input type="text" [(ngModel)]="teamName" />
+      <div class="input-group">
+        <label>Team Name:</label>
+        <input type="text" formControlName="teamName" />
+        <div *ngIf="teamForm.get('teamName')?.touched && teamForm.get('teamName')?.invalid">
+          <span class="bold" style="color: red; font-weight: bold;">
+            Team Name is required.
+          </span>
 
-      <label>City:</label>
-      <select [(ngModel)]="city">
+        </div>
+      </div>
+      <div class="input-group">
+       <label>City:</label>
+      <select formControlName="city">
+        <option value="">Select City</option>
         <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
       </select>
+      <div class="error" *ngIf="teamForm.get('city')?.touched && teamForm.get('city')?.invalid">
+
+        <span class="bold" style="color: red; font-weight: bold">
+          City is required.
+        </span>
+      </div>
+      </div>
+
+    
+
       <button type="submit" style="margin: 2rem auto 0 auto; display: block;">Submit</button>
     </div>
-  </div>
+
+  </form>
 </div>
