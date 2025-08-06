@@ -1,0 +1,103 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.step {
+  color: #999;
+}
+
+.step.completed {
+  color: green;
+}
+
+.step.active {
+  color: #00bfa5;
+}
+
+.note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.teams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.team {
+  text-align: center;
+  margin: 0 30px;
+}
+
+.team-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  margin: 0 auto 10px;
+}
+
+.vs {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.back {
+  background: white;
+  border: 2px solid #00bfa5;
+  color: #00bfa5;
+}
+
+.btn.back:hover {
+  background: #e0f2f1;
+}
+
+.btn.next {
+  background-color: #00bfa5;
+  color: white;
+}
+
+.btn.next:hover {
+  background-color: #009e88;
+}

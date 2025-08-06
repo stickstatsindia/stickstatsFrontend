@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component  } from '@angular/core';
 import { RouterLink, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 // import { RouterOutlet } from '@angular/router';
 import { Navbar } from './navbar/navbar'; // Only needed component
 import {  FormsModule } from '@angular/forms'; // Importing FormsModule for ngModel
-
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgModel } from '@angular/forms';
 
 
 
 @Component({
   selector: 'app-root',
-   imports: [RouterOutlet, Navbar,FormsModule],
+   imports: [RouterOutlet, Navbar,FormsModule, CommonModule],
   standalone: true,
   // imports: [RouterOutlet],
   templateUrl: './app.html',

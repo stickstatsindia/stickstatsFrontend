@@ -1,0 +1,85 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.header {
+  background-color: #b71c1c;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.content h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.content p {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn.outline {
+  background-color: white;
+  border: 2px solid #00bfa5;
+  color: #00bfa5;
+}
+
+.btn.outline:hover {
+  background-color: #e0f2f1;
+}
+
+.btn.filled {
+  background-color: #00bfa5;
+  color: white;
+}
+
+.btn.filled:hover {
+  background-color: #009e88;
+}

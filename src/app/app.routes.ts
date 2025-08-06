@@ -14,6 +14,8 @@ import { AddTeamComponent } from './addnew-team/addnew-team';
 import { RoundsDetailsComponent } from './rounds-details/rounds-details';
 import { PointsTable } from './points-table/points-table';
 import { GroupManagerComponent } from './group-manager/group-manager';
+import { TournamentDashboardComponent } from './tournament-dashboard.component/tournament-dashboard.component';
+import { ScheduleMatchTeamSelection } from './schedule-match-team-selection/schedule-match-team-selection';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -31,6 +33,9 @@ export const routes: Routes = [
   { path: 'rounds-details', component:RoundsDetailsComponent },
   { path: 'point-table', component:PointsTable },
   { path: 'group-manager', component: GroupManagerComponent },
+  { path: 'tournament-dashboard', component: TournamentDashboardComponent},
+  { path: 'schedule-match-select-teams', component: ScheduleMatchTeamSelection },
+
   //Add new path before this
   { path: '**', redirectTo: '' }
    
