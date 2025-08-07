@@ -1,6 +1,5 @@
 <div class="profile-container">
 
-  <!-- Profile Summary -->
   <div *ngIf="isProfileSaved" class="card profile-summary">
     <div class="d-flex align-items-center mb-4">
       <img [src]="user.profileImage || 'https://via.placeholder.com/80'" alt="Profile" class="profile-pic">
@@ -35,21 +34,11 @@
     <button class="btn btn-outline-light mt-3" (click)="editProfile()">Edit Profile</button>
   </div>
 
-  <!-- PRO Membership Section -->
-  <div *ngIf="isProfileSaved" class="pro-banner mt-4">
-    <h5>PRO MEMBERSHIP</h5>
-    <p>₹399/year OR ₹3,999/lifetime</p>
-    <p>Access unlimited HockeyInsights & other features.</p>
-    <button class="btn btn-warning btn-sm">Become a PRO</button>
-  </div>
-
-  <!-- Profile Form -->
   <div *ngIf="!isProfileSaved" class="profile-form card">
     <h2 class="section-title">Complete Your Profile</h2>
     <form #profileForm="ngForm" (ngSubmit)="submitProfile()" novalidate>
       <div class="row g-3">
 
-        <!-- Profile Picture Upload -->
         <div class="text-center mb-4">
           <label class="form-label d-block">Profile Picture</label>
           <input type="file" accept="image/*" (change)="onFileSelected($event)" />
@@ -60,32 +49,54 @@
 
         <div class="col-md-6">
           <label>Full Name</label>
-          <input class="form-control" name="name" [(ngModel)]="user.name" required />
+          <input class="form-control" name="name" [(ngModel)]="user.name" required #name="ngModel" pattern="^([A-Z][a-z]+)(\s[A-Z][a-z]+)*$" />
+          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger small mt-1">
+            <div *ngIf="name.errors?.['required']">Full Name is required.</div>
+            <div *ngIf="name.errors?.['pattern']">Name must start with a capital letter and can contain multiple words.</div>
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Email</label>
-          <input type="email" class="form-control" name="email" [(ngModel)]="user.email" required />
+          <input type="email" class="form-control" name="email" [(ngModel)]="user.email" required #email="ngModel" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" />
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger small mt-1">
+            <div *ngIf="email.errors?.['required']">Email is required.</div>
+            <div *ngIf="email.errors?.['pattern']">Please enter a valid email address.</div>
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Mobile</label>
-          <input class="form-control" name="mobile" [(ngModel)]="user.mobile" required />
+          <input class="form-control" type="tel" name="mobile" [(ngModel)]="user.mobile" required #mobile="ngModel" pattern="^[6-9]\d{9}$" />
+          <div *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)" class="text-danger small mt-1">
+            <div *ngIf="mobile.errors?.['required']">Mobile number is required.</div>
+            <div *ngIf="mobile.errors?.['pattern']">Please enter a valid 10-digit mobile number.</div>
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Location</label>
-          <input class="form-control" name="location" [(ngModel)]="user.location" required />
+          <input class="form-control" name="location" [(ngModel)]="user.location" required #location="ngModel" />
+          <div *ngIf="location.invalid && (location.dirty || location.touched)" class="text-danger small mt-1">
+            Location is required.
+          </div>
+          <div *ngIf="locationValidationStatus === 'invalid'" class="text-danger small mt-1">
+            Location must be within India.
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Date of Birth</label>
-          <input type="date" class="form-control" name="dob" [(ngModel)]="user.dob" required />
+          <input type="date" class="form-control" name="dob" [(ngModel)]="user.dob" required [max]="getMaxDate()" #dob="ngModel" />
+          <div *ngIf="dob.invalid && (dob.dirty || dob.touched)" class="text-danger small mt-1">
+            <div *ngIf="dob.errors?.['required']">Date of Birth is required.</div>
+            <div *ngIf="dob.errors?.['max']">You must be at least 5 years old.</div>
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Position</label>
-          <select class="form-select" name="position" [(ngModel)]="user.position" required>
+          <select class="form-select" name="position" [(ngModel)]="user.position" required #position="ngModel">
             <option value="">None</option>
             <option>Goalkeeper (GK)</option>
             <option>Left Back (LB)</option>
@@ -99,39 +110,56 @@
             <option>Inside Forward Left (IFL)</option>
             <option>Inside Forward Right (IFR)</option>
           </select>
+          <div *ngIf="position.invalid && (position.dirty || position.touched)" class="text-danger small mt-1">
+            Position is required.
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Stick Hand</label>
-          <select class="form-select" name="stickHand" [(ngModel)]="user.stickHand" required>
+          <select class="form-select" name="stickHand" [(ngModel)]="user.stickHand" required #stickHand="ngModel">
             <option value="">Select</option>
             <option>Right-handed</option>
             <option>Left-handed</option>
           </select>
+          <div *ngIf="stickHand.invalid && (stickHand.dirty || stickHand.touched)" class="text-danger small mt-1">
+            Stick Hand is required.
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Gender</label>
-          <select class="form-select" name="gender" [(ngModel)]="user.gender" required>
+          <select class="form-select" name="gender" [(ngModel)]="user.gender" required #gender="ngModel">
             <option value="">Select</option>
             <option>Male</option>
             <option>Female</option>
             <option>Other</option>
           </select>
+          <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="text-danger small mt-1">
+            Gender is required.
+          </div>
         </div>
 
         <div class="col-md-6">
           <label>Jersey Number</label>
-          <input type="number" class="form-control" name="jerseyNumber" [(ngModel)]="user.jerseyNumber" required min="0" />
+          <input type="number" class="form-control" name="jerseyNumber" [(ngModel)]="user.jerseyNumber" required min="1" max="999" #jerseyNumber="ngModel" />
+          <div *ngIf="jerseyNumber.invalid && (jerseyNumber.dirty || jerseyNumber.touched)" class="text-danger small mt-1">
+            <div *ngIf="jerseyNumber.errors?.['required']">Jersey Number is required.</div>
+            <div *ngIf="jerseyNumber.errors?.['min'] || jerseyNumber.errors?.['max']">Jersey number must be between 1 and 999.</div>
+          </div>
         </div>
 
-        <div class="col-md-6">
-          <label>PIN</label>
-          <input type="password" class="form-control" name="pin" [(ngModel)]="user.pin" required minlength="4" />
-        </div>
+      <div class="col-md-6">
+        <label>PIN</label>
+        <input type="text" class="form-control" name="pin" [(ngModel)]="user.pin" required #pin="ngModel" pattern="^\d{6}$" />
+          <div *ngIf="pin.invalid && (pin.dirty || pin.touched)" class="text-danger small mt-1">
+          <div *ngIf="pin.errors?.['required']">PIN is required.</div>
+          <div *ngIf="pin.errors?.['pattern']">PIN must of 6 digits only.</div>
+         </div>
+      </div>
 
       </div>
-      <button type="submit" class="btn btn-primary mt-4">Save Profile</button>
+      <button type="submit" class="btn btn-primary mt-4" [disabled]="profileForm.invalid">Save Profile</button>
     </form>
   </div>
 </div>

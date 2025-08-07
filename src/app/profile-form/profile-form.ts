@@ -1,16 +1,20 @@
+
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './profile-form.html',
   styleUrls: ['./profile-form.css']
 })
 export class ProfileForm {
   isProfileSaved = false;
+  locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
 
   user = {
     name: '',
@@ -29,12 +33,10 @@ export class ProfileForm {
     profileImage: ''
   };
 
+  constructor(private http: HttpClient) {}
+
   submitProfile() {
-    if (this.user.name && this.user.email && this.user.mobile) {
-      this.isProfileSaved = true;
-    } else {
-      alert('Please fill all required fields.');
-    }
+    this.isProfileSaved = true;
   }
 
   editProfile() {
@@ -67,5 +69,12 @@ export class ProfileForm {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  getMaxDate(): string {
+    const today = new Date();
+    const minAge = 5;
+    const maxDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+    return maxDate.toISOString().split('T')[0];
   }
 }

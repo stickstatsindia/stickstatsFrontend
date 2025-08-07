@@ -1,32 +1,33 @@
-<div class="profile-container">
-  <div class="profile-header">
-    <div class="profile-left">
-      <img [src]="profile.imageUrl" class="profile-img" alt="Profile" />
-      <div class="profile-details">
-        <div class="name-row">
-          <h2>{{ profile.name }}</h2>
-          <span *ngIf="profile.isPro" class="pro-badge">PRO</span>
-        </div>
-        <p>{{ profile.location }} • {{ profile.views }} Views</p>
-        <p>{{ profile.battingStyle }}</p>
-      </div>
+
+<div class="profile-card">
+  <div class="profile-main-row">
+    <div class="profile-logo-section">
+      <img [src]="profile.imageUrl" alt="Profile" />
     </div>
-    <div class="profile-stats">
+    <div class="profile-info-section">
+      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge">PRO</span></h2>
+      <p><strong>Location:</strong> {{ profile.location }}</p>
+      <p><strong>Position:</strong> {{ profile.battingStyle }}</p>
+    </div>
+    <div class="profile-stats-row">
       <div class="stat-box">
+        <div class="stat-label">Matches</div>
         <div class="stat-value">{{ profile.matches }}</div>
-        <div class="stat-label">MATCHES</div>
       </div>
       <div class="stat-box">
+        <div class="stat-label">Goals</div>
         <div class="stat-value">{{ profile.runs }}</div>
-        <div class="stat-label">GOALS</div>
       </div>
-      
     </div>
   </div>
-
-  <div class="nav-tabs">
-    <div *ngFor="let item of menu" class="nav-tab" [class.active]="item === 'MATCHES'">
-      {{ item }}
+  <div class="profile-navbar">
+    <div class="profile-tabs">
+      <div *ngFor="let item of menu"
+           class="profile-tab"
+           [class.active]="item === selectedTab"
+           (click)="onTabSelect(item)">
+        {{ item }}
+      </div>
     </div>
   </div>
 </div>

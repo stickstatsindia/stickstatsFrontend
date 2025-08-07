@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="card">
+    <h2>Schedule a Match</h2>
+
+    <p class="note">
+      Let's start the battle!!
+    </p>
+
+    <div class="teams">
+      <div class="team">
+        <label for="teamA">Select Team A:</label>
+        <select [(ngModel)]="selectedTeamA" id="teamA">
+          <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+        </select>
+      </div>
+
+      <div class="vs">VS</div>
+
+      <div class="team">
+        <label for="teamB">Select Team B:</label>
+        <select [(ngModel)]="selectedTeamB" id="teamB">
+          <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn back" (click)="goToPreviousStep()">BACK</button>
+      <button class="btn next" [disabled]="!selectedTeamA || !selectedTeamB" (click)="goToNextStep()">NEXT</button>
+    </div>
+  </div>
+</div>

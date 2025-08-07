@@ -21,7 +21,29 @@ export class PlayerProfileComponent {
     runs: 0,
     wickets: 0
   };
- 
+
   menu = ['MATCHES', 'STATS', 'AWARDS', 'BADGES', 'TEAMS', 'PHOTOS', 'CONNECTIONS', 'PROFILE'];
+  selectedTab = 'MATCHES';
+
+  onTabSelect(tab: string) {
+    this.selectedTab = tab;
+    // Here you can call backend API to fetch data for the selected tab
+    // Example: this.fetchTabData(tab);
+  }
+
+  getTabRoute(tab: string): string {
+    // Map tab names to routes (customize as needed)
+    switch (tab) {
+      case 'MATCHES': return '/player/matches';
+      case 'STATS': return '/player/stats';
+      case 'AWARDS': return '/player/awards';
+      case 'BADGES': return '/player/badges';
+      case 'TEAMS': return '/player/teams';
+      case 'PHOTOS': return '/player/photos';
+      case 'CONNECTIONS': return '/player/connections';
+      case 'PROFILE': return '/player/profile';
+      default: return '/player/profile';
+    }
+  }
 }
  
