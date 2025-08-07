@@ -1,0 +1,84 @@
+<div class="container py-4 position-relative">
+
+  <!-- Back Button -->
+  <button class="btn btn-outline-secondary position-absolute top-0 end-0" (click)="goBack()">
+    ← Back
+  </button>
+
+  <!-- Page Heading -->
+  <h2 class="mb-4 fw-bold">Add Group</h2>
+
+  <!-- Group Name & Dropdown Row -->
+  <div class="row g-3 align-items-end mb-3">
+    <div class="col-md-6">
+      <label for="groupName" class="form-label">Group Name</label>
+      <input
+        type="text"
+        id="groupName"
+        class="form-control"
+        placeholder="e.g. Group A"
+        [(ngModel)]="groupName"
+      />
+    </div>
+
+    <div class="col-md-4">
+      <label for="groupType" class="form-label">Group Type</label>
+      <select
+        id="groupType"
+        class="form-select"
+        [(ngModel)]="selectedGroupType"
+      >
+        <option disabled selected value="">Select type</option>
+        <option *ngFor="let type of groupTypes" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Group Cards Grid -->
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
+    <div class="col" *ngFor="let group of groups; let i = index">
+      <div
+        class="card text-white text-center h-100"
+        [ngClass]="[
+          group.bg,
+          selectedGroupIndex === i ? 'border border-4 border-light' : ''
+        ]"
+        style="cursor: pointer;"
+        (click)="selectGroup(i)"
+      >
+        <div class="card-body d-flex flex-column justify-content-center">
+          <h5 class="card-title fw-bold display-6">{{ group.initials }}</h5>
+          <p class="card-text">{{ group.name }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Card -->
+    <!-- <div class="col">
+      <div
+        class="card h-100 text-center p-2 border"
+        [ngClass]="selectedGroupIndex === groups.length ? 'border border-4 border-primary' : ''"
+        (click)="selectGroup(groups.length)"
+        style="cursor: pointer;"
+      >
+        <img
+          src="assets/cricket-king-logo.png"
+          class="card-img-top mx-auto"
+          alt="Team Logo"
+          style="max-width: 60px;"
+        />
+        <div class="card-body">
+          <p class="card-text small">Singh Bagh Dynamites</p>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="d-flex gap-2">
+    <button class="btn btn-success" (click)="addGroup()">Add Group</button>
+    <button class="btn btn-outline-secondary" (click)="cancel()">Cancel</button>
+  </div>
+</div>
