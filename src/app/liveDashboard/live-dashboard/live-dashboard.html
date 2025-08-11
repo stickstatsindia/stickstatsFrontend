@@ -10,11 +10,16 @@
 
     <div class="match-list">
       <ng-container *ngFor="let match of filteredMatches()">
-        <div class="match-card" (click)="openModal(match)">
+        <div class="match-card">
           <h3>{{ match.home_team_name }} vs {{ match.away_team_name }}</h3>
           <p *ngIf="selectedTab !== 'Upcoming'">
             Score: {{ match.home_score }} - {{ match.away_score }}
           </p>
+          <!-- <p *ngIf="selectedTab === 'Live' && timers[match.match_id]">
+            ⏱ Timer: 
+            {{ format(timers[match.match_id].minutes) }}:{{ format(timers[match.match_id].seconds) }}
+          </p> -->
+
           <p>Time: {{ match.match_time }} | Venue: {{ match.venue }}</p>
           <p>Status: <strong [ngClass]="match.status.toLowerCase()">{{ match.status }}</strong></p>
         </div>
@@ -24,7 +29,7 @@
 
   <!-- 🔽 Modal Popup -->
 <!-- Match Info Modal -->
-<div class="modal-backdrop" *ngIf="selectedMatch" (click)="closeModal()">
+<!-- <div class="modal-backdrop" *ngIf="selectedMatch" (click)="closeModal()">
   <div class="modal" (click)="$event.stopPropagation()">
     <h2>{{ selectedMatch.home_team_name }} vs {{ selectedMatch.away_team_name }}</h2>
     <p><strong>Date:</strong> {{ selectedMatch.match_date }}</p>
@@ -34,6 +39,6 @@
     <p><strong>Status:</strong> {{ selectedMatch.status }}</p>
     <button (click)="closeModal()">Close</button>
   </div>
-</div>
+</div> -->
 
 </div>

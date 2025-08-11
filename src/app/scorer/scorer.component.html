@@ -1,133 +1,152 @@
+<div class="container my-4">
+  <!-- Scoreboard -->
+  <mat-card class="mb-4 p-3">
+    <div class="d-flex justify-content-between align-items-center">
+      
+      <!-- Team 1 -->
+      <div class="text-center">
+        <h5>{{ team1Name }}</h5>
+        <div class="d-flex align-items-center justify-content-center gap-2">
+          <h3 class="text-primary m-0 px-2">{{ totalScore.team1 }}</h3>
+        </div>
+      </div>
 
-<!-- <div class="scorer-container">
-  <div class="timer-section">
-    <h2>Match Timer: {{ displayTime }}</h2>
-    <input type="number" [(ngModel)]="setMinutes" placeholder="Min" />
-    <input type="number" [(ngModel)]="setSeconds" placeholder="Sec" />
-    <button (click)="setTime()">Set Time</button>
-    <button (click)="startTimer()">Start</button>
-    <button (click)="pauseTimer()">Pause</button>
-    <button (click)="resumeTimer()">Resume</button>
-    <button (click)="stopTimer()">Stop</button>
-  </div>
- 
-  
-  <div class="event-section">
-    <h3>Add Match Event</h3>
-    <label>Team:</label>
-    <select [(ngModel)]="eventTeam" (change)="onTeamChange()">
-      <option *ngFor="let team of teams" [value]="team">{{ team }}</option>
-    </select>
- 
-    <label>Player:</label>
-    <select [(ngModel)]="eventPlayer">
-      <option *ngFor="let player of players[eventTeam]">{{ player }}</option>
-    </select>
- 
-    <label>Quarter:</label>
-    <select [(ngModel)]="selectedQuarter">
-      <option *ngFor="let q of quarters" [value]="q">Q{{ q }}</option>
-    </select>
- 
-    <button (click)="addEvent('Goal')">Goal</button>
-    <button (click)="addEvent('Penalty Corner Earned')">Penalty Corner Earned</button>
-    <button (click)="addEvent('Penalty Corner Scored')">PC Scored</button>
-    <button (click)="addEvent('Green Card')">Green Card</button>
-  </div>
- 
-  <div class="event-log">
-    <h4>Match Events</h4>
-    <ul>
-      <li *ngFor="let e of matchEvents">{{ e }}</li>
-    </ul>
-  </div>
- 
-  
-  <div class="penalty-section">
-    <h3>Penalty Shootout</h3>
-    <label>Team</label>
-    <input [(ngModel)]="penaltyTeam" placeholder="Team Name" />
-    <label>Player</label>
-    <input [(ngModel)]="penaltyPlayer" placeholder="Player Name" />
-    <button (click)="recordPenalty()">Record Penalty</button>
- 
-    <ul>
-      <li *ngFor="let p of penaltyShootouts">{{ p }}</li>
-    </ul>
-  </div>
-</div>
+      <!-- VS -->
+      <div class="mx-3"><strong>VS</strong></div>
 
- -->
-
-
- <div class="container">
-  <!-- Team Names & Scores -->
-  <div class="scoreboard">
-    <div class="team-info">
-      <span class="team-name">{{ team1Name }}</span>
-      <span class="team-score">{{ totalScore.team1 }}</span>
+      <!-- Team 2 -->
+      <div class="text-center">
+        <h5>{{ team2Name }}</h5>
+        <div class="d-flex align-items-center justify-content-center gap-2">
+          <h3 class="text-primary m-0 px-2">{{ totalScore.team2 }}</h3>
+        </div>
+      </div>
+      
     </div>
-    <div class="vs">VS</div>
-    <div class="team-info">
-      <span class="team-name">{{ team2Name }}</span>
-      <span class="team-score">{{ totalScore.team2 }}</span>
+  </mat-card>
+
+
+  <!-- Timer Section -->
+  <mat-card class="mb-4 p-3">
+    <h6>Match Timer: {{ displayMinutes }}:{{ displaySeconds }}</h6>
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Minutes</mat-label>
+          <input matInput type="number" [(ngModel)]="minutes" min="0">
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Seconds</mat-label>
+          <input matInput type="number" [(ngModel)]="seconds" min="0">
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Quarter</mat-label>
+          <mat-select [(ngModel)]="currentQuarter">
+            <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
-  </div>
+    <div class="mt-2 d-flex flex-wrap gap-2">
+      <button mat-raised-button color="primary" (click)="setTime()">Set Time</button>
+      <button mat-raised-button color="accent" (click)="startTimer()">Start</button>
+      <button mat-raised-button (click)="pauseTimer()">Pause</button>
+      <button mat-raised-button (click)="resumeTimer()">Resume</button>
+      <button mat-raised-button color="warn" (click)="stopTimer()">Stop</button>
+    </div>
 
-  <!-- Timer -->
-  <div class="box">
-    <h4>Match Timer: {{ displayMinutes }}:{{ displaySeconds }}</h4>
-    <input type="number" [(ngModel)]="minutes" min="0" />
-    <input type="number" [(ngModel)]="seconds" min="0" />
-    <button (click)="setTime()">Set Time</button>
-    <button (click)="startTimer()">Start</button>
-    <button (click)="pauseTimer()">Pause</button>
-    <button (click)="resumeTimer()">Resume</button>
-    <button (click)="stopTimer()">Stop</button>
-    <select [(ngModel)]="currentQuarter">
-      <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
-    </select>
-  </div>
+  </mat-card>
 
-  <!-- Add Match Event -->
-  <div class="box">
-    <h4>Add Match Event</h4>
-    <select [(ngModel)]="selectedTeam">
-      <option [value]="team1Name">{{ team1Name }}</option>
-      <option [value]="team2Name">{{ team2Name }}</option>
-    </select>
-    <select [(ngModel)]="selectedPlayer">
-      <option *ngFor="let player of players" [value]="player">{{ player }}</option>
-    </select>
-    <select [(ngModel)]="currentQuarter">
-      <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
-    </select>
-    <button (click)="addEvent('Goal')">Goal</button>
-    <button (click)="addEvent('Penalty Corner Earned')">Penalty Corner Earned</button>
-    <button (click)="addEvent('PC Scored')">PC Scored</button>
-    <button (click)="addEvent('Green Card')">Green Card</button>
-  </div>
+  <!-- Match Event -->
+  <mat-card class="mb-4 p-3">
+    <h6>Add Match Event</h6>
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Team</mat-label>
+          <mat-select [(ngModel)]="selectedTeam">
+            <mat-option [value]="team1Name">{{ team1Name }}</mat-option>
+            <mat-option [value]="team2Name">{{ team2Name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Player</mat-label>
+          <mat-select [(ngModel)]="selectedPlayer">
+            <mat-option *ngFor="let player of players" [value]="player">{{ player }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Quarter</mat-label>
+          <mat-select [(ngModel)]="currentQuarter">
+            <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="mt-2 d-flex flex-wrap gap-2">
+      <button mat-stroked-button color="primary" (click)="addEvent('Goal')">Goal</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')">PC Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('PC Scored')">PC Scored</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')">Green Card</button>
+    </div>
+  </mat-card>
 
   <!-- Match Events -->
-  <div class="box">
-    <h4>Match Events</h4>
-    <ul>
-      <li *ngFor="let event of matchEvents">
+  <mat-card class="mb-4 p-3">
+    <h6>Match Events</h6>
+    <mat-list>
+      <mat-list-item *ngFor="let event of matchEvents">
         {{ event.time }} - {{ event.team }} - {{ event.player }} - {{ event.type }} ({{ event.quarter }})
-      </li>
-    </ul>
-  </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
 
   <!-- Penalty Shootout -->
-  <div class="box">
-    <h4>Penalty Shootout</h4>
-    <select [(ngModel)]="penaltyShootoutTeam">
-      <option [value]="team1Name">{{ team1Name }}</option>
-      <option [value]="team2Name">{{ team2Name }}</option>
-    </select>
-    <select [(ngModel)]="penaltyShootoutPlayer">
-      <option *ngFor="let player of players" [value]="player">{{ player }}</option>
-    </select>
-    <button (click)="recordPenalty()">Record Penalty</button>
+  <mat-card class="mb-4 p-3">
+    <h6>Penalty Shootout</h6>
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Team</mat-label>
+          <mat-select [(ngModel)]="penaltyShootoutTeam">
+            <mat-option [value]="team1Name">{{ team1Name }}</mat-option>
+            <mat-option [value]="team2Name">{{ team2Name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Player</mat-label>
+          <mat-select [(ngModel)]="penaltyShootoutPlayer">
+            <mat-option *ngFor="let player of players" [value]="player">{{ player }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Outcome</mat-label>
+          <mat-select [(ngModel)]="penaltyOutcome">
+            <mat-option [value]="goal">{{ goal }}</mat-option>
+            <mat-option [value]="saved">{{ saved }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="recordPenalty()">Record Penalty</button>
+    </div>
+    
+  </mat-card>
+
+  <div class="text-center">
+    <button mat-flat-button color="accent" (click)="sendFakeUpdates()">Send Test Update</button>
   </div>
 </div>

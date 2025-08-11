@@ -1,116 +1,37 @@
-// import { Component } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
- 
-// @Component({
-//   selector: 'app-scorer',
-//   standalone: true, // ✅ very important
-//   imports: [CommonModule,FormsModule], // ✅ include CommonModule here
-//   templateUrl: './scorer.component.html',
-//   styleUrls: ['./scorer.component.css']
-// })
-// export class ScorerComponent {
-//   timerInterval: any;
-//   timerSet: string = "00:00";
-//   displayTime: string = "00:00";
-//   seconds: number = 0;
-//   isRunning = false;
- 
-//   // Set Time
-//   setMinutes: number = 0;
-//   setSeconds: number = 0;
- 
-//   // Match Events
-//   teams: string[] = ['Team A', 'Team B'];
-//   players: { [key: string]: string[] } = {
-//     'Team A': ['Player A1', 'Player A2'],
-//     'Team B': ['Player B1', 'Player B2']
-//   };
-//   quarters = [1, 2, 3, 4];
- 
-//   eventTeam = '';
-//   eventPlayer = '';
-//   selectedQuarter = 1;
-//   matchEvents: string[] = [];
- 
-//   // Penalty Shootout
-//   penaltyTeam = '';
-//   penaltyPlayer = '';
-//   penaltyShootouts: string[] = [];
- 
-//   startTimer() {
-//     if (this.isRunning) return;
-//     this.isRunning = true;
-//     this.timerInterval = setInterval(() => {
-//       this.seconds++;
-//       this.updateDisplayTime();
-//     }, 1000);
-//   }
- 
-//   pauseTimer() {
-//     clearInterval(this.timerInterval);
-//     this.isRunning = false;
-//   }
- 
-//   resumeTimer() {
-//     if (!this.isRunning) this.startTimer();
-//   }
- 
-//   stopTimer() {
-//     clearInterval(this.timerInterval);
-//     this.isRunning = false;
-//     this.seconds = 0;
-//     this.updateDisplayTime();
-//   }
- 
-//   setTime() {
-//     this.seconds = this.setMinutes * 60 + this.setSeconds;
-//     this.updateDisplayTime();
-//   }
- 
-//   updateDisplayTime() {
-//     const min = Math.floor(this.seconds / 60);
-//     const sec = this.seconds % 60;
-//     this.displayTime = `${this.pad(min)}:${this.pad(sec)}`;
-//   }
- 
-//   pad(num: number): string {
-//     return num < 10 ? '0' + num : num.toString();
-//   }
- 
-//   onTeamChange() {
-//     this.eventPlayer = '';
-//   }
- 
-//   addEvent(eventType: string) {
-//     const team = this.eventTeam;
-//     const player = this.eventPlayer;
-//     const event = player
-//       ? `${eventType} by ${player} (Q${this.selectedQuarter})`
-//       : `${eventType} (Q${this.selectedQuarter})`;
-//     this.matchEvents.push(`${team}: ${event}`);
-//   }
- 
-//   recordPenalty() {
-//     if (this.penaltyTeam && this.penaltyPlayer) {
-//       this.penaltyShootouts.push(`${this.penaltyTeam}: Shootout by ${this.penaltyPlayer}`);
-//     }
-//   }
-// }
- 
+import { Component, NgModule } from '@angular/core';
 
-import { Component } from '@angular/core';
+import { SocketService } from '../socket';
+
 import { FormsModule } from '@angular/forms';
- import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
- 
+import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
+
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+
  
 @Component({
   selector: 'app-scorer',
-   standalone: true, // ✅ very important
- imports: [CommonModule,FormsModule], // ✅ include CommonModule here
+  standalone: true, // ✅ very important
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatListModule,
+    MatFormFieldModule
+  ],
   templateUrl: './scorer.component.html',
   styleUrls: ['./scorer.component.css']
 })
+
+
 export class ScorerComponent {
   minutes = 0;
   seconds = 0;
@@ -121,6 +42,9 @@ export class ScorerComponent {
  
   team1Name = 'Team A';
   team2Name = 'Team B';
+
+  goal = 'Goal';
+  saved = 'Saved'
  
   totalScore = {
     team1: 0,
@@ -138,7 +62,36 @@ export class ScorerComponent {
  
   penaltyShootoutTeam = '';
   penaltyShootoutPlayer = '';
- 
+  penaltyOutcome = '';
+
+  //For live scores
+
+  constructor(private socketService: SocketService) {}
+
+  updateScore(teamA: number, teamB: number) {
+    this.socketService.emitScoreUpdate({
+      match_id: 'match123',
+      home_team_id: 4,
+      away_team_id: 3,
+      home_score: 3,
+      away_score: 2,
+      timestamp: new Date()
+    });
+  }
+
+    sendFakeUpdates() {
+    this.socketService.emitScoreUpdate({
+      match_id: 'match123',
+      home_team_id: 4,
+      away_team_id: 3,
+      home_score: 3,
+      away_score: 2,
+      timestamp: new Date()
+    });
+  }
+
+  //Live scores end
+
   setTime() {
     this.displayMinutes = this.format(this.minutes);
     this.displaySeconds = this.format(this.seconds);
@@ -160,6 +113,12 @@ export class ScorerComponent {
           this.seconds--;
         }
         this.setTime();
+
+        this.socketService.emitTimerUpdate({
+          match_id: '2', // use actual match ID
+          minutes: this.minutes,
+          seconds: this.seconds
+        });
       }
     }, 1000);
   }
