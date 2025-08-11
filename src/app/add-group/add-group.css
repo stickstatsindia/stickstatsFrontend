@@ -1,0 +1,66 @@
+/* Ensure consistent height for cards */
+.card {
+  min-height: 150px;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Add hover effect on cards */
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Center image inside the card */
+.card-img-top {
+  max-height: 60px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+/* Smaller text for group name under initials */
+.card-text {
+  font-size: 0.9rem;
+}
+
+/* Buttons spacing */
+.btn {
+  min-width: 120px;
+}
+
+/* Responsive padding for container */
+.container {
+  padding-bottom: 40px;
+}
+
+/* Input styling (optional enhancement) */
+input.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+.card {
+  min-height: 150px;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.card-img-top {
+  max-height: 60px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+.card-text {
+  font-size: 0.9rem;
+}
+
+.btn {
+  min-width: 120px;
+}
+
+.container {
+  padding-bottom: 40px;
+}

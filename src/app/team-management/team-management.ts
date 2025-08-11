@@ -15,7 +15,8 @@ export class TeamManagementComponent {
     startDate: '2025-07-01',
     endDate: '2025-07-10',
     location: 'Mumbai, India',
-    viewers: 250000
+    viewers: 250000,
+    totalMatches: 4 // Example value
   };
 }
 

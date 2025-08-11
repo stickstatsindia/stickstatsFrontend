@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="header">
+    <h2>Tournaments</h2>
+    <button class="add-btn" (click)="addTournament()">ADD A NEW TOURNAMENT</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table *ngIf="tournaments.length > 0; else noData">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>From Date</th>
+          <th>To Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of tournaments; let i = index">
+          <td><a href="#" class="name-link">{{ t.name }}</a></td>
+          <td>{{ t.fromDate }}</td>
+          <td>{{ t.toDate }}</td>
+          <td class="actions">
+            <button (click)="editTournament(i)">✏️</button>
+            <button (click)="deleteTournament(i)">🗑️</button>
+            <button (click)="openSettings(i)">⚙️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noData>
+      <p class="no-data">No tournaments available.</p>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="points-table-outer">
+  <div class="points-table-container">
+    <div class="points-table-header">
+      <div class="points-table-controls">
+        <div class="column-control">
+          <span class="by-label">Show by</span>
+          <select [(ngModel)]="selectedBy" class="by-select">
+            <option *ngFor="let option of byOptions" [value]="option">{{ option }}</option>
+          </select>
+        </div>
+        <div class="column-control">
+          <span class="stage-label">Stage</span>
+          <select [(ngModel)]="selectedStage" class="stage-select">
+            <option *ngFor="let stage of stageOptions" [value]="stage">{{ stage }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="points-table-content">
+      <!-- Example Pool A -->
+      <div class="pool-title">Pool A</div>
+      <div class="table-responsive">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th style="text-align:left;">Name</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>ScF</th>
+              <th>ScA</th>
+              <th>PDiff</th>
+              <th>Pt</th>
+              <th>Res</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="team-name" style="text-align:left;"><img class="flag" src="https://flagcdn.com/pk.svg" alt="Pakistan"/>Pakistan</td>
+              <td>4</td><td>4</td><td>0</td><td>0</td><td>25</td><td>4</td><td>21</td><td>12</td>
+              <td><div class="res-badges"><span class="res-badge win">W</span><span class="res-badge win">W</span><span class="res-badge win">W</span><span class="res-badge win">W</span></div></td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Example Pool B -->
+      <div class="pool-title" style="margin-top:2.5rem;">Pool B</div>
+      <div class="table-responsive">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th style="text-align:left;">Name</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>ScF</th>
+              <th>ScA</th>
+              <th>PDiff</th>
+              <th>Pt</th>
+              <th>Res</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="team-name" style="text-align:left;"><img class="flag" src="https://flagcdn.com/jp.svg" alt="Japan"/>Japanrtegfn</td>
+              <td>5</td>
+              <td>5</td>
+              <td>0</td>
+              <td>0</td>
+              <td>36</td>
+              <td>5</td>
+              <td>31</td>
+              <td>15</td>
+              <td><div class="res-badges">
+                <span class="res-badge win">W</span>
+                <span class="res-badge win">W</span>
+                <span class="res-badge win">W</span>
+                <span class="res-badge win">W</span>
+                <span class="res-badge win">W</span>
+              </div></td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<p>points-table works!</p>

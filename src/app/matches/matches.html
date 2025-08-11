@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="header">
+    <h2>Matches</h2>
+    <button class="schedule-btn" (click)="scheduleMatch()">SCHEDULE MATCH</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table *ngIf="matches.length > 0; else noData">
+      <thead>
+        <tr>
+          <th>Match Between</th>
+          <th>Ground/City</th>
+          <th>Match Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of matches; let i = index">
+          <td>
+            <a href="#" class="team-link">{{ m.team1 }}</a> <br>
+            <strong>VS</strong> <br>
+            <a href="#" class="team-link">{{ m.team2 }}</a>
+          </td>
+          <td>{{ m.ground }}<br>{{ m.city }}</td>
+          <td>{{ m.matchTime }}</td>
+          <td class="actions">
+            <button (click)="editMatch(i)">✏️</button>
+            <button (click)="deleteMatch(i)">🗑️</button>
+            <button (click)="openSettings(i)">⚙️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noData>
+      <p class="no-data">No matches scheduled.</p>
+    </ng-template>
+  </div>
+</div>
