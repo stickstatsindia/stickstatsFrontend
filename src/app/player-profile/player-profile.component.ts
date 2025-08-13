@@ -22,13 +22,44 @@ export class PlayerProfileComponent {
     wickets: 0
   };
 
+  stats = {
+    totalMatches: 0,
+    pc: 0,
+    ps: 0,
+    redCards: 0,
+    greenCards: 0,
+    yellowCards: 0,
+    fieldGoals: 0,
+    assists: 0,
+    totalGoalScore: 0
+  };
+
   menu = ['MATCHES', 'STATS', 'AWARDS', 'BADGES', 'TEAMS', 'PHOTOS', 'CONNECTIONS', 'PROFILE'];
   selectedTab = 'MATCHES';
 
   onTabSelect(tab: string) {
     this.selectedTab = tab;
-    // Here you can call backend API to fetch data for the selected tab
-    // Example: this.fetchTabData(tab);
+    if (tab === 'STATS') {
+      this.fetchStatsFromBackend();
+    }
+  }
+
+  fetchStatsFromBackend() {
+    // Simulate backend API call
+    setTimeout(() => {
+      this.stats = {
+        totalMatches: 12,
+        pc: 5,
+        ps: 3,
+        redCards: 1,
+        greenCards: 2,
+        yellowCards: 4,
+        fieldGoals: 7,
+        assists: 6,
+        totalGoalScore: 15
+      };
+    }, 500);
+    // Replace above with real API call in production
   }
 
   getTabRoute(tab: string): string {
