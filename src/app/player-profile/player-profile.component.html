@@ -5,7 +5,7 @@
       <img [src]="profile.imageUrl" alt="Profile" />
     </div>
     <div class="profile-info-section">
-      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge">PRO</span></h2>
+      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge"></span></h2>
       <p><strong>Location:</strong> {{ profile.location }}</p>
       <p><strong>Position:</strong> {{ profile.battingStyle }}</p>
     </div>
@@ -19,7 +19,7 @@
         <div class="stat-value">{{ profile.runs }}</div>
       </div>
       <div class="stat-box">
-        <div class="stat-label">Runs</div>
+        <div class="stat-label">Assists</div>
         <div class="stat-value">{{ profile.runs }}</div>
       </div>
     </div>

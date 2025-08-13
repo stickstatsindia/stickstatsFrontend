@@ -33,8 +33,9 @@ export class TeamManagementComponent {
     greenCards: 0,
     yellowCards: 0,
     fieldGoals: 0,
-    assists: 0
-  
+    assists: 0,
+    totalGoalScore: 0
+    
   };
 
   onTabSelect(tab: string) {
@@ -56,7 +57,8 @@ export class TeamManagementComponent {
         greenCards: 2,
         yellowCards: 4,
         fieldGoals: 7,
-        assists: 6
+        assists: 6,
+        totalGoalScore: 15
         
       };
     }, 500);
