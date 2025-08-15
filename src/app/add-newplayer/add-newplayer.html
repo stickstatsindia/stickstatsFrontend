@@ -1,0 +1,47 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <span class="modal-title">Add Players to Team</span>
+    <button class="close-btn" aria-label="Close">&times;</button>
+  </div>
+  <div class="tab-bar">
+    <div
+      *ngFor="let tab of tabs; let i = index"
+      class="tab"
+      [class.active]="selectedTab === i"
+      (click)="selectTab(i)">
+      {{ tab.label }}
+    </div>
+  </div>
+  <div class="tab-content" *ngIf="selectedTab === 2">
+    <form [formGroup]="playerForm" (ngSubmit)="addTeam()">
+      <div class="form-row">
+        <div class="logo-upload">
+          <label for="logoInput" class="logo-box">
+            <ng-container *ngIf="!logoPreview">
+              <span class="logo-placeholder">&#128247;</span>
+            </ng-container>
+            <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo Preview" />
+            <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" hidden />
+          </label>
+          <div class="logo-desc">
+            <strong>Add Team Logo</strong>
+            <div class="logo-hint">(Dimension: 300px x 300px; Size: &lt;100kb)</div>
+          </div>
+        </div>
+        <div class="form-fields">
+          <label>
+            Player Name*
+            <input formControlName="playerName" placeholder="Player Name" />
+          </label>
+          <label>
+            Valid Phone Number*
+            <input formControlName="phoneNumber" placeholder="Valid Phone Number" maxlength="10" />
+          </label>
+        </div>
+      </div>
+      <button class="add-btn" type="submit" [disabled]="!playerForm.valid">ADD TEAM</button>
+    </form>
+  </div>
+  <!-- Add content for other tabs as needed -->
+</div>
+ 
