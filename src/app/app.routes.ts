@@ -19,6 +19,7 @@ import { TournamentDashboardComponent } from './tournament-dashboard.component/t
 import { ScheduleMatchTeamSelection } from './schedule-match-team-selection/schedule-match-team-selection';
 import { Tournaments } from './tournaments/tournaments';
 import { Matches } from './matches/matches';
+import { AddNewplayerComponent } from './add-newplayer/add-newplayer';
 
 
 
@@ -48,6 +49,7 @@ export const routes: Routes = [
   { path: 'schedule-match-select-teams', component: ScheduleMatchTeamSelection },
   { path: 'tournaments', component: Tournaments },
   { path: 'matches', component: Matches },
+  { path: 'addnew-palyer', component: AddNewplayerComponent},
 
   //Add new path before this
   { path: '**', redirectTo: '' }
