@@ -178,3 +178,8 @@ input:focus, select:focus {
   border-bottom: 2px solid #1abc9c;
 }
 
+body{
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+}

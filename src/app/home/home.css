@@ -43,3 +43,38 @@ button {
 button:hover {
   background-color: #005fcc;
 }
+
+.carousel-item img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* .carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: transparent !important;
+} */
+
+
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background: transparent; /* Remove blue box */
+  background-image: none; /* Remove Bootstrap's default SVG background */
+  width: 2rem;
+  height: 2rem;
+}
+
+.carousel-control-prev-icon::after {
+  content: '‹';
+  font-size: 2rem;
+  color: white;
+}
+
+.carousel-control-next-icon::after {
+  content: '›';
+  font-size: 2rem;
+  color: white;
+}
+
+
+

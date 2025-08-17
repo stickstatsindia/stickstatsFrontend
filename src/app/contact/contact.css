@@ -4,3 +4,19 @@ form {
   border-radius: 8px;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
 }
+
+.card-body {
+  padding: 2rem;   /* more breathing space */
+}
+
+.form-control {
+  font-size: 1.1rem; /* bigger inputs */
+  padding: 0.75rem;
+}
+
+.color{
+  background-color: #E8FFD7;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
