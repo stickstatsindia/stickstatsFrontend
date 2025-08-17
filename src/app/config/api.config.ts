@@ -11,6 +11,7 @@ export const environment = {
     getTournaments: '/api/tournaments',
     addTournament: '/api/addtournaments',
     updateTournament: '/api/tournaments/update',
-    deleteTournament: '/api/tournaments/delete'
+    deleteTournament: '/api/tournaments/delete',
+    addUser:"/api/users",
   }
 };
