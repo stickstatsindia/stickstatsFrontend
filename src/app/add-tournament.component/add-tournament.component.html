@@ -14,7 +14,7 @@
           <button type="button"
                   *ngFor="let cat of tournamentCategories"
                   class="btn"
-                  [ngClass]="{'btn-primary': selectedCategories.has(cat), 'btn-outline-primary': !selectedCategories.has(cat)}"
+                  [ngClass]="{'btn-primary': selectedCategory === cat, 'btn-outline-primary': selectedCategory !== cat}"
                   (click)="toggleCategory(cat)">
             {{cat}}
           </button>
@@ -34,7 +34,7 @@
           <button type="button"
                   *ngFor="let type of groundTypes"
                   class="btn"
-                  [ngClass]="{'btn-success': selectedGroundTypes.has(type), 'btn-outline-success': !selectedGroundTypes.has(type)}"
+                  [ngClass]="{'btn-success': selectedGroundType === type, 'btn-outline-success': selectedGroundType !== type}"
                   (click)="toggleGroundType(type)">
             {{type}}
           </button>
@@ -54,7 +54,7 @@
           <button type="button"
                   *ngFor="let mt of matchTypes"
                   class="btn btn-toggle"
-                  [ngClass]="{'btn-warning': selectedMatchTypes.has(mt), 'btn-outline-warning': !selectedMatchTypes.has(mt)}"
+                  [ngClass]="{'btn-warning': selectedMatchType === mt, 'btn-outline-warning': selectedMatchType !== mt}"
                   (click)="toggleMatchType(mt)">
             {{mt}}
           </button>
@@ -78,7 +78,7 @@
           <button type="button"
                   *ngFor="let format of tournamentFormats"
                   class="btn btn-toggle"
-                  [ngClass]="{'btn-warning': selectedFormats.has(format), 'btn-outline-warning': !selectedFormats.has(format)}"
+                  [ngClass]="{'btn-warning': selectedFormat === format, 'btn-outline-warning': selectedFormat !== format}"
                   (click)="toggleFormat(format)">
             {{format}}
           </button>
