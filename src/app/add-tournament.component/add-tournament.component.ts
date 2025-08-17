@@ -85,7 +85,7 @@ export class AddTournamentComponent {
           // Step 2: Attach organiserId to formData
           const updatedFormData = {
             ...formData,
-            organiserId: user?.id || user?._id  // Adjust based on API response
+            organizer_id: user?.['user_id'] // Adjust based on API response
           };
 
           // Step 3: Call addTournament with organiserId included

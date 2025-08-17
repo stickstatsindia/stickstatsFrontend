@@ -19,16 +19,16 @@ export class ProfileForm {
 
   user = {
     full_name: '',
-    location: '',
+    address: '',
     joinDate: new Date().toLocaleDateString(),
-    mobile: '',
+    phone_number: '',
     position: '',
     stickHand: '',
-    dob: '',
+    date_of_birth: '',
     email: '',
-    pin: '',
+    zip: '',
     gender: '',
-    jerseyNumber: '',
+    jersey_number: '',
     followers: 0,
     profileViews: 0,
     profileImage: ''
@@ -56,14 +56,14 @@ export class ProfileForm {
     const fields = [
       this.user.full_name,
       this.user.email,
-      this.user.mobile,
-      this.user.location,
-      this.user.dob,
+      this.user.phone_number,
+      this.user.address,
+      this.user.date_of_birth,
       this.user.position,
       this.user.stickHand,
       this.user.gender,
-      this.user.jerseyNumber,
-      this.user.pin
+      this.user.jersey_number,
+      this.user.zip
     ];
     const filled = fields.filter(f => f && f.toString().trim() !== '').length;
     return Math.round((filled / fields.length) * 100);
