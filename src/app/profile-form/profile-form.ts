@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Profile } from '../service/profile/profile';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +18,7 @@ export class ProfileForm {
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
 
   user = {
-    name: '',
+    full_name: '',
     location: '',
     joinDate: new Date().toLocaleDateString(),
     mobile: '',
@@ -33,10 +34,18 @@ export class ProfileForm {
     profileImage: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private profileService: Profile) {}
 
   submitProfile() {
-    this.isProfileSaved = true;
+  
+    this.profileService.addUser(this.user).subscribe(response => {
+
+      console.log('User added successfully:', response);
+        this.isProfileSaved = true;
+        alert('Profile saved successfully!');
+    }, error => {
+      console.error('Error adding user:', error);
+    });
   }
 
   editProfile() {
@@ -45,7 +54,7 @@ export class ProfileForm {
 
   get profileCompletion(): number {
     const fields = [
-      this.user.name,
+      this.user.full_name,
       this.user.email,
       this.user.mobile,
       this.user.location,

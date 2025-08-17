@@ -49,10 +49,10 @@
 
         <div class="col-md-6">
           <label>Full Name</label>
-          <input class="form-control" name="name" [(ngModel)]="user.name" required #name="ngModel" pattern="^([A-Z][a-z]+)(\s[A-Z][a-z]+)*$" />
-          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger small mt-1">
-            <div *ngIf="name.errors?.['required']">Full Name is required.</div>
-            <div *ngIf="name.errors?.['pattern']">Name must start with a capital letter and can contain multiple words.</div>
+          <input class="form-control" name="full_name" [(ngModel)]="user.full_name" required #full_name="ngModel" pattern="^([A-Z][a-z]+)(\s[A-Z][a-z]+)*$" />
+          <div *ngIf="full_name.invalid && (full_name.dirty || full_name.touched)" class="text-danger small mt-1">
+            <div *ngIf="full_name.errors?.['required']">Full Name is required.</div>
+            <div *ngIf="full_name.errors?.['pattern']">Name must start with a capital letter and can contain multiple words.</div>
           </div>
         </div>
 
