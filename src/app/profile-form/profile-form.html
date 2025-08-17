@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center mb-4">
       <img [src]="user.profileImage || 'https://via.placeholder.com/80'" alt="Profile" class="profile-pic">
       <div class="ms-3">
-        <h3>{{ user.name }}</h3>
+        <h3>{{ user.full_name }}</h3>
         <p><i class="bi bi-geo-alt-fill"></i> {{ user.location }}</p>
         <p>Since {{ user.joinDate }}</p>
       </div>
