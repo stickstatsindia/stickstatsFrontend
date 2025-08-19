@@ -13,13 +13,13 @@ import { Result } from './result/result';
 import { AddTeamComponent } from './addnew-team/addnew-team';
 import { RoundsDetailsComponent } from './rounds-details/rounds-details';
 import { PointsTable } from './points-table/points-table';
-import { AddGroupComponent } from './add-group/add-group';
 import { GroupListComponent } from './group-list/group-list';
 import { TournamentDashboardComponent } from './tournament-dashboard.component/tournament-dashboard.component';
 import { ScheduleMatchTeamSelection } from './schedule-match-team-selection/schedule-match-team-selection';
 import { Tournaments } from './tournaments/tournaments';
 import { Matches } from './matches/matches';
 import { AddNewplayerComponent } from './add-newplayer/add-newplayer';
+import { AddGroupComponent } from './add-group/add-group';
 
 
 
