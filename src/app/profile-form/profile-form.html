@@ -5,7 +5,7 @@
       <img [src]="user.profileImage || 'https://via.placeholder.com/80'" alt="Profile" class="profile-pic">
       <div class="ms-3">
         <h3>{{ user.full_name }}</h3>
-        <p><i class="bi bi-geo-alt-fill"></i> {{ user.location }}</p>
+        <p><i class="bi bi-geo-alt-fill"></i> {{ user.address }}</p>
         <p>Since {{ user.joinDate }}</p>
       </div>
     </div>
@@ -17,12 +17,12 @@
 
     <div class="mb-3">
       <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Mobile:</strong> {{ user.mobile }}</p>
-      <p><strong>DOB:</strong> {{ user.dob }}</p>
+      <p><strong>Mobile:</strong> {{ user.phone_number }}</p>
+      <p><strong>DOB:</strong> {{ user.date_of_birth }}</p>
       <p><strong>Position:</strong> {{ user.position }}</p>
       <p><strong>Stick Hand:</strong> {{ user.stickHand }}</p>
       <p><strong>Gender:</strong> {{ user.gender }}</p>
-      <p><strong>Jersey Number:</strong> {{ user.jerseyNumber }}</p>
+      <p><strong>Jersey Number:</strong> {{ user.jersey_number }}</p>
       <p><strong>PIN:</strong> ****</p>
     </div>
 
@@ -67,17 +67,17 @@
 
         <div class="col-md-6">
           <label>Mobile</label>
-          <input class="form-control" type="tel" name="mobile" [(ngModel)]="user.mobile" required #mobile="ngModel" pattern="^[6-9]\d{9}$" />
-          <div *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)" class="text-danger small mt-1">
-            <div *ngIf="mobile.errors?.['required']">Mobile number is required.</div>
-            <div *ngIf="mobile.errors?.['pattern']">Please enter a valid 10-digit mobile number.</div>
+          <input class="form-control" type="tel" name="phone_number" [(ngModel)]="user.phone_number" required #phone_number="ngModel" pattern="^[6-9]\d{9}$" />
+          <div *ngIf="phone_number.invalid && (phone_number.dirty || phone_number.touched)" class="text-danger small mt-1">
+            <div *ngIf="phone_number.errors?.['required']">Mobile number is required.</div>
+            <div *ngIf="phone_number.errors?.['pattern']">Please enter a valid 10-digit phone_number number.</div>
           </div>
         </div>
 
         <div class="col-md-6">
           <label>Location</label>
-          <input class="form-control" name="location" [(ngModel)]="user.location" required #location="ngModel" />
-          <div *ngIf="location.invalid && (location.dirty || location.touched)" class="text-danger small mt-1">
+          <input class="form-control" name="address" [(ngModel)]="user.address" required #address="ngModel" />
+          <div *ngIf="address.invalid && (address.dirty || address.touched)" class="text-danger small mt-1">
             Location is required.
           </div>
           <div *ngIf="locationValidationStatus === 'invalid'" class="text-danger small mt-1">
@@ -87,10 +87,10 @@
 
         <div class="col-md-6">
           <label>Date of Birth</label>
-          <input type="date" class="form-control" name="dob" [(ngModel)]="user.dob" required [max]="getMaxDate()" #dob="ngModel" />
-          <div *ngIf="dob.invalid && (dob.dirty || dob.touched)" class="text-danger small mt-1">
-            <div *ngIf="dob.errors?.['required']">Date of Birth is required.</div>
-            <div *ngIf="dob.errors?.['max']">You must be at least 5 years old.</div>
+          <input type="date" class="form-control" name="date_of_birth" [(ngModel)]="user.date_of_birth" required [max]="getMaxDate()" #date_of_birth="ngModel" />
+          <div *ngIf="date_of_birth.invalid && (date_of_birth.dirty || date_of_birth.touched)" class="text-danger small mt-1">
+            <div *ngIf="date_of_birth.errors?.['required']">Date of Birth is required.</div>
+            <div *ngIf="date_of_birth.errors?.['max']">You must be at least 5 years old.</div>
           </div>
         </div>
 
@@ -142,19 +142,19 @@
 
         <div class="col-md-6">
           <label>Jersey Number</label>
-          <input type="number" class="form-control" name="jerseyNumber" [(ngModel)]="user.jerseyNumber" required min="1" max="999" #jerseyNumber="ngModel" />
-          <div *ngIf="jerseyNumber.invalid && (jerseyNumber.dirty || jerseyNumber.touched)" class="text-danger small mt-1">
-            <div *ngIf="jerseyNumber.errors?.['required']">Jersey Number is required.</div>
-            <div *ngIf="jerseyNumber.errors?.['min'] || jerseyNumber.errors?.['max']">Jersey number must be between 1 and 999.</div>
+          <input type="number" class="form-control" name="jersey_number" [(ngModel)]="user.jersey_number" required min="1" max="999" #jersey_number="ngModel" />
+          <div *ngIf="jersey_number.invalid && (jersey_number.dirty || jersey_number.touched)" class="text-danger small mt-1">
+            <div *ngIf="jersey_number.errors?.['required']">Jersey Number is required.</div>
+            <div *ngIf="jersey_number.errors?.['min'] || jersey_number.errors?.['max']">Jersey number must be between 1 and 999.</div>
           </div>
         </div>
 
       <div class="col-md-6">
         <label>PIN</label>
-        <input type="text" class="form-control" name="pin" [(ngModel)]="user.pin" required #pin="ngModel" pattern="^\d{6}$" />
-          <div *ngIf="pin.invalid && (pin.dirty || pin.touched)" class="text-danger small mt-1">
-          <div *ngIf="pin.errors?.['required']">PIN is required.</div>
-          <div *ngIf="pin.errors?.['pattern']">PIN must of 6 digits only.</div>
+        <input type="text" class="form-control" name="zip" [(ngModel)]="user.zip" required #zip="ngModel" pattern="^\d{6}$" />
+          <div *ngIf="zip.invalid && (zip.dirty || zip.touched)" class="text-danger small mt-1">
+          <div *ngIf="zip.errors?.['required']">PIN is required.</div>
+          <div *ngIf="zip.errors?.['pattern']">PIN must of 6 digits only.</div>
          </div>
       </div>
 

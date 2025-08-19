@@ -8,6 +8,7 @@ import { environment } from '../../config/api.config';
 export class Tournament {
   addTournamentUrl = environment.baseUrl + environment.endpoints.addTournament;
   getTournamentUrl = environment.baseUrl + environment.endpoints.getTournaments;
+  getUserByPhoneUrl = environment.baseUrl + environment.endpoints.getUserByPhone;
   constructor(private http: HttpClient) {
     console.log('Add Tournament URL:', this.addTournamentUrl);
     console.log('Get Tournaments URL:', this.getTournamentUrl);
@@ -20,7 +21,12 @@ export class Tournament {
     return this.http.post(this.addTournamentUrl, data);
   }
 
-  // getTournaments() {
-  //   return this.http.get(this.getTournamentUrl);
-  // }
+  getTournaments() {
+    return this.http.get(this.getTournamentUrl);
+  }
+
+  getUserByPhone(phone: string) {
+    const url = this.getUserByPhoneUrl.replace(':phone', phone);
+    return this.http.get(url);
+  }
 }

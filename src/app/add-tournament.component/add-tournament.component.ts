@@ -3,6 +3,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Tournament } from '../service/tournament/tournament';
 
+// Define a User interface for type safety (must be outside the class)
+interface User {
+  id?: string;
+  _id?: string;
+  [key: string]: any;
+}
 
 @Component({
   selector: 'app-add-tournament',
@@ -19,10 +25,10 @@ export class AddTournamentComponent {
   matchTypes = ['7-A SIDE', '11-A SIDE', '5-A SIDE'];
   tournamentFormats = ['KNOCKOUT', 'LEAGUE'];
 
-  selectedCategories = new Set<string>();
-  selectedGroundTypes = new Set<string>();
-  selectedMatchTypes = new Set<string>();
-  selectedFormats = new Set<string>();
+  selectedCategory: string | null = null;
+  selectedGroundType: string | null = null;
+  selectedMatchType: string | null = null;
+  selectedFormat: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -30,11 +36,11 @@ export class AddTournamentComponent {
   ) {
     this.tournamentForm = this.fb.group({
       tournament_name: ['', Validators.required],
-      tournament_category: [[]],
+      tournament_category: ['', Validators.required],
       location: ['', Validators.required],
-      ground_type: [[]],
-      match_type: [[]],
-      format: [[], Validators.required],
+      ground_type: ['', Validators.required],
+      match_type: ['', Validators.required],
+      format: ['', Validators.required],
       organiserName: ['', Validators.required],
       countryCode: ['', Validators.required],
       organiserContact: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -44,41 +50,24 @@ export class AddTournamentComponent {
     });
   }
 
-  toggleSelection(set: Set<string>, value: string): void {
-    if (set.has(value)) {
-      set.delete(value);
-    } else {
-      set.add(value);
-    }
-  }
-
   toggleCategory(category: string): void {
-    this.toggleSelection(this.selectedCategories, category);
-    this.tournamentForm.patchValue({
-      tournament_category: Array.from(this.selectedCategories)
-    });
+    this.selectedCategory = category;
+    this.tournamentForm.patchValue({ tournament_category: category });
   }
 
   toggleGroundType(type: string): void {
-    this.toggleSelection(this.selectedGroundTypes, type);
-    this.tournamentForm.patchValue({
-      ground_type: Array.from(this.selectedGroundTypes)
-    });
+    this.selectedGroundType = type;
+    this.tournamentForm.patchValue({ ground_type: type });
   }
 
   toggleMatchType(type: string): void {
-    this.toggleSelection(this.selectedMatchTypes, type);
-    this.tournamentForm.patchValue({
-      match_type: Array.from(this.selectedMatchTypes)
-    });
+    this.selectedMatchType = type;
+    this.tournamentForm.patchValue({ match_type: type });
   }
 
   toggleFormat(format: string): void {
-    this.selectedFormats.clear(); // Only one format allowed
-    this.selectedFormats.add(format);
-    this.tournamentForm.patchValue({
-      format: [format]
-    });
+    this.selectedFormat = format;
+    this.tournamentForm.patchValue({ format: format });
   }
 
   onSubmit(): void {
@@ -86,18 +75,42 @@ export class AddTournamentComponent {
       const formData = this.tournamentForm.value;
       console.log('Submitting tournament:', formData);
 
-      this.tournamentService.addTournament(formData).subscribe({
-        next: (response) => {
-          console.log('Tournament added successfully:', response);
-          // Optional: reset form or show toast
+      const userPhone = formData.organiserContact;
+
+      // Step 1: Fetch user by phone
+      this.tournamentService.getUserByPhone(userPhone).subscribe({
+        next: (user: User) => {
+          console.log('User details fetched successfully:', user);
+
+          // Step 2: Attach organiserId to formData
+          const updatedFormData = {
+            ...formData,
+            organizer_id: user?.['user_id'] // Adjust based on API response
+          };
+
+          // Step 3: Call addTournament with organiserId included
+          this.tournamentService.addTournament(updatedFormData).subscribe({
+            next: (response: any) => {
+              console.log('Tournament added successfully:', response);
+              this.tournamentForm.reset();
+              this.selectedCategory = null;
+              this.selectedGroundType = null;
+              this.selectedMatchType = null;
+              this.selectedFormat = null;
+            },
+            error: (err: any) => {
+              console.error('Error adding tournament:', err);
+            }
+          });
         },
-        error: (err) => {
-          console.error('Error adding tournament:', err);
-          // Optional: show error alert
+        error: (err: any) => {
+          console.error('Error fetching user details:', err);
         }
       });
+
     } else {
-      // this.tournamentForm.markAllAsTouched();
+      this.tournamentForm.markAllAsTouched();
     }
   }
 }
+
