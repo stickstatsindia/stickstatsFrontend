@@ -76,9 +76,10 @@ export class AddGroupComponent {
 
   constructor(private location: Location) {}
 
-  selectPool(index: number) {
-    this.selectedPoolIndex = index;
-  }
+ selectPool(index: number) {
+  this.selectedPoolIndex = index;
+  console.log("Selected pool/team index:", index, this.pools[index]);
+}
 
   addPool() {
     if (!this.poolName || !this.selectedPoolType || this.selectedPoolIndex === null) {
