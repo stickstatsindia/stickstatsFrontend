@@ -19,14 +19,22 @@
           <td>{{ group.name }}</td>
           <td>
             <div class="d-flex flex-column">
-              <span *ngFor="let team of group.teams" class="text-primary">{{ team }}</span>
+              <span *ngFor="let team of group.teams" class="text-primary">
+                {{ team }}
+              </span>
             </div>
           </td>
           <td class="text-center">
-            <button class="btn btn-sm btn-outline-secondary me-2" (click)="editGroup(group)">
+            <button
+              class="btn btn-sm btn-outline-secondary me-2"
+              (click)="editGroup(group)"
+            >
               ✏️
             </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteGroup(group)">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="deleteGroup(group)"
+            >
               🗑️
             </button>
           </td>
@@ -39,8 +47,13 @@
   <div class="d-flex justify-content-between align-items-center mt-3">
     <div>
       Rows per page:
-      <select [(ngModel)]="rowsPerPage" class="form-select d-inline-block w-auto ms-2">
-        <option *ngFor="let size of [5,10,25]" [value]="size">{{ size }}</option>
+      <select
+        [(ngModel)]="rowsPerPage"
+        class="form-select d-inline-block w-auto ms-2"
+      >
+        <option *ngFor="let size of [5, 10, 25]" [value]="size">
+          {{ size }}
+        </option>
       </select>
     </div>
     <div>
