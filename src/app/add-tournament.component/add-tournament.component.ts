@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Tournament } from '../service/tournament/tournament';
+import { TournamentService } from '../service/tournament/tournament';
 
 // Define a User interface for type safety (must be outside the class)
 interface User {
@@ -32,7 +32,7 @@ export class AddTournamentComponent {
 
   constructor(
     private fb: FormBuilder,
-    private tournamentService: Tournament
+    private tournamentService: TournamentService
   ) {
     this.tournamentForm = this.fb.group({
       tournament_name: ['', Validators.required],

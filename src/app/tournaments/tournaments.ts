@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TournamentService } from '../service/tournament/tournament';
 
 interface Tournament {
   name: string;
@@ -17,13 +18,18 @@ interface Tournament {
 export class Tournaments implements OnInit {
   tournaments: Tournament[] = [];
 
-  ngOnInit() {
-    // Replace with actual API call
-    // Example:
-    // this.http.get<Tournament[]>('/api/tournaments').subscribe(data => {
-    //   this.tournaments = data;
-    // });
+  constructor(private tournamentService: TournamentService) {
   }
+  ngOnInit() {
+    this.loadTournaments();
+  }
+
+  loadTournaments() {
+    this.tournamentService.getTournaments().subscribe((data: any) => {
+      this.tournaments = data as Tournament[];
+    });
+  }
+
 
   addTournament() {
     alert('Add tournament clicked!');

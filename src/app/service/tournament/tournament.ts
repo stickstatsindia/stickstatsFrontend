@@ -5,7 +5,7 @@ import { environment } from '../../config/api.config';
 @Injectable({
   providedIn: 'root'
 })
-export class Tournament {
+export class TournamentService {
   addTournamentUrl = environment.baseUrl + environment.endpoints.addTournament;
   getTournamentUrl = environment.baseUrl + environment.endpoints.getTournaments;
   getUserByPhoneUrl = environment.baseUrl + environment.endpoints.getUserByPhone;
@@ -29,4 +29,6 @@ export class Tournament {
     const url = this.getUserByPhoneUrl.replace(':phone', phone);
     return this.http.get(url);
   }
+
+
 }
