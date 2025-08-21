@@ -54,13 +54,19 @@ export class GroupListComponent implements OnInit {
 
   constructor(private poolService: PoolService) {}
 
-  ngOnInit() {
-    // subscribe to reactive pools
-    this.poolService.pools$.subscribe((pools) => {
-      this.groups = pools;
-      console.log('Groups updated:', this.groups);
-    });
-  }
+  // ngOnInit() {
+  //   // subscribe to reactive pools
+  //   this.poolService.pools$.subscribe((pools) => {
+  //     this.groups = pools;
+  //     console.log('Groups updated:', this.groups);
+  //   });
+  // }
+ngOnInit() {
+  this.poolService.pools$.subscribe((pools) => {
+    this.groups = pools;   // ✅ always reflects latest state
+    console.log('Groups updated:', this.groups);
+  });
+}
 
   addNewGroup() {
     alert('Redirect to Add Pool Page');

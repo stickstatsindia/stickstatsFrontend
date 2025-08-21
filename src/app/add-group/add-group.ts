@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PoolService } from '../service/pool/pool';
 
 @Component({
@@ -22,32 +23,31 @@ export class AddGroupComponent {
     { initials: 'RC', name: 'RCB', bg: 'bg-primary' }
   ];
 
-  constructor(private location: Location, private poolService: PoolService) {}
+  constructor(private router: Router, private poolService: PoolService) {}
 
   selectPool(index: number) {
     this.selectedPoolIndex = index;
   }
 
   addPool() {
-  if (!this.poolName || !this.selectedPoolType || this.selectedPoolIndex === null) {
-    alert('Please fill all fields and select a team.');
-    return;
+    if (!this.poolName || !this.selectedPoolType || this.selectedPoolIndex === null) {
+      alert('Please fill all fields and select a team.');
+      return;
+    }
+
+    const selectedTeam = this.pools[this.selectedPoolIndex];
+
+    const newPool = {
+      name: this.poolName,
+      type: this.selectedPoolType,
+      teams: [selectedTeam.name]
+    };
+
+    this.poolService.addPool(newPool);
+
+    alert('Pool added successfully!');
+    this.router.navigate(['/group-list']); // ✅ Navigate to list after adding
   }
-
-  const selectedTeam = this.pools[this.selectedPoolIndex];
-
-  const newPool = {
-    name: this.poolName,
-    type: this.selectedPoolType,
-    teams: [selectedTeam.name]
-  };
-
-  this.poolService.addPool(newPool);
-
-  alert('Pool added successfully!');
-  this.goBack(); // still works
-}
-
 
   cancel() {
     this.poolName = '';
@@ -56,6 +56,6 @@ export class AddGroupComponent {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/group-list']); // ✅ safer than location.back()
   }
 }

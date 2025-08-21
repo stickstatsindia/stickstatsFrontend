@@ -1,21 +1,3 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({ providedIn: 'root' })
-// export class PoolService {
-//   pools: any[] = [];
-
-//   getPools() {
-//     return this.pools;
-//   }
-
-//   addPool(pool: any) {
-//     this.pools.push(pool);
-//   }
-
-//   deletePool(pool: any) {
-//     this.pools = this.pools.filter(p => p !== pool);
-//   }
-// }
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -26,13 +8,7 @@ export class PoolService {
   private poolsSubject = new BehaviorSubject<any[]>([]);
   pools$ = this.poolsSubject.asObservable();
 
-  constructor() {
-    // preload with sample pools
-    this.poolsSubject.next([
-      { name: 'Pool A', type: 'League', teams: ['RCB'] },
-      { name: 'Pool B', type: 'Knockout', teams: ['Abc'] },
-    ]);
-  }
+  constructor() {}
 
   getPools() {
     return this.poolsSubject.value;
