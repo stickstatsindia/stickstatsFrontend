@@ -19,6 +19,8 @@ import { ScheduleMatchTeamSelection } from './schedule-match-team-selection/sche
 import { Tournaments } from './tournaments/tournaments';
 import { Matches } from './matches/matches';
 import { AddNewplayerComponent } from './add-newplayer/add-newplayer';
+import { ShowTeamsComponent } from './show-teams/show-teams';
+
 import { AddGroupComponent } from './add-group/add-group';
 
 export const routes: Routes = [
@@ -44,6 +46,7 @@ export const routes: Routes = [
   { path: 'tournaments', component: Tournaments },
   { path: 'matches', component: Matches },
   { path: 'addnew-palyer', component: AddNewplayerComponent},
+  { path: 'show-teams', component: ShowTeamsComponent },
   //Add new path before this
   { path: '**', redirectTo: '' }
 ];
