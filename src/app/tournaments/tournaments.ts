@@ -60,9 +60,9 @@ export class Tournaments implements OnInit {
     console.log('Settings opened for index:', index);
   }
 
-  goToTeams() {
+  goToTeams(tournamentId: string) {
     this.settingsOpenIndex = null;
-    this.router.navigate(['/show-teams']);
+    this.router.navigate(['/show-teams'], { state: { tournamentId } });
   }
 
   goToGroups() {

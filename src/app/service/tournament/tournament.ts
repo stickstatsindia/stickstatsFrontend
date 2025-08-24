@@ -9,6 +9,7 @@ export class TournamentService {
   addTournamentUrl = environment.baseUrl + environment.endpoints.addTournament;
   getTournamentUrl = environment.baseUrl + environment.endpoints.getTournaments;
   getUserByPhoneUrl = environment.baseUrl + environment.endpoints.getUserByPhone;
+  getTournamentByIdUrl = environment.baseUrl + environment.endpoints.getTournamentById;
   constructor(private http: HttpClient) {
     console.log('Add Tournament URL:', this.addTournamentUrl);
     console.log('Get Tournaments URL:', this.getTournamentUrl);
@@ -30,5 +31,8 @@ export class TournamentService {
     return this.http.get(url);
   }
 
-
+getTournamentById(tournamentId: string) {
+    const url = `${this.getTournamentByIdUrl}/${tournamentId}`;
+    return this.http.get(url);
+  }
 }

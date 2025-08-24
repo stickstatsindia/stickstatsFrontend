@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../config/api.config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,14 +9,11 @@ import { Injectable } from '@angular/core';
 export class AddTeam {
 
     constructor(private http: HttpClient) { }
-  
-    addTeam() {
-      this.http.get('https://api.example.com/teams')
-        .subscribe(response => {
-          console.log('Teams fetched successfully:', response);
-        }, error => {
-          console.error('Error fetching teams:', error);
-        });
+  addTeamUrl: string = environment.baseUrl + environment.endpoints.addTeam;
+    addTeam(teamData: any): Observable<any> {
+      // Replace :tournament_id in the URL with the actual tournamentId from teamData
+      const url = environment.baseUrl + environment.endpoints.addTeam.replace(':tournament_id', teamData.tournamentId);
+      return this.http.post(url, teamData);
     }
   }
 

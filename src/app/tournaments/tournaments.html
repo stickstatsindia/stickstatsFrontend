@@ -25,7 +25,7 @@
             <div class="settings-dropdown-wrapper" style="display:inline-block;position:relative;">
               <button (click)="openSettings(i)">⚙️</button>
               <div *ngIf="settingsOpenIndex === i" class="settings-dropdown">
-                <button (click)="goToTeams()">Teams</button>
+                <button (click)="goToTeams(t.tournament_id)">Teams</button>
                 <button (click)="goToGroups()">Groups</button>
               </div>
             </div>

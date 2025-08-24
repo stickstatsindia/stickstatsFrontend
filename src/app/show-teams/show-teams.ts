@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Team {
   name: string;
@@ -18,6 +19,14 @@ export class ShowTeamsComponent {
   rowsPerPageOptions = [5, 10, 25];
   rowsPerPage = 10;
   currentPage = 1;
+  tournamentId: string | null = null;
+
+  constructor(private router: Router) {
+    // Get tournamentId from navigation state
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as { tournamentId?: string };
+    this.tournamentId = state?.tournamentId || null;
+  }
 
   ngOnInit() {
     this.fetchTeams();
@@ -57,8 +66,7 @@ export class ShowTeamsComponent {
   }
 
   onAddTeam() {
-    // Open add team modal or navigate to add team page
-    alert('Add Team clicked');
+    this.router.navigate(['/addnew-team'], { state: { tournamentId: this.tournamentId } });
   }
 
   onEditTeam(team: Team) {

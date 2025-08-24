@@ -60,7 +60,7 @@ h2 {
 }
 
 .table-wrapper {
-  overflow-x: auto; /* Responsive scroll */
+  /* overflow-x: auto;  Responsive scroll */
 }
 
 table {
