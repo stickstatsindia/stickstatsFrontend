@@ -10,10 +10,17 @@ export class AddTeam {
 
     constructor(private http: HttpClient) { }
   addTeamUrl: string = environment.baseUrl + environment.endpoints.addTeam;
+    getTeamsUrl: string = environment.baseUrl + environment.endpoints.getTeamsByTournamentId;
     addTeam(teamData: any): Observable<any> {
       // Replace :tournament_id in the URL with the actual tournamentId from teamData
       const url = environment.baseUrl + environment.endpoints.addTeam.replace(':tournament_id', teamData.tournamentId);
       return this.http.post(url, teamData);
     }
+    getTeamsByTournamentId(tournamentId: string): Observable<any> {
+      const url = environment.baseUrl + environment.endpoints.getTeamsByTournamentId.replace(':tournament_id', tournamentId);
+      return this.http.get(url);
+    }
   }
+
+
 
