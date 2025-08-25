@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AddTeam } from '../service/team/add-team';
+import { CommonModule } from '@angular/common';
 
 interface Team {
-  name: string;
-  members: number;
+  _id: string;
+  team_name: string;
+  city: string;
+  logo?: string;
 }
 
 @Component({
   selector: 'app-show-teams',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './show-teams.html',
   styleUrls: ['./show-teams.css']
 })
@@ -77,20 +80,27 @@ export class ShowTeamsComponent {
   }
 
   onEditTeam(team: Team) {
-    // Edit team logic
-    alert('Edit ' + team.name);
+    this.router.navigate(['/edit-team'], { 
+      queryParams: { 
+        teamId: team._id,
+        tournamentId: this.tournamentId 
+      }
+    });
   }
 
   onDeleteTeam(team: Team) {
-    // Delete team logic
-    if (confirm('Delete ' + team.name + '?')) {
+    if (confirm(`Delete team ${team.team_name}?`)) {
       this.teams = this.teams.filter(t => t !== team);
     }
   }
 
   onViewMembers(team: Team) {
-    // View members logic
-    alert('View members of ' + team.name);
+    this.router.navigate(['/team-members'], { 
+      queryParams: { 
+        teamId: team._id,
+        tournamentId: this.tournamentId
+      }
+    });
   }
 }
 

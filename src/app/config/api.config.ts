@@ -13,6 +13,6 @@ export const environment = {
     getTournamentById: '/api/tournaments/:tournament_id',
     addUser:"/api/users",
     getUserByPhone:'/api/users/phone/:phone',
-    getTeamsByTournamentId: '/api/tournament/:tournament_id/teams'
+    getTeamsByTournamentId: '/api/:tournament_id/teams'
   }
 };
