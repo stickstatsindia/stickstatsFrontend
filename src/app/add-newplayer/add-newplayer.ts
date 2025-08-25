@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MembersService } from '../service/members/members-service';
 
 @Component({
   selector: 'app-add-newplayer',
   templateUrl: './add-newplayer.html',
   styleUrls: ['./add-newplayer.css'],
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class AddNewplayerComponent {
   tabs = [
@@ -19,7 +21,7 @@ export class AddNewplayerComponent {
   playerForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private memeberService:MembersService) {
     this.playerForm = this.fb.group({
       playerName: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -42,11 +44,33 @@ export class AddNewplayerComponent {
       alert('Logo must be <100kb');
     }
   }
-
+  teamtId:string="64a7f3f4c8e4f2b1d6e4b8c1"; // Example team ID
   addTeam() {
     if (this.playerForm.valid) {
       // Submit logic here
-      alert('Team added!');
+      // alert('Team added!');
+      console.log('Form Submitted', this.teamtId);
+    if (this.playerForm.valid) {
+      const teamData = { ...this.playerForm.value, tournamentId: this.teamtId };
+      console.log('Team Data:', teamData);
+      // if (!this.tournamentId) {
+      //   console.error('No tournamentId provided!');
+      //   return;
+      // }
+       this.memeberService.addMember(teamData).subscribe({
+            next: (response: any) => {
+              console.log('Tournament added successfully:', response);
+           
+            },
+            error: (err: any) => {
+              console.error('Error adding tournament:', err);
+            }
+          });
+      console.log('Team data sent to service:', teamData);
+    } else {
+      this.playerForm.markAllAsTouched(); // Show validation errors
+    }
+
     }
   }
 }
