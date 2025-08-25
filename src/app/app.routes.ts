@@ -45,7 +45,7 @@ export const routes: Routes = [
   { path: 'schedule-match-select-teams', component: ScheduleMatchTeamSelection },
   { path: 'tournaments', component: Tournaments },
   { path: 'matches', component: Matches },
-  { path: 'addnew-palyer', component: AddNewplayerComponent},
+  { path: 'addnew-player', component: AddNewplayerComponent},
   { path: 'show-teams', component: ShowTeamsComponent },
   //Add new path before this
   { path: '**', redirectTo: '' }

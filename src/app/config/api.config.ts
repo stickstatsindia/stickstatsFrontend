@@ -1,5 +1,7 @@
 // src/app/config/api.config.ts
 
+import { get } from "http";
+
 export const environment = {
   port: '3000',
   baseUrl: 'http://localhost:3000',
@@ -15,5 +17,6 @@ export const environment = {
     getUserByPhone:'/api/users/phone/:phone',
     getTeamsByTournamentId: '/api/:tournament_id/teams',
     addplayer: '/api/teams/:team_id/members',
+    getPlayersByTeamId: '/api/team/:team_id/members',
   }
 };

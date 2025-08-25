@@ -44,7 +44,7 @@ export class AddNewplayerComponent {
       alert('Logo must be <100kb');
     }
   }
-  teamtId:string="64a7f3f4c8e4f2b1d6e4b8c1"; // Example team ID
+  teamtId:string=""; // Example team ID
   addTeam() {
     if (this.playerForm.valid) {
       // Submit logic here
