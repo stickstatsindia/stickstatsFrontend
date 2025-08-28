@@ -1,18 +1,9 @@
 <div class="modal-container">
   <div class="modal-header">
-    <span class="modal-title">Add Players to Team</span>
+    <span class="modal-title">Add Player via Phone Number</span>
     <button class="close-btn" aria-label="Close">&times;</button>
   </div>
-  <div class="tab-bar">
-    <div
-      *ngFor="let tab of tabs; let i = index"
-      class="tab"
-      [class.active]="selectedTab === i"
-      (click)="selectTab(i)">
-      {{ tab.label }}
-    </div>
-  </div>
-  <div class="tab-content" *ngIf="selectedTab === 2">
+  <div class="tab-content">
     <form [formGroup]="playerForm" (ngSubmit)="addTeam()">
       <div class="form-row">
         <div class="logo-upload">
@@ -42,6 +33,4 @@
       <button class="add-btn" type="submit" [disabled]="!playerForm.valid">ADD TEAM</button>
     </form>
   </div>
-  <!-- Add content for other tabs as needed -->
 </div>
- 

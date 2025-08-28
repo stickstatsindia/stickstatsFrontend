@@ -25,26 +25,6 @@
   font-size: 2rem;
   cursor: pointer;
 }
-.tab-bar {
-  display: flex;
-  border-bottom: 1.5px solid #e0e0e0;
-  margin: 24px 0 0 0;
-}
-.tab {
-  flex: 1;
-  text-align: center;
-  padding: 18px 0 12px 0;
-  font-weight: 600;
-  color: #757575;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: color 0.2s, border-bottom 0.2s;
-}
-.tab.active {
-  color: #00bfae;
-  border-bottom: 3px solid #ffc107;
-  background: #f7fafd;
-}
 .tab-content {
   padding: 32px;
 }

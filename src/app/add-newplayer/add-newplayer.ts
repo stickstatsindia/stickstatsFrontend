@@ -11,13 +11,8 @@ import { MembersService } from '../service/members/members-service';
   imports: [ReactiveFormsModule, CommonModule]
 })
 export class AddNewplayerComponent {
-  tabs = [
-    { label: 'MY NETWORK' },
-    { label: 'SEARCH' },
-    { label: 'ADD VIA PHONE NUMBER' },
-    { label: 'ADD VIA EXCEL SHEET' }
-  ];
-  selectedTab = 2; // Default to "ADD VIA PHONE NUMBER"
+  // Remove other tabs and just keep phone number entry
+  selectedTab = 0; // Since we only have one tab now
   playerForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
 
