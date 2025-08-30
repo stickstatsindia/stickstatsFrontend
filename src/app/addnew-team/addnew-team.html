@@ -18,8 +18,8 @@
     <div class="right">
       <div class="input-group">
         <label>Team Name:</label>
-        <input type="text" formControlName="teamName" />
-        <div *ngIf="teamForm.get('teamName')?.touched && teamForm.get('teamName')?.invalid">
+        <input type="text" formControlName="team_name" />
+        <div *ngIf="teamForm.get('team_name')?.touched && teamForm.get('team_name')?.invalid">
           <span class="bold" style="color: red; font-weight: bold;">
             Team Name is required.
           </span>

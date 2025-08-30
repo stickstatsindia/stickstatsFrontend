@@ -13,14 +13,15 @@ import { Result } from './result/result';
 import { AddTeamComponent } from './addnew-team/addnew-team';
 import { RoundsDetailsComponent } from './rounds-details/rounds-details';
 import { PointsTable } from './points-table/points-table';
-import { AddGroupComponent } from './add-group/add-group';
 import { GroupListComponent } from './group-list/group-list';
 import { TournamentDashboardComponent } from './tournament-dashboard.component/tournament-dashboard.component';
 import { ScheduleMatchTeamSelection } from './schedule-match-team-selection/schedule-match-team-selection';
 import { Tournaments } from './tournaments/tournaments';
 import { Matches } from './matches/matches';
+import { AddNewplayerComponent } from './add-newplayer/add-newplayer';
+import { ShowTeamsComponent } from './show-teams/show-teams';
 
-
+import { AddGroupComponent } from './add-group/add-group';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -37,19 +38,15 @@ export const routes: Routes = [
   { path: 'addnew-team', component:AddTeamComponent },
   { path: 'rounds-details', component:RoundsDetailsComponent },
   { path: 'point-table', component:PointsTable },
-
   { path: 'add-group' , component:AddGroupComponent},
-  {
-    path: 'group-list' , component: GroupListComponent
-  },
-
+  { path: 'group-list' , component: GroupListComponent},
   { path: 'group-manager', component: GroupListComponent },
   { path: 'tournament-dashboard', component: TournamentDashboardComponent},
   { path: 'schedule-match-select-teams', component: ScheduleMatchTeamSelection },
   { path: 'tournaments', component: Tournaments },
   { path: 'matches', component: Matches },
-
+  { path: 'addnew-player', component: AddNewplayerComponent},
+  { path: 'show-teams', component: ShowTeamsComponent },
   //Add new path before this
   { path: '**', redirectTo: '' }
-   
 ];

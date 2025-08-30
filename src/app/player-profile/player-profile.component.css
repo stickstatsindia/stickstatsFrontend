@@ -1,3 +1,38 @@
+/* Stats horizontal bar for STATS tab */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.10);
+  padding: 1.2rem 0.5rem;
+  margin: 24px 0;
+}
+.stat-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+  padding: 0.7rem 1rem;
+}
+.stat-bar-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 0.3rem;
+}
+.stat-bar-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1565c0;
+}
 /* Base Container */
 .profile-container {
   background-color: #b30000;

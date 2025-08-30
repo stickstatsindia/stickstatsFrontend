@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Profile } from '../service/profile/profile';
 
 @Component({
   selector: 'app-profile',
@@ -17,26 +18,34 @@ export class ProfileForm {
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
 
   user = {
-    name: '',
-    location: '',
+    full_name: '',
+    address: '',
     joinDate: new Date().toLocaleDateString(),
-    mobile: '',
+    phone_number: '',
     position: '',
     stickHand: '',
-    dob: '',
+    date_of_birth: '',
     email: '',
-    pin: '',
+    zip: '',
     gender: '',
-    jerseyNumber: '',
+    jersey_number: '',
     followers: 0,
     profileViews: 0,
     profileImage: ''
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private profileService: Profile) {}
 
   submitProfile() {
-    this.isProfileSaved = true;
+  
+    this.profileService.addUser(this.user).subscribe(response => {
+
+      console.log('User added successfully:', response);
+        this.isProfileSaved = true;
+        alert('Profile saved successfully!');
+    }, error => {
+      console.error('Error adding user:', error);
+    });
   }
 
   editProfile() {
@@ -45,16 +54,16 @@ export class ProfileForm {
 
   get profileCompletion(): number {
     const fields = [
-      this.user.name,
+      this.user.full_name,
       this.user.email,
-      this.user.mobile,
-      this.user.location,
-      this.user.dob,
+      this.user.phone_number,
+      this.user.address,
+      this.user.date_of_birth,
       this.user.position,
       this.user.stickHand,
       this.user.gender,
-      this.user.jerseyNumber,
-      this.user.pin
+      this.user.jersey_number,
+      this.user.zip
     ];
     const filled = fields.filter(f => f && f.toString().trim() !== '').length;
     return Math.round((filled / fields.length) * 100);

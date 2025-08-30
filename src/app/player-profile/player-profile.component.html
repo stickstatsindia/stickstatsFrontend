@@ -5,7 +5,7 @@
       <img [src]="profile.imageUrl" alt="Profile" />
     </div>
     <div class="profile-info-section">
-      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge">PRO</span></h2>
+      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge"></span></h2>
       <p><strong>Location:</strong> {{ profile.location }}</p>
       <p><strong>Position:</strong> {{ profile.battingStyle }}</p>
     </div>
@@ -16,6 +16,10 @@
       </div>
       <div class="stat-box">
         <div class="stat-label">Goals</div>
+        <div class="stat-value">{{ profile.runs }}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Assists</div>
         <div class="stat-value">{{ profile.runs }}</div>
       </div>
     </div>
@@ -29,5 +33,18 @@
         {{ item }}
       </div>
     </div>
+  </div>
+
+  <!-- Stats horizontal bar for STATS tab (now below tabs) -->
+  <div *ngIf="selectedTab === 'STATS'" class="stats-bar">
+    <div class="stat-bar-item"><span class="stat-bar-label">Total Matches</span><span class="stat-bar-value">{{ stats.totalMatches }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">PC</span><span class="stat-bar-value">{{ stats.pc }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">PS</span><span class="stat-bar-value">{{ stats.ps }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">RED CARDS</span><span class="stat-bar-value">{{ stats.redCards }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">GREEN CARDS</span><span class="stat-bar-value">{{ stats.greenCards }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">YELLOW CARDS</span><span class="stat-bar-value">{{ stats.yellowCards }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">Field goals</span><span class="stat-bar-value">{{ stats.fieldGoals }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">Assists</span><span class="stat-bar-value">{{ stats.assists }}</span></div>
+    <div class="stat-bar-item"><span class="stat-bar-label">Total Goal Score</span><span class="stat-bar-value">{{ stats.totalGoalScore }}</span></div>
   </div>
 </div>

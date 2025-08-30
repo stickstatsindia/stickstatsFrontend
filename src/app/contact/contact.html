@@ -1,18 +1,22 @@
-<div class="container my-5">
+<div class="color" >
+<div class="container my-5" >
   <div class="row align-items-center">
-    <!-- Left: Image -->
-    <div class="col-md-6 mb-4 mb-md-0 text-center">
+     <h2 class="mb-4 text-center" >Contact Us</h2>
+<!-- Left: Image -->
+    <div class="col-md-6 mb-4 mb-md-0 d-flex justify-content-left align-items-center">
       <img
-        src="https://i.postimg.cc/W1tWLcvy/5124556.jpg"
-        alt="Contact"
-        class="img-fluid rounded shadow"
+         src="assets/finalStickStats.png"
+         alt="Logo"
+         
+         style="max-height: 25em; width: auto; height: auto;"
       />
     </div>
 
+
     <!-- Right: Form -->
     <div class="col-md-6">
-      <h2 class="mb-4 text-center text-md-start">Get in Touch</h2>
       <form (ngSubmit)="submitForm()">
+        <h3 class="mb-4 text-center text-md-start">Let's Start a Conversation</h3>
         <div class="mb-3">
           <label class="form-label">Name</label>
           <input [(ngModel)]="name" name="name" class="form-control" required />
@@ -29,4 +33,5 @@
       </form>
     </div>
   </div>
+</div>
 </div>

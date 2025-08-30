@@ -16,13 +16,19 @@
       </thead>
       <tbody>
         <tr *ngFor="let t of tournaments; let i = index">
-          <td><a href="#" class="name-link">{{ t.name }}</a></td>
-          <td>{{ t.fromDate }}</td>
-          <td>{{ t.toDate }}</td>
+          <td><a href="#" class="name-link">{{ t.tournament_name }}</a></td>
+          <td>{{ t.start_date | date:'yyyy-MM-dd' }}</td>
+          <td>{{ t.end_date | date:'yyyy-MM-dd' }}</td>
           <td class="actions">
             <button (click)="editTournament(i)">✏️</button>
             <button (click)="deleteTournament(i)">🗑️</button>
-            <button (click)="openSettings(i)">⚙️</button>
+            <div class="settings-dropdown-wrapper" style="display:inline-block;position:relative;">
+              <button (click)="openSettings(i)">⚙️</button>
+              <div *ngIf="settingsOpenIndex === i" class="settings-dropdown">
+                <button (click)="goToTeams(t.tournament_id)">Teams</button>
+                <button (click)="goToGroups()">Groups</button>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>
