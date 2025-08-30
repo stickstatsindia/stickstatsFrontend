@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TournamentService } from '../service/tournament/tournament';
+import { Router } from '@angular/router';
 
 // Define a User interface for type safety (must be outside the class)
 interface User {
@@ -32,7 +33,8 @@ export class AddTournamentComponent {
 
   constructor(
     private fb: FormBuilder,
-    private tournamentService: TournamentService
+    private tournamentService: TournamentService,
+    private router: Router
   ) {
     this.tournamentForm = this.fb.group({
       tournament_name: ['', Validators.required],
@@ -97,6 +99,7 @@ export class AddTournamentComponent {
               this.selectedGroundType = null;
               this.selectedMatchType = null;
               this.selectedFormat = null;
+              this.router.navigate(['/tournament-dashboard']);
             },
             error: (err: any) => {
               console.error('Error adding tournament:', err);
