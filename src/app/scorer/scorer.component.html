@@ -94,8 +94,12 @@
     <div class="mt-2 d-flex flex-wrap gap-2">
       <button mat-stroked-button color="primary" (click)="addEvent('Goal')">Goal</button>
       <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')">PC Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('PC Scored')">PC Scored</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')">PC Scored</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')">PS Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')">PS Scored</button>
       <button mat-stroked-button color="warn" (click)="addEvent('Green Card')">Green Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')">Yellow Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')">Red Card</button>
     </div>
   </mat-card>
 
@@ -145,8 +149,4 @@
     </div>
     
   </mat-card>
-
-  <div class="text-center">
-    <button mat-flat-button color="accent" (click)="sendFakeUpdates()">Send Test Update</button>
-  </div>
 </div>

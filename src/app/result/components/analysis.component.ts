@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-analysis',
   standalone: true,
   templateUrl: './analysis.component.html',
-  styleUrls: []
+  styleUrls: ['./analysis.component.css']
 })
 export class AnalysisComponent {}

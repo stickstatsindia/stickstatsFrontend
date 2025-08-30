@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { NgModel } from '@angular/forms';
 
 
-
 @Component({
   selector: 'app-root',
    imports: [RouterOutlet, Navbar,FormsModule, CommonModule],

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './timeline.component.html',
-  styleUrls: []
+  styleUrls: ['./timeline.component.css']
 })
 export class TimelineComponent {
   @Input() data: any;

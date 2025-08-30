@@ -10,17 +10,17 @@
 
     <div class="match-list">
       <ng-container *ngFor="let match of filteredMatches()">
-        <div class="match-card">
-          <h3>{{ match.home_team_name }} vs {{ match.away_team_name }}</h3>
+        <div class="match-card" [routerLink]="['/result', match.matchId]">
+          <h3>{{ match.team1Name }} vs {{ match.team2Name }}</h3>
           <p *ngIf="selectedTab !== 'Upcoming'">
-            Score: {{ match.home_score }} - {{ match.away_score }}
+            Score: {{ match.team1Score }} - {{ match.team2Score }}
           </p>
           <!-- <p *ngIf="selectedTab === 'Live' && timers[match.match_id]">
             ⏱ Timer: 
             {{ format(timers[match.match_id].minutes) }}:{{ format(timers[match.match_id].seconds) }}
           </p> -->
 
-          <p>Time: {{ match.match_time }} | Venue: {{ match.venue }}</p>
+          <p>Time: {{ match.matchTime }} | Venue: {{ match.venue }}</p>
           <p>Status: <strong [ngClass]="match.status.toLowerCase()">{{ match.status }}</strong></p>
         </div>
       </ng-container>

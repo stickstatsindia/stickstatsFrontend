@@ -1,65 +1,80 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatchService } from '../../match.service';
-import { SocketService } from '../../socket';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { MatchService, Match } from '../../match.service'; // Import type from service
 import { CommonModule } from '@angular/common';
-// import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router'; // 👈 Import RouterModule
 import { Subscription } from 'rxjs';
 
-interface Match {
-  _id: string;
-  match_id: string;
-  status: 'Live' | 'Upcoming' | 'Finished';
-  match_date?: string;
-  match_time?: string;
-  venue?: string;
-  home_team_id?: string;
-  away_team_id?: string;
-  home_score?: number;
-  away_score?: number;
-  home_team_name?: string;
-  away_team_name?: string;
-}
 
 @Component({
   selector: 'app-live-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './live-dashboard.html',
   styleUrls: ['./live-dashboard.css']
 })
-
-
 export class LiveDashboardComponent implements OnInit, OnDestroy {
-  constructor(private socketService: SocketService, private matchService: MatchService) {}
-
   matches: Match[] = [];
   selectedTab: 'Live' | 'Upcoming' | 'Finished' = 'Live';
-  
-  private subscriptions: Subscription = new Subscription();
+
+  private subscriptions = new Subscription();
+
+  constructor(private matchService: MatchService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // 1. Fetch initial matches from the backend
-    // This calls the API endpoint `/api/matches`
-    this.matchService.getAllMatches().subscribe(
-      matches => {
-        this.matches = matches;
-        console.log('Matches loaded:', this.matches);
-      },
-      error => {
-        console.error('Error fetching matches:', error);
-      }
+    this.subscriptions.add(
+      this.matchService.getAllMatches().subscribe(
+        matches => {
+          this.matches = matches;
+          console.log('Matches loaded:', this.matches);
+        },
+        error => {
+          console.error('Error fetching matches:', error);
+        }
+      )
     );
 
-    // 2. Listen for real-time score updates
+    // Live updates
     this.subscriptions.add(
-      this.socketService.onScoreUpdate().subscribe(data => {
-        const matchToUpdate = this.matches.find(m => m.match_id === data.matchId);
-        if (matchToUpdate) {
-          matchToUpdate.home_score = data.homeScore;
-          matchToUpdate.away_score = data.awayScore;
+      this.matchService.onMatchUpdates().subscribe(patch => {
+        if (!patch.matchId) return;
+
+        const idx = this.matches.findIndex(m => m.matchId === patch.matchId);
+
+        if (idx === -1) {
+          // If we get a patch for a match not in the list, fetch full snapshot once
+          this.matchService.getMatch(patch.matchId).subscribe(full => {
+            this.matches = [...this.matches, full];
+            this.cdr.detectChanges();
+          });
+          return;
         }
+
+        const curr = this.matches[idx];
+
+        // Merge only defined scalars
+        const merged: Match = {
+          ...curr,
+          ...(pickDefined<Match>(patch))
+        };
+
+        // Special-case: append new events instead of replacing
+        if (patch.matchEvents && patch.matchEvents.length > 0) {
+          merged.matchEvents = [...(curr.matchEvents ?? []), ...patch.matchEvents];
+        }
+
+        // Immutable replace to trigger change detection consistently
+        this.matches = [
+          ...this.matches.slice(0, idx),
+          merged,
+          ...this.matches.slice(idx + 1)
+        ];
+
+        // If you still use Default strategy, this guarantees UI refresh
+        this.cdr.detectChanges();
       })
     );
+
+
   }
 
   ngOnDestroy(): void {
@@ -70,10 +85,18 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
     return this.matches.filter(match => match.status === this.selectedTab);
   }
 
-  // Method to handle tab switching
   selectTab(tab: 'Live' | 'Upcoming' | 'Finished'): void {
     this.selectedTab = tab;
   }
+}
+
+// ✅ helper: keep only keys with non-undefined values
+function pickDefined<T>(obj: Partial<T>): Partial<T> {
+  const out: Partial<T> = {};
+  Object.entries(obj).forEach(([k, v]) => {
+    if (v !== undefined) (out as any)[k] = v;
+  });
+  return out;
 }
 
 
