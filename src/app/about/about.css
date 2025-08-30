@@ -1,30 +1,69 @@
-
+/* Team Card */
 .team-card {
   border: none;
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
-  background: #fff;
-  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition: all 0.3s ease-in-out;
+  background:transparent;
+  padding: 25px 20px;
   height: 100%;
+  position: relative;
+  overflow: hidden;
 }
+
 .team-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
 }
+
+/* Team Image */
 .team-img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 50%;
   margin: 0 auto 15px;
   display: block;
+  border: 4px solid #0b2561; /* your theme blue */
+  transition: transform 0.3s ease;
 }
+
+.team-card:hover .team-img {
+  transform: scale(1.05);
+}
+
+/* Name & Role */
+.team-card h5 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.team-card small {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+/* Social Icons */
+.social-icons {
+  margin-top: 15px;
+}
+
 .social-icons a {
-  color: #555;
+  color: #0b2561;
   font-size: 18px;
   margin: 0 8px;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
+
 .social-icons a:hover {
-  color: #007bff;
+  color: #1abc9c;
+  transform: translateY(-3px);
+}
+
+
+.container{
+  padding-bottom: 3%;
 }

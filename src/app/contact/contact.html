@@ -1,37 +1,58 @@
-<div class="color" >
-<div class="container my-5" >
-  <div class="row align-items-center">
-     <h2 class="mb-4 text-center" >Contact Us</h2>
-<!-- Left: Image -->
-    <div class="col-md-6 mb-4 mb-md-0 d-flex justify-content-left align-items-center">
-      <img
-         src="assets/finalStickStats.png"
-         alt="Logo"
-         
-         style="max-height: 25em; width: auto; height: auto;"
-      />
-    </div>
+<div class="color">
+  <h2 class="mb-4 text-center">Connect with StickStats Team</h2>
+  <div class="container my-5">
+
+    <div class="row align-items-center">
+      <!-- Left: Image -->
+      <div class="col-md-6 mb-4 mb-md-0 d-flex justify-content-left align-items-center">
+        <img src="assets/StickStatsRoundTransparent.jpg" alt="Logo" style="max-height: 25em; width: auto; height: auto;" />
+      </div>
 
 
-    <!-- Right: Form -->
-    <div class="col-md-6">
-      <form (ngSubmit)="submitForm()">
-        <h3 class="mb-4 text-center text-md-start">Let's Start a Conversation</h3>
-        <div class="mb-3">
-          <label class="form-label">Name</label>
-          <input [(ngModel)]="name" name="name" class="form-control" required />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input [(ngModel)]="email" name="email" type="email" class="form-control" required />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Message</label>
-          <textarea [(ngModel)]="message" name="message" class="form-control" rows="4" required></textarea>
-        </div>
-        <button class="btn btn-primary w-100" type="submit">Send Message</button>
-      </form>
+      <!-- Right: Form -->
+      <div class="col-md-6">
+        <form #contactForm="ngForm" (ngSubmit)="submitForm()" novalidate>
+          <h3 class="mb-4 text-center text-md-start">Let's Start a Conversation</h3>
+
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input [(ngModel)]="name" name="name" class="form-control" required minlength="2" pattern="^[a-zA-Z\s]+$"
+              #nameCtrl="ngModel" />
+            <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="text-danger small mt-1">
+              <span *ngIf="nameCtrl.errors?.['required']">Name is required.</span>
+              <span *ngIf="nameCtrl.errors?.['minlength']">Name must be at least 2 characters long.</span>
+              <span *ngIf="nameCtrl.errors?.['pattern']">Name can only contain letters and spaces.</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input [(ngModel)]="email" name="email" type="email" class="form-control" required email
+              #emailCtrl="ngModel" />
+            <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger small mt-1">
+              <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+              <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email address.</span>
+            </div>
+          </div>
+
+          <!-- Message -->
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea [(ngModel)]="message" name="message" class="form-control" rows="4" required minlength="10"
+              #msgCtrl="ngModel"></textarea>
+            <div *ngIf="msgCtrl.invalid && (msgCtrl.dirty || msgCtrl.touched)" class="text-danger small mt-1">
+              <span *ngIf="msgCtrl.errors?.['required']">Message is required.</span>
+              <span *ngIf="msgCtrl.errors?.['minlength']">Message must be at least 10 characters long.</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit" [disabled]="contactForm.invalid">
+            Send Message
+          </button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 </div>

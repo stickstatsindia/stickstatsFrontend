@@ -1,5 +1,9 @@
 .footer {
-  background-color: #00005C; /* dark blue background */
+  background-color: #01051b;
+  color: #fff;
+  width: 100%;
+  padding: 1rem 0;
+  margin-top: auto;
 }
 
 .footer-divider {
@@ -15,21 +19,13 @@
   border-radius: 50%;
   border: 1px solid #fff;
   color: #fff;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .btn-social:hover {
   background-color: #fff;
-  color: #00224D;
-}
-
-.footer-link {
-  color: #ccc;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.footer-link:hover {
-  color: #fff;
-  text-decoration: underline;
+  color: #00005C;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.2);
 }

@@ -1,5 +1,77 @@
+/* =============================
+   NAVBAR
+============================= */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 1050;
+  background-color: #003153; /* matches footer */
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.navbar a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s, border-bottom 0.3s;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar a:hover {
+  color: #1abc9c;
+  border-bottom: 2px solid #1abc9c;
+}
+
+.navbar a.active {
+  color: #1abc9c;
+  border-bottom: 2px solid #1abc9c;
+}
+
+/* =============================
+   DROPDOWN MENU
+============================= */
+
+/* Global dropdown menu background */
+.dropdown-menu {
+  background-color: #003153 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 5px 0 !important;
+  min-width: 180px; /* keep dropdown wide enough */
+}
+
+/* Dropdown items - default text color */
+.dropdown-menu .dropdown-item {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover + focus state */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: #0474a4 !important;
+  color: #ffffff !important;
+}
+
+/* Active state (when routerLinkActive applies .active) */
+.dropdown-menu .dropdown-item:active,
+.dropdown-menu .dropdown-item.active {
+  background-color: #0474a4 !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Divider styling (if you add dropdown-divider) */
+.dropdown-divider {
+  border-color: rgba(255, 255, 255, 0.2);
 }

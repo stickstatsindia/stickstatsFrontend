@@ -1,5 +1,11 @@
+.color {
+  background-color: #c0c5ce;  /* page background */
+  min-height: 100vh;          /* full screen height */
+  padding: 2rem 0;            /* some top-bottom spacing */
+}
+
 form {
-  background: #fff;
+  background: #ffff;
   padding: 24px;
   border-radius: 8px;
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
@@ -14,9 +20,18 @@ form {
   padding: 0.75rem;
 }
 
-.color{
-  background-color: #E8FFD7;
-  border: 0px;
-  margin: 0px;
-  padding: 0px;
+
+.color img {
+  max-height: 25em;
+  width: auto;
+  height: auto;
+  background: transparent;
+  border-radius: 12px;              /* smooth corners */
+  box-shadow: 0 8px 20px #051780;  /* elevation effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.color img:hover {
+  transform: translateY(-5px);      /* slight lift on hover */
+  box-shadow: 0 12px 28px rgba(53, 115, 238, 0.963); /* stronger shadow */
 }

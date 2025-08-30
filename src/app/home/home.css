@@ -1,65 +1,81 @@
-.home-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 16px;
-  background-color: #f9f9f9;
+/* General Layout */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  
 }
 
-.home-content {
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-  background-color: #ffffff;
-  padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
+
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 12px;
-  color: #333;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #222;
 }
 
-p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-  color: #666;
+p.lead {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 650px;
+  margin: 0 auto 20px auto;
 }
 
-button {
-  background-color: #007bff;
+/* Buttons - Responsive */
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.custom-btn {
+  font-size: 1.1rem;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #95f0ee, #b1d0f4);
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  min-width: 200px;
+  text-align: center;
 }
 
-button:hover {
-  background-color: #005fcc;
+.custom-btn:hover {
+  background: linear-gradient(45deg, #005fcc, #004099);
+  transform: translateY(-2px);
+  box-shadow: 0px 5px 15px rgba(0, 91, 187, 0.3);
+  color: #fff;
 }
 
+/* Responsive - On small screens stack buttons vertically */
+@media (max-width: 576px) {
+  .home-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .custom-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+
+/* Carousel */
 .carousel-item img {
   max-height: 400px;
   object-fit: cover;
+  border-radius: 12px;
 }
-
-/* .carousel-control-prev-icon,
-.carousel-control-next-icon {
-  background-color: transparent !important;
-} */
-
-
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background: transparent; /* Remove blue box */
-  background-image: none; /* Remove Bootstrap's default SVG background */
+  background: transparent;
+  background-image: none;
   width: 2rem;
   height: 2rem;
 }
@@ -76,5 +92,7 @@ button:hover {
   color: white;
 }
 
-
-
+/* Section Padding */
+.container {
+  padding: 40px 15px;
+}

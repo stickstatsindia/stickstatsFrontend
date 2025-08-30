@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Profile } from '../service/profile/profile';
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +16,7 @@ import { Profile } from '../service/profile/profile';
 })
 export class ProfileForm {
   isProfileSaved = false;
+  isUserRegistered=false;
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
 
   user = {
@@ -38,14 +40,36 @@ export class ProfileForm {
 
   submitProfile() {
   
+    this.isUserRegistered=true;
     this.profileService.addUser(this.user).subscribe(response => {
-
+      
+      
+      
       console.log('User added successfully:', response);
-        this.isProfileSaved = true;
-        alert('Profile saved successfully!');
+
+
+
+      alert('Profile saved successfully!');
+
+
+
     }, error => {
       console.error('Error adding user:', error);
+      // Handle based on backend response
+      if (error.status === 400) {
+        alert(error.error.error || 'Validation failed. Please check your inputs.');
+      } else if (error.status === 409) {
+        alert(error.error.error || 'Duplicate entry detected.');
+      } else if (error.status === 500) {
+        alert('Server error: Could not create user. Please try again later.');
+      } else {
+        alert('Unexpected error occurred. Please try again.');
+      }
     });
+  }
+
+  showProfile(){
+    this.isProfileSaved = true;
   }
 
   editProfile() {
@@ -86,4 +110,12 @@ export class ProfileForm {
     const maxDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
     return maxDate.toISOString().split('T')[0];
   }
+
+// For login right now its dummy
+  isLoggedIn: boolean = false;
+
+  onLogin(): void {
+    this.isLoggedIn = true;
+  }
+
 }
