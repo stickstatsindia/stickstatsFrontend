@@ -4,8 +4,8 @@
 
 <div class="members-grid" *ngIf="teamMembers && teamMembers.length > 0">
   <div class="member-card" *ngFor="let member of teamMembers">
-    <div class="member-avatar">
-      <img src="assets/default-avatar.png" [alt]="member.name" class="member-img">
+    <div class="member-avatar" [attr.data-initials]="getInitials(member.name)">
+      <div class="initials">{{ getInitials(member.name) }}</div>
       <div class="role-badge">{{ member.role }}</div>
     </div>
     <div class="member-name">{{ member.name }}</div>

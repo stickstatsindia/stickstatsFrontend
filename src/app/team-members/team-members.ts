@@ -81,4 +81,24 @@ export class TeamMembersComponent implements OnInit {
       }
     });
   }
+
+  getInitials(fullName: string): string {
+    console.log('Getting initials for:', fullName);
+    if (!fullName) return '';
+
+    // Split the name and filter out any empty parts
+    const parts = fullName.trim().split(' ').filter(part => part.length > 0);
+    console.log('Name parts:', parts);
+
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+
+    // Get first and last initials
+    const firstInitial = parts[0].charAt(0);
+    const lastInitial = parts[parts.length - 1].charAt(0);
+    const initials = firstInitial + lastInitial;
+    
+    console.log('Generated initials:', initials.toUpperCase());
+    return initials.toUpperCase();
+  }
 }
