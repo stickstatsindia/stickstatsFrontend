@@ -22,6 +22,7 @@ import { AddNewplayerComponent } from './add-newplayer/add-newplayer';
 import { ShowTeamsComponent } from './show-teams/show-teams';
 
 import { AddGroupComponent } from './add-group/add-group';
+import { TeamMembersComponent } from './team-members/team-members';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -47,6 +48,7 @@ export const routes: Routes = [
   { path: 'matches', component: Matches },
   { path: 'addnew-player', component: AddNewplayerComponent},
   { path: 'show-teams', component: ShowTeamsComponent },
+  {path: 'team-members', component: TeamMembersComponent},
   //Add new path before this
   { path: '**', redirectTo: '' }
 ];

@@ -148,7 +148,7 @@ fetchTeams() {
     // });
   } else {
     // 👉 Members exist → go to members list
-     this.router.navigate(['/addnew-player'], { 
+     this.router.navigate(['/team-members'], { 
       state: { 
         teamId: team.team_id,
         tournamentId: this.tournamentId
