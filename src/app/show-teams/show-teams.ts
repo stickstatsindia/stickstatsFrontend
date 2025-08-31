@@ -134,17 +134,23 @@ fetchTeams() {
     console.log('Team selected for members action:', team);
   if (!team.memberCount || team.memberCount === 0) {
     // 👉 No members → go to add player form
-    this.router.navigate(['/addnew-player'], { 
-      queryParams: { 
-        teamId: team._id,
+   this.router.navigate(['/addnew-player'], { 
+      state: { 
+        teamId: team.team_id,
         tournamentId: this.tournamentId
       }
     });
+    // this.router.navigate(['/addnew-player'], { 
+    //   queryParams: { 
+    //     teamId: team.team_id,
+    //     tournamentId: this.tournamentId
+    //   }
+    // });
   } else {
     // 👉 Members exist → go to members list
-    this.router.navigate(['/team-members'], { 
-      queryParams: { 
-        teamId: team._id,
+     this.router.navigate(['/addnew-player'], { 
+      state: { 
+        teamId: team.team_id,
         tournamentId: this.tournamentId
       }
     });
