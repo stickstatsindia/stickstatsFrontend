@@ -4,16 +4,16 @@
   <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="add-team-container">
     <div>
 
-
       <div class="left">
 
         <label for="logoInput" style="cursor:pointer;">
-          <img [src]="logoUrl || 'https://via.placeholder.com/200x200'" alt="Team" />
+          <!-- <img [src]="logoUrl || 'https://via.placeholder.com/200x200'" alt="Team" /> -->
+           <img src="assets/teamDefault.png" alt="teamDefault">
         </label>
 
-        <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" style="display: none;" />
+        <!-- <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" style="display: none;" /> -->
       </div>
-      <label style="margin-left: 25px;" for="logoInput" class="upload-label">Upload Team Logo</label>
+      <!-- <label style="margin-left: 25px;" for="logoInput" class="upload-label">Upload Team Logo</label> -->
     </div>
     <div class="right">
       <div class="input-group">

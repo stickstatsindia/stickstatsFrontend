@@ -4,17 +4,91 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AddTeam } from '../service/team/add-team';
 import { TournamentService } from '../service/tournament/tournament';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-team',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './addnew-team.html',
   styleUrls: ['./addnew-team.css']
 })
 export class AddTeamComponent {
   teamForm: FormGroup;
-  cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai'];
+cities = [
+  "Agra",
+  "Ahmedabad",
+  "Aligarh",
+  "Allahabad (Prayagraj)",
+  "Amritsar",
+  "Aizawl",
+  "Aurangabad",
+  "Bareilly",
+  "Bangalore",
+  "Bhopal",
+  "Bhubaneswar",
+  "Chandigarh",
+  "Chennai",
+  "Coimbatore",
+  "Cuttack",
+  "Dehradun",
+  "Delhi",
+  "Faridabad",
+  "Gangtok",
+  "Ghaziabad",
+  "Goa",
+  "Gurgaon",
+  "Guwahati",
+  "Gwalior",
+  "Haridwar",
+  "Hyderabad",
+  "Imphal",
+  "Indore",
+  "Jaipur",
+  "Jabalpur",
+  "Jammu",
+  "Jamshedpur",
+  "Jodhpur",
+  "Kanpur",
+  "Kochi",
+  "Kohima",
+  "Kolkata",
+  "Kota",
+  "Kozhikode",
+  "Lucknow",
+  "Ludhiana",
+  "Madurai",
+  "Mangalore",
+  "Margao",
+  "Meerut",
+  "Moradabad",
+  "Mumbai",
+  "Mysore",
+  "Nagpur",
+  "Nashik",
+  "Noida",
+  "Panaji",
+  "Patna",
+  "Puducherry",
+  "Pune",
+  "Rajkot",
+  "Ranchi",
+  "Rourkela",
+  "Shillong",
+  "Srinagar",
+  "Surat",
+  "Thane",
+  "Thiruvananthapuram",
+  "Tiruchirappalli",
+  "Tirupati",
+  "Udaipur",
+  "Varanasi",
+  "Vijayawada",
+  "Visakhapatnam",
+  "Warangal"
+];
+
+
   logoUrl: string | ArrayBuffer | null = null;
   tournamentId: string | null = null;
 

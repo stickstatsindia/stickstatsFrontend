@@ -1,7 +1,7 @@
 <div class="modal-container">
   <div class="modal-header">
     <span class="modal-title">Add Player via Phone Number</span>
-    <button class="close-btn" aria-label="Close">&times;</button>
+    <!-- <button class="close-btn" aria-label="Close">&times;</button> -->
   </div>
   <div class="tab-content">
     <form [formGroup]="playerForm" (ngSubmit)="addTeam()">
@@ -21,13 +21,21 @@
         </div>
         <div class="form-fields">
           <label>
-            Player Name*
+            Player Name* (Will be auto fetch via phone number)
             <input formControlName="playerName" placeholder="Player Name" />
           </label>
           <label>
-            Valid Phone Number*
+            Phone Number* (Player have to be a registered user)
             <input formControlName="phone_number" placeholder="Valid Phone Number" maxlength="10" />
           </label>
+        </div>
+        <div class="error" *ngIf="playerForm.get('phone_number')?.touched && playerForm.get('phone_number')?.invalid">
+          <div class="text-danger" *ngIf="playerForm.get('phone_number')?.errors?.['required']">
+            Phone number is required.
+          </div>
+          <div class="text-danger" *ngIf="playerForm.get('phone_number')?.errors?.['pattern']">
+            Enter a valid 10-digit phone number starting with 6, 7, 8, or 9.
+          </div>
         </div>
       </div>
       <button class="add-btn" type="submit" [disabled]="!playerForm.valid">ADD TEAM</button>
