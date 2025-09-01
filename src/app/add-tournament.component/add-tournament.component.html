@@ -6,18 +6,25 @@
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="tournament_name" class="form-label">Tournament Name*</label>
-        <input type="text" id="tournament_name" class="form-control" formControlName="tournament_name" placeholder="Enter Tournament Name">
+        <input type="text" id="tournament_name" class="form-control" formControlName="tournament_name"
+          placeholder="Enter Tournament Name">
+        <div *ngIf="tournamentForm.get('tournament_name')?.touched && tournamentForm.get('tournament_name')?.invalid"
+          class="text-danger">
+          Tournament Name is required
+        </div>
       </div>
       <div class="col-md-6 form-group">
         <label class="form-label">Tournament Category*</label>
         <div class="d-flex flex-wrap gap-2">
-          <button type="button"
-                  *ngFor="let cat of tournamentCategories"
-                  class="btn"
-                  [ngClass]="{'btn-primary': selectedCategory === cat, 'btn-outline-primary': selectedCategory !== cat}"
-                  (click)="toggleCategory(cat)">
+          <button type="button" *ngFor="let cat of tournamentCategories" class="btn"
+            [ngClass]="{'btn-primary': selectedCategory === cat, 'btn-outline-primary': selectedCategory !== cat}"
+            (click)="toggleCategory(cat)">
             {{cat}}
           </button>
+        </div>
+        <div *ngIf="tournamentForm.get('category')?.touched && tournamentForm.get('category')?.invalid"
+          class="text-danger">
+          Tournament category is required
         </div>
       </div>
     </div>
@@ -27,17 +34,23 @@
       <div class="col-md-6 form-group">
         <label for="location" class="form-label">City*</label>
         <input type="text" id="location" class="form-control" formControlName="location" placeholder="Enter City">
+        <div *ngIf="tournamentForm.get('location')?.touched && tournamentForm.get('location')?.invalid"
+          class="text-danger">
+          City is required
+        </div>
       </div>
       <div class="col-md-6 form-group">
         <label class="form-label">Ground Type*</label>
         <div class="d-flex flex-wrap gap-2">
-          <button type="button"
-                  *ngFor="let type of groundTypes"
-                  class="btn"
-                  [ngClass]="{'btn-success': selectedGroundType === type, 'btn-outline-success': selectedGroundType !== type}"
-                  (click)="toggleGroundType(type)">
+          <button type="button" *ngFor="let type of groundTypes" class="btn"
+            [ngClass]="{'btn-success': selectedGroundType === type, 'btn-outline-success': selectedGroundType !== type}"
+            (click)="toggleGroundType(type)">
             {{type}}
           </button>
+        </div>
+        <div *ngIf="tournamentForm.get('groundType')?.touched && tournamentForm.get('groundType')?.invalid"
+          class="text-danger">
+          Please select a ground type
         </div>
       </div>
     </div>
@@ -45,19 +58,38 @@
     <!-- Organiser Name & Match Type -->
     <div class="row">
       <div class="col-md-6 form-group">
-        <label for="organiserName" class="form-label">Organiser Name*</label>
-        <input type="text" id="organiserName" class="form-control" formControlName="organiserName" placeholder="Enter Organiser Name">
+        <!-- <label for="organiserName" class="form-label">Organiser Name*</label>
+        <input type="text" id="organiserName" class="form-control" formControlName="organiserName"
+          placeholder="Enter Organiser Name" >
+        <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+          {{ errorMessage }}
+        </div> -->
+
+        <!-- Auto fetch organizer name via phone -->
+        <div class="col-md-6 form-group">
+          <label for="organiserName" class="form-label">Organiser Name* </label>
+          <small><strong> (Will be auto fetched via organizer phone number)</strong></small>
+          <input type="text" id="organiserName" class="form-control" formControlName="organiserName"
+            placeholder="Organiser Name" readonly> <!-- 👈 readonly -->
+          <!-- Show custom error -->
+          <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+            {{ errorMessage }}
+          </div>
+        </div>
+
       </div>
       <div class="col-md-6 form-group">
         <label class="form-label">Match Type*</label>
         <div class="d-flex flex-wrap gap-2">
-          <button type="button"
-                  *ngFor="let mt of matchTypes"
-                  class="btn btn-toggle"
-                  [ngClass]="{'btn-warning': selectedMatchType === mt, 'btn-outline-warning': selectedMatchType !== mt}"
-                  (click)="toggleMatchType(mt)">
+          <button type="button" *ngFor="let mt of matchTypes" class="btn btn-toggle"
+            [ngClass]="{'btn-warning': selectedMatchType === mt, 'btn-outline-warning': selectedMatchType !== mt}"
+            (click)="toggleMatchType(mt)">
             {{mt}}
           </button>
+        </div>
+        <div *ngIf="tournamentForm.get('matchType')?.touched && tournamentForm.get('matchType')?.invalid"
+          class="text-danger">
+          Please select a match type
         </div>
       </div>
     </div>
@@ -66,47 +98,73 @@
     <div class="row">
       <div class="col-md-4 form-group">
         <label for="countryCode" class="form-label">Country Code*</label>
-        <input type="text" id="countryCode" class="form-control" formControlName="countryCode" placeholder="+91">
+        <select id="countryCode" class="form-control" formControlName="countryCode">
+          <option value="">Select</option>
+          <option value="+91">India (+91)</option>
+        </select>
+        <!-- Live validation -->
+        <div *ngIf="tournamentForm.get('countryCode')?.invalid && tournamentForm.get('countryCode')?.touched"
+          class="text-danger small">
+          Country code is required.
+        </div>
       </div>
       <div class="col-md-4 form-group">
-        <label for="organiserContact" class="form-label">Organiser Contact*</label>
-        <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact" placeholder="Phone Number">
+        <label for="organiserContact" class="form-label">Organiser Contact* </label> <small> <strong> (The organizer
+            must be a registered
+            user!!!)</strong></small>
+        <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact"
+          placeholder="Phone Number" (blur)="fetchOrganizerByPhone()">
+        <div *ngIf="tournamentForm.get('organiserContact')?.touched && tournamentForm.get('organiserContact')?.errors">
+          <small class="text-danger" *ngIf="tournamentForm.get('organiserContact')?.errors?.['required']">
+            Phone number is required
+          </small>
+          <small class="text-danger" *ngIf="tournamentForm.get('organiserContact')?.errors?.['pattern']">
+            Enter a valid 10-digit phone number
+          </small>
+        </div>
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label d-block">Tournament Format*</label>
         <div class="d-flex flex-wrap gap-2">
-          <button type="button"
-                  *ngFor="let format of tournamentFormats"
-                  class="btn btn-toggle"
-                  [ngClass]="{'btn-warning': selectedFormat === format, 'btn-outline-warning': selectedFormat !== format}"
-                  (click)="toggleFormat(format)">
+          <button type="button" *ngFor="let format of tournamentFormats" class="btn btn-toggle"
+            [ngClass]="{'btn-warning': selectedFormat === format, 'btn-outline-warning': selectedFormat !== format}"
+            (click)="toggleFormat(format)">
             {{format}}
           </button>
+        </div>
+        <div *ngIf="tournamentForm.get('format')?.touched && tournamentForm.get('format')?.invalid" class="text-danger">
+          Please select a tournament format
         </div>
       </div>
     </div>
 
     <!-- Allow Contact Checkbox -->
-    <div class="form-group form-check mb-2">
+    <!-- <div class="form-group form-check mb-2">
       <input type="checkbox" class="form-check-input" id="allowContact" formControlName="allowContact">
       <label class="form-check-label" for="allowContact">Allow players to contact me for Team Registration</label>
-    </div>
+    </div> -->
 
     <!-- Start Date & End Date -->
     <div class="row date-row">
       <div class="col-md-6 form-group">
         <label for="start_date" class="form-label">Start Date*</label>
         <input type="date" id="start_date" class="form-control" formControlName="start_date">
+        <div *ngIf="tournamentForm.errors?.['startPast']" class="text-danger">
+          Start date must be today or in the future.
+        </div>
       </div>
       <div class="col-md-6 form-group">
         <label for="end_date" class="form-label">End Date*</label>
         <input type="date" id="end_date" class="form-control" formControlName="end_date">
+        <div *ngIf="tournamentForm.errors?.['endBeforeStart']" class="text-danger">
+          End date must be after the start date.
+        </div>
       </div>
     </div>
 
     <!-- Submit Button -->
-    <div class="text-center mt-3">
-      <button type="submit" class="btn btn-primary px-5">Submit</button>
+    <div class="text-center mt-3 pb-5">
+      <button type="submit" [disabled]="tournamentForm.invalid" class="btn btn-primary col-md-3 py-2 ">Submit</button>
     </div>
   </form>
 </div>

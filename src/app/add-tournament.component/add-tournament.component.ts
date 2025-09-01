@@ -20,6 +20,7 @@ interface User {
 })
 export class AddTournamentComponent {
   tournamentForm: FormGroup;
+  errorMessage: string | null = null; // For showing validation errors
 
   tournamentCategories = ['OPEN', 'CORPORATE', 'COMMUNITY', 'SCHOOL', 'BOX'];
   groundTypes = ['ASTROTURF', 'GRASS'];
@@ -44,32 +45,75 @@ export class AddTournamentComponent {
       match_type: ['', Validators.required],
       format: ['', Validators.required],
       organiserName: ['', Validators.required],
-      countryCode: ['', Validators.required],
+      countryCode: ['+91', Validators.required],
       organiserContact: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       allowContact: [false],
       start_date: ['', Validators.required],
-      end_date: ['', Validators.required]
-    });
+      end_date: ['', Validators.required],
+
+    }, { validators: this.dateValidator });
+  }
+
+  //  Custom validator for dates
+  dateValidator(formGroup: FormGroup) {
+    const start = new Date(formGroup.get('start_date')?.value);
+    const end = new Date(formGroup.get('end_date')?.value);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    if (!start || !end) return null;
+
+    if (start < today) {
+      return { startPast: true };
+    }
+    if (end <= start) {
+      return { endBeforeStart: true };
+    }
+    return null;
   }
 
   toggleCategory(category: string): void {
     this.selectedCategory = category;
     this.tournamentForm.patchValue({ tournament_category: category });
+    this.tournamentForm.get('category')?.markAsTouched();
   }
 
   toggleGroundType(type: string): void {
     this.selectedGroundType = type;
     this.tournamentForm.patchValue({ ground_type: type });
+    this.tournamentForm.get('type')?.markAsTouched();
   }
 
   toggleMatchType(type: string): void {
     this.selectedMatchType = type;
     this.tournamentForm.patchValue({ match_type: type });
+    this.tournamentForm.get('type')?.markAsTouched();
   }
 
   toggleFormat(format: string): void {
     this.selectedFormat = format;
     this.tournamentForm.patchValue({ format: format });
+    this.tournamentForm.get('format')?.markAsTouched();
+  }
+
+  //  Fetch organizer name when phone entered
+  fetchOrganizerByPhone(): void {
+    const phone = this.tournamentForm.get('organiserContact')?.value;
+    if (!phone || this.tournamentForm.get('organiserContact')?.invalid) return;
+
+    this.tournamentService.getUserByPhone(phone).subscribe({
+      next: (user: any) => {
+        console.log("✅ User found:", user);
+        this.tournamentForm.patchValue({ organiserName: user.full_name });
+        this.errorMessage = null;
+      },
+      error: () => {
+        console.error("❌ No user found:");
+        this.errorMessage = "No user found with this phone number. Organizer must register first!";
+        this.tournamentForm.patchValue({ organiserName: '' });
+      }
+    });
   }
 
   onSubmit(): void {

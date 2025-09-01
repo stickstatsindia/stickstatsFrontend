@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd  } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../service/tournament/tournament';
+import { filter, Subscription } from 'rxjs';
 
 interface Tournament {
   _id: string;
@@ -24,14 +25,35 @@ interface Tournament {
   templateUrl: './tournaments.html',
   styleUrls: ['./tournaments.css']
 })
-export class Tournaments implements OnInit {
+export class Tournaments implements OnInit, OnDestroy  {
   tournaments: Tournament[] = [];
   settingsOpenIndex: number | null = null;
+  private routerSub!: Subscription;
 
-  constructor(private tournamentService: TournamentService, private router: Router) {
-  }
+  constructor(
+    private tournamentService: TournamentService, 
+    private router: Router
+  ) {}
+
   ngOnInit() {
+    // load initially
     this.loadTournaments();
+
+    // reload whenever we navigate back to /tournaments
+    this.routerSub = this.router.events
+    .pipe(filter(event=> event instanceof NavigationEnd)).subscribe((event:any)=>{
+      if (event.urlAfterRedirects === '/tournaments') {
+          this.loadTournaments();
+        }
+    });
+
+  }
+
+    ngOnDestroy() {
+    // cleanup subscription to avoid memory leaks
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
   }
 
   loadTournaments() {
@@ -42,6 +64,7 @@ export class Tournaments implements OnInit {
   }
 
   addTournament() {
+    this.router.navigate(['/add-tournament']); 
     alert('Add tournament clicked!');
   }
 
