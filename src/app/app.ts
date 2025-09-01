@@ -9,7 +9,6 @@ import { NgModel } from '@angular/forms';
 import { Footer } from "./footer/footer";
 
 
-
 @Component({
   selector: 'app-root',
    imports: [RouterOutlet, Navbar, FormsModule, CommonModule, Footer],

@@ -1,39 +1,23 @@
-import { Injectable, inject } from '@angular/core';
+// src/app/services/socket.service.ts
+import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { fromEvent, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   private socket: Socket;
-  private readonly SERVER_URL = 'http://localhost:3000'; // Replace with deployed URL later
 
   constructor() {
-    this.socket = io(this.SERVER_URL);
+    this.socket = io('http://localhost:3000'); // change to your backend URL
   }
 
-  emitScoreUpdate(data: any): void {
-    this.socket.emit('scoreUpdate', data);
+  emit(eventName: string, data: any) {
+    this.socket.emit(eventName, data);
   }
 
-  onScoreBroadcast(): Observable<any> {
-    return new Observable(observer => {
-      this.socket.on('scoreBroadcast', (data) => observer.next(data));
-    });
-  }
-
-  emitTimerUpdate(timerData: any) {
-    this.socket.emit('timerUpdate', timerData);
-  }
-
-  onTimerUpdate(): Observable<any> {
-    return fromEvent(this.socket, 'timerUpdate');
-  }
-
-  onScoreUpdate(): Observable<any> {
-    return new Observable(observer => {
-      this.socket.on('scoreUpdate', (data) => {
-        observer.next(data);
-      });
-    });
+  disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
 }

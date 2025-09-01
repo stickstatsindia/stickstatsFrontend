@@ -17,33 +17,33 @@
     </div>
     <span class="vs-text">vs</span>
     <div class="flex-vertical-center">
-<table class="ps-quarter-table">
-      <thead>
-        <tr>
-          <th>Q1</th>
-          <th>Q2</th>
-          <th>Q3</th>
-          <th>Q4</th>
-          <th>PEN</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ matchData.teams.home.q1 }}</td>
-          <td>{{ matchData.teams.home.q2 }}</td>
-          <td>{{ matchData.teams.home.q3 }}</td>
-          <td>{{ matchData.teams.home.q4 }}</td>
-          <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.homeScore : '' }}</td>
-        </tr>
-        <tr>
-          <td>{{ matchData.teams.away.q1 }}</td>
-          <td>{{ matchData.teams.away.q2 }}</td>
-          <td>{{ matchData.teams.away.q3 }}</td>
-          <td>{{ matchData.teams.away.q4 }}</td>
-          <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.awayScore : '' }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="ps-quarter-table">
+        <thead>
+          <tr>
+            <th>Q1</th>
+            <th>Q2</th>
+            <th>Q3</th>
+            <th>Q4</th>
+            <th>PEN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ matchData.teams.home.q1 }}</td>
+            <td>{{ matchData.teams.home.q2 }}</td>
+            <td>{{ matchData.teams.home.q3 }}</td>
+            <td>{{ matchData.teams.home.q4 }}</td>
+            <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.homeScore : '' }}</td>
+          </tr>
+          <tr>
+            <td>{{ matchData.teams.away.q1 }}</td>
+            <td>{{ matchData.teams.away.q2 }}</td>
+            <td>{{ matchData.teams.away.q3 }}</td>
+            <td>{{ matchData.teams.away.q4 }}</td>
+            <td>{{ matchData.penaltyShootout ? matchData.penaltyShootout.awayScore : '' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     
     <div class="team-block">
@@ -58,10 +58,12 @@
     </div>
   </div>
     
-   <div class="status-row">
+  <div class="status-row">
     <span>Status: {{ matchData.status }}</span>
   </div>
+
   <app-penaltyshootout [data]="matchData"></app-penaltyshootout>
+  
   <!-- Match Events inside card, after penalty shootout -->
   <div class="match-events-flex">
     <div class="match-events-col">
@@ -91,6 +93,8 @@
       </div>
     </div>
   </div>
+
+  
   <!-- Tab Navigation -->
   <div class="tab-nav">
     <button *ngFor="let tab of tabs; let i = index" [class.active]="selectedTab === i" (click)="selectedTab = i">{{ tab }}</button>

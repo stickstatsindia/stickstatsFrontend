@@ -1,0 +1,37 @@
+<div class="members-header">
+  <h1>Members of Team</h1>
+</div>
+
+<div class="members-grid" *ngIf="teamMembers && teamMembers.length > 0">
+  <div class="member-card" *ngFor="let member of teamMembers">
+    <div class="member-avatar" [attr.data-initials]="getInitials(member.name)">
+      <div class="initials">{{ getInitials(member.name) }}</div>
+      <div class="role-badge">{{ member.role }}</div>
+    </div>
+    <div class="member-name">{{ member.name }}</div>
+    <div class="member-phone">{{ member.phone_number }}</div>
+  </div>
+  <!-- Add Player Card -->
+  <div class="member-card add-player-card" (click)="onAddPlayer()">
+    <div class="member-avatar">
+      <img src="assets/add-player.png" alt="Add Player" class="member-img">
+    </div>
+    <div class="member-name">Add Player</div>
+  </div>
+</div>
+
+<!-- No members message -->
+<div class="no-members" *ngIf="!isLoading && (!teamMembers || teamMembers.length === 0)">
+  <p>No team members found. Add players to your team.</p>
+  <button class="add-player-btn" (click)="onAddPlayer()">ADD PLAYER</button>
+</div>
+
+<!-- Loading indicator -->
+<div class="loading" *ngIf="isLoading">
+  <p>Loading team members...</p>
+</div>
+
+<!-- Error message -->
+<div class="error-message" *ngIf="error">
+  {{ error }}
+</div>

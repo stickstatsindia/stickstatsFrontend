@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MembersService } from '../service/members/members-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-newplayer',
@@ -15,11 +16,17 @@ export class AddNewplayerComponent {
   selectedTab = 0; // Since we only have one tab now
   playerForm: FormGroup;
   logoPreview: string | ArrayBuffer | null = null;
+  team_id: string | null = null;
 
-  constructor(private fb: FormBuilder,private memeberService:MembersService) {
+  constructor(private fb: FormBuilder,private memeberService:MembersService, private router: Router) {
+    const nav = this.router.getCurrentNavigation();
+    console.log('Navigation State:', nav?.extras.state);
+    const state = nav?.extras.state as { teamId?: string };
+    console.log('Extracted State:', state);
+    this.team_id= state?.teamId || null;
     this.playerForm = this.fb.group({
       playerName: ['', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       teamLogo: [null]
     });
   }
@@ -46,7 +53,7 @@ export class AddNewplayerComponent {
       // alert('Team added!');
       console.log('Form Submitted', this.teamtId);
     if (this.playerForm.valid) {
-      const teamData = { ...this.playerForm.value, tournamentId: this.teamtId };
+      const teamData = { ...this.playerForm.value, teamId: this.team_id };
       console.log('Team Data:', teamData);
       // if (!this.tournamentId) {
       //   console.error('No tournamentId provided!');
@@ -65,10 +72,9 @@ export class AddNewplayerComponent {
     } else {
       this.playerForm.markAllAsTouched(); // Show validation errors
     }
-
-    }
   }
+    
 }
 
-
+}
 

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { PreviewComponent } from './components/preview.component';
 import { BoxScoreComponent } from './components/boxscore.component';
 import { TimelineComponent } from './components/timeline.component';
 import { AnalysisComponent } from './components/analysis.component';
 import { LeadersComponent } from './components/leaders.component';
 import { PenaltyShootoutComponent } from './components/penaltyshootout.component';
+import { io, Socket } from "socket.io-client";
 
 @Component({
   selector: 'app-result',
@@ -14,8 +16,12 @@ import { PenaltyShootoutComponent } from './components/penaltyshootout.component
   templateUrl: './result.html',
   styleUrls: ['./result.css']
 })
+
 export class Result {
   matchData: any;
+  matchId!: string;
+  private socket!: Socket;
+
   tabs = ['Preview', 'Box Score', 'Timeline', 'Analysis', 'Leaders'];
   selectedTab = 0;
   boxScoreStats = [
@@ -37,7 +43,121 @@ export class Result {
     { label: 'Red Cards', key: 'RedCards' }
   ];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit(): void {
+    // Initialize Socket.IO connection
+    this.socket = io("http://localhost:3000");
+
+    // Get matchId from URL params
+    this.route.paramMap.subscribe(params => {
+      this.matchId = params.get('matchId')!;
+      console.log('🎯 Match ID from URL:', this.matchId);
+      
+      // Join the specific match room
+      this.socket.emit("joinMatch", this.matchId);
+      console.log('🔌 Joined match room:', this.matchId);
+    });
+
+    // Listen for real-time score updates
+    this.socket.on("scoreUpdated", (data) => {
+      console.log('📊 Score Update Received:', data);
+      
+      // Check if this update is for our match
+      if (data.match_id === this.matchId) {
+        console.log('✅ Score update for current match:', {
+          matchId: data.match_id,
+          team1Score: data.team1_score,
+          team2Score: data.team2_score,
+          status: data.status
+        });
+        
+        // Update the score in matchData
+        if (this.matchData) {
+          this.matchData.score.home = data.team1_score;
+          this.matchData.score.away = data.team2_score;
+          this.matchData.status = data.status || this.matchData.status;
+        }
+      }
+    });
+
+    // Listen for timer updates
+    this.socket.on("timerUpdated", (data) => {
+      console.log('⏱️ Timer Update Received:', data);
+      
+      if (data.match_id === this.matchId) {
+        console.log('✅ Timer update for current match:', {
+          matchId: data.match_id,
+          totalSeconds: data.total_seconds,
+          isPaused: data.is_paused,
+          displayMinutes: data.display_minutes,
+          displaySeconds: data.display_seconds,
+          status: data.status
+        });
+      }
+    });
+
+    // Listen for new events
+    this.socket.on("eventAdded", (data) => {
+      console.log('🎯 Event Added Received:', data);
+      
+      if (data.match_id === this.matchId) {
+        console.log('✅ Event added for current match:', {
+          matchId: data.match_id,
+          event: data.event,
+          status: data.status
+        });
+        
+        // Add the new event to matchData events if needed
+        if (this.matchData && data.event) {
+          this.matchData.events.push({
+            minute: data.event.time,
+            team: data.event.team,
+            type: data.event.type,
+            player: data.event.player
+          });
+        }
+      }
+    });
+
+    // Listen for quarter changes
+    this.socket.on("quarterChanged", (data) => {
+      console.log('🔄 Quarter Changed Received:', data);
+      
+      if (data.match_id === this.matchId) {
+        console.log('✅ Quarter changed for current match:', {
+          matchId: data.match_id,
+          currentQuarter: data.current_quarter,
+          status: data.status
+        });
+      }
+    });
+
+    // Listen for match status changes
+    this.socket.on("matchStatusChanged", (data) => {
+      console.log('📝 Match Status Changed Received:', data);
+      
+      if (data.match_id === this.matchId) {
+        console.log('✅ Match status changed for current match:', {
+          matchId: data.match_id,
+          status: data.status
+        });
+        
+        if (this.matchData) {
+          this.matchData.status = data.status;
+        }
+      }
+    });
+
+    // Listen for complete match state updates
+    this.socket.on("matchStateUpdated", (data) => {
+      console.log('🔄 Complete Match State Update Received:', data);
+      
+      if (data.matchId === this.matchId) {
+        console.log('✅ Complete state update for current match:', data);
+      }
+    });
+
     this.matchData = {
       matchId: '03dc760e-55e4-11f0-a2ea-29cee7c0ffc0',
       date: '2025-07-17',
@@ -115,5 +235,14 @@ export class Result {
         { type: 'PC', player: 'Muhammad Safwan', minute: '09:42' }
       ]
     };
+  }
+
+  ngOnDestroy(): void {
+    // Clean up socket connection
+    if (this.socket && this.matchId) {
+      this.socket.emit("leaveMatch", this.matchId);
+      this.socket.disconnect();
+      console.log('🔌 Disconnected from socket and left match room:', this.matchId);
+    }
   }
 }
