@@ -1,54 +1,71 @@
 <div class="teams-container">
-	<div class="teams-header">
-		<h1>Teams</h1>
-		<button class="add-team-btn" (click)="onAddTeam()">ADD A NEW TEAM</button>
-	</div>
-	<div class="teams-table-card">
-		<table class="teams-table">
-			<thead>
-				<tr>
-					<th>Team Name <span class="sort-arrow">↑</span></th>
-					<th>City</th>
-					<th>Members</th> <!-- ✅ New Column -->
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let team of pagedTeams">
-					<td>{{ team.team_name }}</td>
-					<td>{{ team.city }}</td>
-					
-					<!-- ✅ Members Column -->
-					<td>
-						<button class="members-btn" (click)="onMembersAction(team)">
-							{{ team.memberCount === 0 || team.memberCount == null ? 'Add Player' : team.memberCount + ' Members' }}
-						</button>
-					</td>
+  <div class="teams-header">
+    <h1>Teams</h1>
+    <button class="add-team-btn" (click)="onAddTeam()">ADD A NEW TEAM</button>
+  </div>
 
-					<td>
-						<button class="action-btn" (click)="onEditTeam(team)">
-							<span class="material-icons">edit</span>
-						</button>
-						<button class="action-btn" (click)="onDeleteTeam(team)">
-							<span class="material-icons">delete</span>
-						</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="teams-table-footer">
-			<div class="rows-per-page">
-				Rows per page:
-				<select [(ngModel)]="rowsPerPage" (change)="currentPage = 1">
-					<option *ngFor="let n of rowsPerPageOptions" [value]="n">{{ n }}</option>
-				</select>
-			</div>
-			<div class="pagination">
-				{{ ((currentPage-1) * rowsPerPage + 1) }}–{{ currentPage * rowsPerPage > teams.length ? teams.length : currentPage * rowsPerPage }} of {{ teams.length }}
-				<button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">&lt;</button>
-				<span class="pagination-page">{{ currentPage }}</span>
-				<button class="pagination-btn" [disabled]="currentPage * rowsPerPage >= teams.length" (click)="nextPage()">&gt;</button>
-			</div>
-		</div>
-	</div>
+  <div class="teams-table-card">
+    <table class="teams-table" *ngIf="teams.length > 0; else noData">
+      <thead>
+        <tr>
+          <th>Team Name <span class="sort-arrow">↑</span></th>
+          <th>City</th>
+          <th>Members</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of pagedTeams">
+          <td>{{ team.team_name }}</td>
+          <td>{{ team.city }}</td>
+          <td>
+            <button class="members-btn" (click)="onMembersAction(team)">
+              {{ team.memberCount === 0 || team.memberCount == null
+                ? 'Add Player'
+                : team.memberCount + ' Members' }}
+            </button>
+          </td>
+          <td>
+            <button class="action-btn" (click)="onEditTeam(team)">
+              <span class="material-icons">edit</span>
+            </button>
+            <button class="action-btn" (click)="onDeleteTeam(team)">
+              <span class="material-icons">delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noData>
+      <p class="no-data">No teams available.</p>
+    </ng-template>
+
+    <!-- ✅ Pagination + rows per page -->
+    <div class="teams-table-footer" *ngIf="teams.length > 0">
+      <div class="rows-per-page">
+        Rows per page:
+        <select [(ngModel)]="rowsPerPage" (change)="onRowsPerPageChange()">
+          <option *ngFor="let n of rowsPerPageOptions" [value]="n">{{ n }}</option>
+        </select>
+      </div>
+      <div class="pagination">
+       <span>
+		{{ (currentPage - 1) * rowsPerPage + 1 }}–
+		{{ displayedEndRow }}
+		of {{ teams.length }}
+		</span>
+
+        <button class="pagination-btn"
+                [disabled]="currentPage === 1"
+                (click)="prevPage()">&lt;</button>
+
+        <span class="pagination-page">{{ currentPage }}</span>
+
+        <button class="pagination-btn"
+                [disabled]="currentPage * rowsPerPage >= teams.length"
+                (click)="nextPage()">&gt;</button>
+      </div>
+    </div>
+  </div>
 </div>

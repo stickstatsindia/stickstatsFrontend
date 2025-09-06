@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd  } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../service/tournament/tournament';
 import { filter, Subscription } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Tournament {
   _id: string;
@@ -21,18 +22,19 @@ interface Tournament {
 
 @Component({
   selector: 'app-tournaments',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './tournaments.html',
-  styleUrls: ['./tournaments.css']
+  styleUrls: ['./tournaments.css'],
 })
-export class Tournaments implements OnInit, OnDestroy  {
+export class Tournaments implements OnInit, OnDestroy {
   tournaments: Tournament[] = [];
   settingsOpenIndex: number | null = null;
   private routerSub!: Subscription;
 
   constructor(
-    private tournamentService: TournamentService, 
-    private router: Router
+    private tournamentService: TournamentService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -41,31 +43,35 @@ export class Tournaments implements OnInit, OnDestroy  {
 
     // reload whenever we navigate back to /tournaments
     this.routerSub = this.router.events
-    .pipe(filter(event=> event instanceof NavigationEnd)).subscribe((event:any)=>{
-      if (event.urlAfterRedirects === '/tournaments') {
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        if (event.urlAfterRedirects.includes('/tournaments')) {
           this.loadTournaments();
+          this.cdr.detectChanges(); 
         }
-    });
-
+      });
   }
 
-    ngOnDestroy() {
-    // cleanup subscription to avoid memory leaks
+  ngOnDestroy() {
     if (this.routerSub) {
       this.routerSub.unsubscribe();
     }
   }
 
   loadTournaments() {
-    this.tournamentService.getTournaments().subscribe((data: any) => {
-      this.tournaments = data as Tournament[];
-      console.log('Tournaments loaded:', this.tournaments);
+    this.tournamentService.getTournaments().subscribe({
+      next: (data: any) => {
+        this.tournaments = data as Tournament[];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load tournaments:', err);
+      },
     });
   }
 
   addTournament() {
-    this.router.navigate(['/add-tournament']); 
-    alert('Add tournament clicked!');
+    this.router.navigate(['/add-tournament']);
   }
 
   editTournament(index: number) {
@@ -90,7 +96,6 @@ export class Tournaments implements OnInit, OnDestroy  {
 
   goToGroups() {
     this.settingsOpenIndex = null;
-    // Implement navigation to groups if needed
     alert('Groups clicked!');
   }
 }
