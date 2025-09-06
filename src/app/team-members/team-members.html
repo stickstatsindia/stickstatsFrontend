@@ -1,8 +1,21 @@
 <div class="members-header">
   <h1>Members of Team</h1>
+  <button class="add-player-btn" (click)="onAddPlayer()">+ Add Player</button>
 </div>
 
-<div class="members-grid" *ngIf="teamMembers && teamMembers.length > 0">
+<!-- 🔄 Loading indicator -->
+<div class="loading" *ngIf="isLoading">
+  <p>Loading team members...</p>
+</div>
+
+<!-- ❌ Error message -->
+<div class="error-message" *ngIf="!isLoading && error">
+  {{ error }}
+</div>
+
+<!-- ✅ Members Grid -->
+<div class="members-grid" *ngIf="!isLoading && !error">
+  <!-- Show members if available -->
   <div class="member-card" *ngFor="let member of teamMembers">
     <div class="member-avatar" [attr.data-initials]="getInitials(member.name)">
       <div class="initials">{{ getInitials(member.name) }}</div>
@@ -11,27 +24,11 @@
     <div class="member-name">{{ member.name }}</div>
     <div class="member-phone">{{ member.phone_number }}</div>
   </div>
-  <!-- Add Player Card -->
-  <div class="member-card add-player-card" (click)="onAddPlayer()">
-    <div class="member-avatar">
-      <img src="assets/add-player.png" alt="Add Player" class="member-img">
-    </div>
-    <div class="member-name">Add Player</div>
-  </div>
-</div>
 
-<!-- No members message -->
-<div class="no-members" *ngIf="!isLoading && (!teamMembers || teamMembers.length === 0)">
+
+
+<!-- ℹ️ No members message (only if API success but no members) -->
+<div class="no-members" *ngIf="!isLoading && !error && teamMembers.length === 0">
   <p>No team members found. Add players to your team.</p>
   <button class="add-player-btn" (click)="onAddPlayer()">ADD PLAYER</button>
-</div>
-
-<!-- Loading indicator -->
-<div class="loading" *ngIf="isLoading">
-  <p>Loading team members...</p>
-</div>
-
-<!-- Error message -->
-<div class="error-message" *ngIf="error">
-  {{ error }}
 </div>

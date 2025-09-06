@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+// 
+
+
+
+
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MembersService } from '../service/members/members-service';
@@ -22,47 +27,45 @@ interface TeamMember {
 })
 export class TeamMembersComponent implements OnInit {
   teamMembers: TeamMember[] = [];
-  teamId: string | null = null;
+  team_id: string | null = null;
   tournamentId: string | null = null;
   isLoading = false;
   error: string | null = null;
-    team_id:string | null=null;
+
   constructor(
     private memberService: MembersService,
     private router: Router,
-    private route: ActivatedRoute
-    
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     console.log('TeamMembersComponent initialized');
     const nav = this.router.getCurrentNavigation();
     console.log('Navigation State:', nav?.extras.state);
     const state = nav?.extras.state as { teamId?: string };
     console.log('Extracted State:', state);
-    this.team_id= state?.teamId || null;
+    this.team_id = state?.teamId || null;
   }
 
   ngOnInit() {
-    
-      
-      if (this.team_id) {
-        this.loadTeamMembers();
-      } else {
-        this.error = 'No team ID provided';
-        console.error('No team ID in query params');
-      }
-    ;
+    if (this.team_id) {
+      this.loadTeamMembers();
+      this.cdr.detectChanges();
+    } else {
+      // this.error = 'No team ID provided';
+      console.error('No team ID in query params');
+    }
   }
 
   loadTeamMembers() {
-    
     if (!this.team_id) return;
 
     this.isLoading = true;
-      this.memberService.getMembers(this.team_id).subscribe({
+    this.memberService.getMembers(this.team_id).subscribe({
       next: (members: TeamMember[]) => {
         console.log('Team members loaded:', members);
         this.teamMembers = members;
-        this.isLoading = false;
+        this.isLoading = false; // ✅ FIXED
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading team members:', err);
@@ -73,32 +76,23 @@ export class TeamMembersComponent implements OnInit {
   }
 
   onAddPlayer() {
-    // Navigate to add player page with teamId
-    this.router.navigate(['/add-newplayer'], {
+    // ✅ FIXED: use team_id not teamId
+    this.router.navigate(['/addnew-player'], {
       state: {
-        teamId: this.teamId,
+        teamId: this.team_id,
         tournamentId: this.tournamentId
       }
     });
   }
 
   getInitials(fullName: string): string {
-    console.log('Getting initials for:', fullName);
     if (!fullName) return '';
-
-    // Split the name and filter out any empty parts
     const parts = fullName.trim().split(' ').filter(part => part.length > 0);
-    console.log('Name parts:', parts);
-
     if (parts.length === 0) return '';
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
 
-    // Get first and last initials
     const firstInitial = parts[0].charAt(0);
     const lastInitial = parts[parts.length - 1].charAt(0);
-    const initials = firstInitial + lastInitial;
-    
-    console.log('Generated initials:', initials.toUpperCase());
-    return initials.toUpperCase();
+    return (firstInitial + lastInitial).toUpperCase();
   }
 }
