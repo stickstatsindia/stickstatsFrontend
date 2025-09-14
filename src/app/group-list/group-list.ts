@@ -94,17 +94,23 @@ import { PoolService } from '../service/pool/pool';
 export class GroupListComponent implements OnInit {
   groups: any[] = [];
   rowsPerPage = 5;
+  tournamentId: string | null = null;
 
-  constructor(private poolService: PoolService, private router: Router) {}
+  constructor(private poolService: PoolService, private router: Router) {
+      // Get tournamentId from navigation state
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as { tournamentId?: string };
+    this.tournamentId = state?.tournamentId || null;
+  }
 
   ngOnInit() {
-    this.poolService.pools$.subscribe((pools) => {
-      this.groups = pools;
-    });
+    // this.poolService.pools$.subscribe((pools) => {
+    //   this.groups = pools;
+    // });
   }
 
   addNewGroup() {
-    this.router.navigate(['/add-group']);
+    this.router.navigate(['/add-group'],{ state: { tournamentId: this.tournamentId } });
   }
 
   editGroup(group: any) {

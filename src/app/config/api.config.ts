@@ -18,5 +18,6 @@ export const environment = {
     getTeamsByTournamentId: '/api/:tournament_id/teams',
     addplayer: '/api/teams/:team_id/members',
     getPlayersByTeamId: '/api/team/:team_id/members',
+    addPool: '/api/:tournament_id/pool',
   }
 };

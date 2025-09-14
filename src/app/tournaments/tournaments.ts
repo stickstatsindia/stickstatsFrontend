@@ -94,8 +94,9 @@ export class Tournaments implements OnInit, OnDestroy {
     this.router.navigate(['/show-teams'], { state: { tournamentId } });
   }
 
-  goToGroups() {
+  goToGroups(tournamentId: string) {
     this.settingsOpenIndex = null;
-    alert('Groups clicked!');
+    this.router.navigate(['/group-list'], { state: { tournamentId } });
+
   }
 }
