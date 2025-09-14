@@ -130,6 +130,7 @@ cities = [
        this.addTeamService.addTeam(teamData).subscribe({
             next: (response: any) => {
               console.log('Tournament added successfully:', response);
+              this.router.navigate(['/show-teams'])
            
             },
             error: (err: any) => {

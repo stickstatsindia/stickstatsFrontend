@@ -84,6 +84,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PoolService } from '../service/pool/pool';
+import { AddTeam } from '../service/team/add-team';
 
 @Component({
   selector: 'app-group-list',
@@ -96,17 +97,20 @@ export class GroupListComponent implements OnInit {
   rowsPerPage = 5;
   tournamentId: string | null = null;
 
+
   constructor(private poolService: PoolService, private router: Router) {
       // Get tournamentId from navigation state
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { tournamentId?: string };
     this.tournamentId = state?.tournamentId || null;
+
   }
 
   ngOnInit() {
     // this.poolService.pools$.subscribe((pools) => {
     //   this.groups = pools;
     // });
+
   }
 
   addNewGroup() {

@@ -1,41 +1,57 @@
 <div class="container mt-4">
   <h2>{{ isEditing ? 'Edit Pool' : 'Add New Pool' }}</h2>
 
-  <div class="mb-3">
-    <label class="form-label">Pool Name</label>
-    <input type="text" [(ngModel)]="poolName" class="form-control" />
-  </div>
+  <form [formGroup]="poolForm">
+    <div class="mb-3">
+      <label class="form-label">Pool Name</label>
+      <input 
+        type="text" 
+        formControlName="pool_name" 
+        class="form-control" 
+        placeholder="Enter pool name"
+      />
+      <div class="text-danger" *ngIf="poolForm.get('pool_name')?.touched && poolForm.get('pool_name')?.invalid">
+        Pool name is required
+      </div>
+    </div>
 
-  <div class="mb-3">
-    <label class="form-label">Pool Type</label>
-    <select [(ngModel)]="selectedPoolType" class="form-select">
-      <option value="" disabled>Select Type</option>
-      <option *ngFor="let type of poolTypes" [value]="type">{{ type }}</option>
-    </select>
-  </div>
-
-  <h5>Select Teams</h5>
-  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
-    <div class="col" *ngFor="let pool of pools; let i = index">
-      <div
-        class="card text-white text-center h-100"
-        [ngClass]="[
-          pool.bg,
-          selectedTeams.includes(i) ? 'border border-4 border-light' : ''
-        ]"
-        style="cursor: pointer;"
-        (click)="toggleTeamSelection(i)"
+    <div class="mb-3">
+      <label class="form-label">Pool Type</label>
+      <select 
+        formControlName="pool_type" 
+        class="form-select"
       >
-        <div class="card-body d-flex flex-column justify-content-center">
-          <h5 class="card-title fw-bold display-6">{{ pool.initials }}</h5>
-          <p class="card-text">{{ pool.name }}</p>
+        <option value="" disabled>Select Type</option>
+        <option *ngFor="let type of poolTypes" [value]="type">{{ type }}</option>
+      </select>
+      <div class="text-danger" *ngIf="poolForm.get('pool_type')?.touched && poolForm.get('pool_type')?.invalid">
+        Pool type is required
+      </div>
+    </div>
+
+    <h5>Select Teams</h5>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
+      <div class="col" *ngFor="let pool of pools; let i = index">
+        <div
+          class="card text-white text-center h-100"
+          [ngClass]="{
+            'bg-primary': selectedTeams.includes(i),
+            'border border-4 border-light': selectedTeams.includes(i)
+          }"
+          style="cursor: pointer;"
+          (click)="toggleTeamSelection(i)"
+        >
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title fw-bold display-6">{{ pool.team_id }}</h5>
+            <p class="card-text">{{ pool.team_name }}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <button class="btn btn-success me-2" (click)="savePool()">
-    {{ isEditing ? 'Update Pool' : 'Add Pool' }}
-  </button>
-  <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    <button class="btn btn-success me-2" (click)="savePool()" [disabled]="poolForm.invalid || !selectedTeams.length">
+      {{ isEditing ? 'Update Pool' : 'Add Pool' }}
+    </button>
+    <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  </form>
 </div>
