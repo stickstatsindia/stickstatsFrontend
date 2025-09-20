@@ -104,7 +104,7 @@ config = environment;
 
   addPool(pool: any):Observable<any> {
     const url = environment.baseUrl + environment.endpoints.addPool.replace(':tournament_id', pool.tournament_id);
-      return this.http.post(url, pool);
+      return this.http.put(url, pool);
   }
 
   updatePool(oldPool: any, updatedPool: any) {
