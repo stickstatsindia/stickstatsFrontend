@@ -33,12 +33,12 @@
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
       <div class="col" *ngFor="let pool of pools; let i = index">
         <div
-          class="card text-white text-center h-100"
+          class="card text-center h-100"
           [ngClass]="{
-            'bg-primary': selectedTeams.includes(i),
-            'border border-4 border-light': selectedTeams.includes(i)
+            'bg-primary text-white': selectedTeams.includes(i),
+            'bg-light text-dark border': !selectedTeams.includes(i)
           }"
-          style="cursor: pointer;"
+          style="cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
           (click)="toggleTeamSelection(i)"
         >
           <div class="card-body d-flex flex-column justify-content-center">
