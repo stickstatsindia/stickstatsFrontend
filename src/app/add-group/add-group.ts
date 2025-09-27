@@ -124,7 +124,7 @@ export class AddGroupComponent implements OnInit {
         next: (response: any) => {
           console.log('Pool added successfully:', response);
           alert('Pool added successfully!');
-          this.router.navigate(['/group-list']);
+          this.router.navigate(['/group-list'], { state: { tournamentId: this.tournamentId } });;
         },
         error: (error: any) => {
           console.error('Error adding pool:', error);
