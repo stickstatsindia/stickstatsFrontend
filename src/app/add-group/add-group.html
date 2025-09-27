@@ -36,14 +36,18 @@
           class="card text-center h-100"
           [ngClass]="{
             'bg-primary text-white': selectedTeams.includes(i),
-            'bg-light text-dark border': !selectedTeams.includes(i)
+            'bg-light text-dark border': !selectedTeams.includes(i),
+            'bg-secondary opacity-75': isTeamInPool(pool)
           }"
-          style="cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
+          [style]="isTeamInPool(pool) ? 'cursor: not-allowed; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);' : 'cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'"
           (click)="toggleTeamSelection(i)"
         >
           <div class="card-body d-flex flex-column justify-content-center">
             <h5 class="card-title fw-bold display-6">{{ pool.team_id }}</h5>
             <p class="card-text">{{ pool.team_name }}</p>
+            <p class="card-text text-muted" *ngIf="isTeamInPool(pool)">
+              Already in {{ pool.pool?.name }}
+            </p>
           </div>
         </div>
       </div>

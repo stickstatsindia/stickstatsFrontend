@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,17 +31,23 @@ export class GroupListComponent implements OnInit {
   pools: Pool[] = [];
   allTeams: Array<Team & { pool: { name?: string; type?: string } }> = [];
   rowsPerPage = 5;
-  tournamentId: string = 'TOUR001';
+  tournamentId: string = '';
   isLoading = false;
   error: string | null = null;
 
   constructor(
     private poolService: PoolService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
+     const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as { pool?: any; tournamentId?: string };
+    this.tournamentId = state?.tournamentId || '';
+  }
 
   ngOnInit() {
     this.loadPools();
+    this.cdr.detectChanges();
   }
 
   private loadPools() {
@@ -52,6 +58,7 @@ export class GroupListComponent implements OnInit {
       next: (response: TournamentPools) => {
         this.pools = response.pools;
         this.allTeams = response.all_teams;
+        this.cdr.detectChanges();
         this.isLoading = false;
       },
       error: (error: Error) => {

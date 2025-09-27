@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,6 +9,10 @@ interface Team {
   _id: string;
   team_id: string;
   team_name: string;
+  pool?: {
+    name: string;
+    type: string;
+  };
 }
 
 @Component({
@@ -32,7 +36,8 @@ export class AddGroupComponent implements OnInit {
     private teamService: AddTeam,
     private fb: FormBuilder,
     private router: Router,
-    private poolService: PoolService
+    private poolService: PoolService,
+    private cdr: ChangeDetectorRef
   ) {
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { pool?: any; tournamentId?: string };
@@ -60,15 +65,7 @@ export class AddGroupComponent implements OnInit {
       this.teamService.getTeamsByTournamentId(this.tournamentId).subscribe({
         next: (teams: Team[]) => {
           this.pools = teams;
-          console.log('Fetched teams:', teams);
-
-          if (this.isEditing && this.originalPool?.teams) {
-            this.selectedTeams = this.pools
-              .map((team: Team, index: number) =>
-                this.originalPool.teams.some((t: any) => t.team_name === team.team_name) ? index : null
-              )
-              .filter((i): i is number => i !== null);
-          }
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error fetching teams:', error);
@@ -78,6 +75,11 @@ export class AddGroupComponent implements OnInit {
   }
 
   toggleTeamSelection(index: number): void {
+    const team = this.pools[index];
+    if (this.isTeamInPool(team)) {
+      return;
+    }
+
     if (this.selectedTeams.includes(index)) {
       this.selectedTeams = this.selectedTeams.filter((i) => i !== index);
     } else {
@@ -134,5 +136,9 @@ export class AddGroupComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/group-list']);
+  }
+
+  isTeamInPool(team: Team): boolean {
+    return team.pool !== undefined && team.pool !== null && Object.keys(team.pool).length > 0;
   }
 }
