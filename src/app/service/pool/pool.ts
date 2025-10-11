@@ -70,9 +70,9 @@ config = environment;
     // }
   }
 
-  getPools() {
-    return this.poolsSubject.value;
-  }
+  // getPools() {
+  //   return this.poolsSubject.value;
+  // }
 
   // addPool(pool: any) {
   //   const updated = [...this.poolsSubject.value, pool];
@@ -103,10 +103,14 @@ config = environment;
  
 
   addPool(pool: any):Observable<any> {
-    const url = environment.baseUrl + environment.endpoints.addPool.replace(':tournament_id', pool.tournamentId);
-      return this.http.post(url, pool);
+    const url = environment.baseUrl + environment.endpoints.addPool.replace(':tournament_id', pool.tournament_id);
+      return this.http.put(url, pool);
   }
 
+  getPoolsByTournamentId(tournamentId: string): Observable<any> {
+    const url = environment.baseUrl + environment.endpoints.getPools.replace(':tournament_id', tournamentId);
+    return this.http.get(url);
+  }
   updatePool(oldPool: any, updatedPool: any) {
     return this.http.put(`/api/pools/${oldPool.id}`, updatedPool);
   }

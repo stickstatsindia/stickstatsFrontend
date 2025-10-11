@@ -62,7 +62,9 @@ export class AddNewplayerComponent {
        this.memeberService.addMember(teamData).subscribe({
             next: (response: any) => {
               console.log('Tournament added successfully:', response);
-               this.router.navigate(['/team-members'])
+               
+                this.router.navigate(['/team-members'], { state: { teamId: this.team_id } });
+           
            
             },
             error: (err: any) => {

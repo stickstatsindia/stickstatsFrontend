@@ -4,36 +4,40 @@
     <button class="btn btn-primary" (click)="addNewGroup()">+ Add Group</button>
   </div>
 
-  <!-- Table -->
+  <!-- Pools Table -->
   <div class="table-responsive">
     <table class="table table-hover align-middle border shadow-sm rounded">
       <thead class="table-light">
         <tr>
           <th>Pool Name</th>
+          <th>Type</th>
           <th>Teams</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let group of groups">
-          <td>{{ group.name }}</td>
+        <tr *ngFor="let pool of pools">
+          <td>{{ pool.name }}</td>
+          <td>{{ pool.type }}</td>
           <td>
             <div class="d-flex flex-column">
-              <span *ngFor="let team of group.teams" class="text-primary">
-                {{ team }}
+              <span *ngFor="let team of pool.teams" class="text-primary">
+                {{ team.team_name }}
               </span>
             </div>
           </td>
           <td class="text-center">
             <button
               class="btn btn-sm btn-outline-secondary me-2"
-              (click)="editGroup(group)"
+              (click)="editGroup(pool)"
+              title="Edit Pool"
             >
               ✏️
             </button>
             <button
               class="btn btn-sm btn-outline-danger"
-              (click)="deleteGroup(group)"
+              (click)="deleteGroup(pool)"
+              title="Delete Pool"
             >
               🗑️
             </button>
@@ -43,7 +47,35 @@
     </table>
   </div>
 
-  <!-- Pagination (Static Example) -->
+  <!-- Available Teams -->
+  <!-- <div class="mt-4">
+    <h4 class="fw-bold mb-3">Available Teams</h4>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle border shadow-sm rounded">
+        <thead class="table-light">
+          <tr>
+            <th>Team Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of allTeams">
+            <td>{{ team.team_name }}</td>
+            <td>
+              <span *ngIf="team.pool?.name" class="badge bg-success">
+                Assigned to {{ team.pool.name }}
+              </span>
+              <span *ngIf="!team.pool?.name" class="badge bg-secondary">
+                Unassigned
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> -->
+
+  <!-- Pagination -->
   <div class="d-flex justify-content-between align-items-center mt-3">
     <div>
       Rows per page:
@@ -57,9 +89,9 @@
       </select>
     </div>
     <div>
-      <span>1–{{ groups.length }} of {{ groups.length }}</span>
+      <span>1–{{ pools.length }} of {{ pools.length }}</span>
       <button class="btn btn-sm btn-light ms-2" disabled>‹</button>
-      <button class="btn btn-sm btn-light">›</button>
+      <button class="btn btn-sm btn-light" disabled>›</button>
     </div>
   </div>
 </div>
