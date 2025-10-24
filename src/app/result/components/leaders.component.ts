@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-leaders',
   standalone: true,
   templateUrl: './leaders.component.html',
-  styleUrls: []
+  styleUrls: ['./leaders.component.css']
 })
 export class LeadersComponent {}

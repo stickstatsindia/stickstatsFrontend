@@ -1,13 +1,28 @@
-<h3>Box Score</h3>
-<table class="box-score-table">
-  <tr>
-    <th></th>
-    <th>{{ data.teams.home.name }}</th>
-    <th>{{ data.teams.away.name }}</th>
-  </tr>
-  <tr *ngFor="let stat of stats">
-    <td>{{ stat.label }}</td>
-    <td>{{ data.teams.home.stats[stat.key] }}</td>
-    <td>{{ data.teams.away.stats[stat.key] }}</td>
-  </tr>
-</table>
+<div class="box-score-container">
+  <h3 class="box-score-title">Box Score</h3>
+  
+  <div class="box-score-wrapper">
+    <table class="box-score-table">
+      <thead>
+        <tr>
+          <th class="stat-label-header">Statistics</th>
+          <th class="team-header home-header">{{ data.teams.home.name }}</th>
+          <th class="team-header away-header">{{ data.teams.away.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of stats; let i = index" 
+            class="stat-row"
+            [class.stat-row-even]="i % 2 === 0">
+          <td class="stat-label">{{ stat.label }}</td>
+          <td class="stat-value home-stat">{{ data.teams.home.stats[stat.key] || 0 }}</td>
+          <td class="stat-value away-stat">{{ data.teams.away.stats[stat.key] || 0 }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="!stats || stats.length === 0" class="no-stats">
+      No statistics available
+    </div>
+  </div>
+</div>

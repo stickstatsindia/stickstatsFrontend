@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './penaltyshootout.component.html',
-  styleUrls: []
+  styleUrls: ['./penaltyshootout.component.css']
 })
 export class PenaltyShootoutComponent implements OnChanges {
   @Input() data: any;

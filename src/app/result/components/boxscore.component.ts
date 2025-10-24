@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   templateUrl: './boxscore.component.html',
-  styleUrls: []
+  styleUrls: ['./boxscore.component.css']
 })
 export class BoxScoreComponent {
   @Input() data: any;

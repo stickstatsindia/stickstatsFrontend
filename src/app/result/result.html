@@ -21,12 +21,12 @@
           <div class="team-name">{{ matchData.teams.home.name }}</div>
           <div class="team-score">{{ matchData.score.home }}</div>
           <div class="team-details">
-            <div *ngIf="matchData.teams.home.coach" class="detail-item">
+            <!-- <div *ngIf="matchData.teams.home.coach" class="detail-item">
               <span class="detail-label">Coach:</span> {{ matchData.teams.home.coach }}
             </div>
             <div *ngIf="matchData.teams.home.captain" class="detail-item">
               <span class="detail-label">Captain:</span> {{ matchData.teams.home.captain }}
-            </div>
+            </div> -->
             <div *ngIf="matchData.teams.home.stats" class="detail-item">
               <span class="detail-label">PC:</span> {{ matchData.teams.home.stats.PCS || 0 }}
             </div>
@@ -48,12 +48,12 @@
           <div class="team-name">{{ matchData.teams.away.name }}</div>
           <div class="team-score">{{ matchData.score.away }}</div>
           <div class="team-details">
-            <div *ngIf="matchData.teams.away.coach" class="detail-item">
+            <!-- <div *ngIf="matchData.teams.away.coach" class="detail-item">
               <span class="detail-label">Coach:</span> {{ matchData.teams.away.coach }}
             </div>
             <div *ngIf="matchData.teams.away.captain" class="detail-item">
               <span class="detail-label">Captain:</span> {{ matchData.teams.away.captain }}
-            </div>
+            </div> -->
             <div *ngIf="matchData.teams.away.stats" class="detail-item">
               <span class="detail-label">PC:</span> {{ matchData.teams.away.stats.PCS || 0 }}
             </div>
@@ -76,7 +76,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="home-quarters">
+            <!-- <tr class="home-quarters">
               <td>{{ matchData.teams.home.q1 }}</td>
               <td>{{ matchData.teams.home.q2 }}</td>
               <td>{{ matchData.teams.home.q3 }}</td>
@@ -89,7 +89,7 @@
               <td>{{ matchData.teams.away.q3 }}</td>
               <td>{{ matchData.teams.away.q4 }}</td>
               <td *ngIf="matchData.penaltyShootout">{{ matchData.penaltyShootout.awayScore }}</td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -107,16 +107,19 @@
   <!-- Match Events Section -->
   <div class="match-events-section">
     <div class="events-grid">
-      <!-- Home Team Events -->
+      <!-- All Team Events -->
       <div class="events-column home-events">
         <h3 class="events-title">MATCH EVENTS</h3>
         <div class="events-list">
-          <div *ngFor="let ev of matchData.eventsHome" class="event-item">
+          <div *ngFor="let ev of matchData.events" class="event-item">
             <span class="event-player">{{ ev.player }}</span>
-            <span class="event-time">{{ ev.minute }}'</span>
+            <span class="event-team">{{ ev.team }}</span>
+            <span class="event-time">{{ ev.time }}'</span>
+            <span class="event-time">{{ ev.quarter }}</span>
             <ng-container [ngSwitch]="ev.type">
-              <span *ngSwitchCase="'Yellow'" class="event-icon yellow-card">&#9724;</span>
-              <span *ngSwitchCase="'Green'" class="event-icon green-card">&#9724;</span>
+              <span *ngSwitchCase="'Yellow Card'" class="event-icon yellow-card">&#9724;</span>
+              <span *ngSwitchCase="'Green Card'" class="event-icon green-card">&#9724;</span>
+              <span *ngSwitchCase="'Red Card'" class="event-icon red-card">&#9724;</span>
               <span *ngSwitchCase="'PC'" class="event-icon pc-icon">PC</span>
               <span *ngSwitchDefault class="event-icon goal-icon">&#9679;</span>
             </ng-container>
@@ -125,7 +128,7 @@
       </div>
 
       <!-- Away Team Events -->
-      <div class="events-column away-events">
+      <!-- <div class="events-column away-events">
         <h3 class="events-title">MATCH EVENTS</h3>
         <div class="events-list">
           <div *ngFor="let ev of matchData.eventsAway" class="event-item event-item-away">
@@ -139,7 +142,7 @@
             <span class="event-player">{{ ev.player }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 

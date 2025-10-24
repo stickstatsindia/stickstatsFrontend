@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './preview.component.html',
-  styleUrls: []
+  styleUrls: ['./preview.component.css']
 })
 export class PreviewComponent {
   @Input() data: any;

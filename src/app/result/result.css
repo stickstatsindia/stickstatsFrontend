@@ -380,6 +380,10 @@
   color: #10b981;
 }
 
+.match-events-section .event-item .event-icon.red-card {
+  color: #ff0800;
+}
+
 .match-events-section .event-item .event-icon.pc-icon {
   font-size: 0.625rem;
   background: #1a73e8;

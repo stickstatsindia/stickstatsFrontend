@@ -1,0 +1,73 @@
+<div class="container-fluid p-0 home-container">
+
+  <!-- Intro Section -->
+  <div class="container my-5 text-center">
+    <h1 class="mb-3">Welcome to StickStats</h1>
+    <p class="lead">
+      Stay updated with real-time match scores, highlights, and tournament schedules.
+    </p>
+
+    <!-- Buttons -->
+    <div class="home-buttons mt-4">
+      <button (click)="goToRegister()" class="btn custom-btn me-3">Register Now</button>
+      <button (click)="goToRegister()" class="btn custom-btn me-3">Login</button>
+    </div>
+  </div>
+
+  <!-- Two-Column Content Section -->
+  <div class="container my-5">
+    <div class="row align-items-center">
+      <!-- Text Content -->
+      <div class="col-md-6">
+        <h2 class="mb-3">About Our Platform</h2>
+        <p class="text-justify">
+          At StickStats, we are redefining the way hockey is experienced. Our platform allows players, teams,
+           and fans to track live scores, analyze detailed statistics, and celebrate every moment of the game.
+        </p>
+        <p class="text-justify">
+          From grassroots matches to competitive leagues, StickStats captures every performance, 
+          helping players improve and giving fans a place to stay connected with the sport they love.
+        </p>
+        <p class="text-justify">
+          We believe in empowering the hockey community with technology, making the game more exciting, 
+          engaging, and data-driven than ever before.
+        </p>
+      </div>
+
+      <!-- Supporting Carousel -->
+      <div class="col-md-6 text-center">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+              aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+              aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+              aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="assets/img1.jpg" class="d-block w-100" alt="img 1">
+            </div>
+            <div class="carousel-item">
+              <img src="assets/img2.jpg" class="d-block w-100" alt="img 2">
+            </div>
+            <div class="carousel-item">
+              <img src="assets/img3.jpg" class="d-block w-100" alt="img 3">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

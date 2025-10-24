@@ -1,16 +1,53 @@
+<div class="team-members-container">
+  <h3 class="members-title">Team Members</h3>
+  
+  <div class="members-grid">
+    <!-- Home Team Members -->
+    <div class="members-team-section home-members">
+      <div class="members-team-header">
+        <h4 class="members-team-name">{{ data.teams.home.name }}</h4>
+        <span class="members-count">{{ data.teams.home.players?.length || 0 }}</span>
+      </div>
+      
+      <ul class="members-list">
+        <li *ngFor="let player of data.teams.home.players; let i = index" 
+            class="member-item">
+          <span class="member-number">{{ i + 1 }}</span>
+          <div class="member-info">
+            <span class="member-name">{{ player.name }}</span>
+            <span class="member-age">Age: {{ player.age }}</span>
+          </div>
+        </li>
+      </ul>
+      
+      <div *ngIf="!data.teams.home.players || data.teams.home.players.length === 0" 
+           class="no-members">
+        No players listed
+      </div>
+    </div>
 
-<h3>Team Members</h3>
-<div class="team-members">
-  <div>
-    <h4>{{ data.teams.home.name }}</h4>
-    <ul>
-      <li *ngFor="let player of data.teams.home.players">{{ player.name }} (Age: {{ player.age }})</li>
-    </ul>
-  </div>
-  <div>
-    <h4>{{ data.teams.away.name }}</h4>
-    <ul>
-      <li *ngFor="let player of data.teams.away.players">{{ player.name }} (Age: {{ player.age }})</li>
-    </ul>
+    <!-- Away Team Members -->
+    <div class="members-team-section away-members">
+      <div class="members-team-header">
+        <h4 class="members-team-name">{{ data.teams.away.name }}</h4>
+        <span class="members-count">{{ data.teams.away.players?.length || 0 }}</span>
+      </div>
+      
+      <ul class="members-list">
+        <li *ngFor="let player of data.teams.away.players; let i = index" 
+            class="member-item">
+          <span class="member-number">{{ i + 1 }}</span>
+          <div class="member-info">
+            <span class="member-name">{{ player.name }}</span>
+            <span class="member-age">Age: {{ player.age }}</span>
+          </div>
+        </li>
+      </ul>
+      
+      <div *ngIf="!data.teams.away.players || data.teams.away.players.length === 0" 
+           class="no-members">
+        No players listed
+      </div>
+    </div>
   </div>
 </div>
