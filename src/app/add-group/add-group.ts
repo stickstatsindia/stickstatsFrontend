@@ -88,8 +88,12 @@ export class AddGroupComponent implements OnInit {
   }
 
   savePool(): void {
-    if (this.poolForm.invalid || this.selectedTeams.length === 0) {
-      alert('Please fill all fields and select at least one team.');
+    if (this.poolForm.invalid) {
+      alert('Please fill all required fields.');
+      return;
+    }
+    if (this.selectedTeams.length < 2) {
+      alert('Please select at least two teams for the pool.');
       return;
     }
 
@@ -140,5 +144,9 @@ export class AddGroupComponent implements OnInit {
 
   isTeamInPool(team: Team): boolean {
     return team.pool !== undefined && team.pool !== null && Object.keys(team.pool).length > 0;
+  }
+
+  hasMinimumTeams(): boolean {
+    return this.selectedTeams.length >= 2;
   }
 }

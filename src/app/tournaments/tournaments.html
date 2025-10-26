@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let t of tournaments; let i = index">
-          <td><a href="#" class="name-link">{{ t.tournament_name }}</a></td>
+          <td><a href="#" class="name-link" (click)="goToTeamManagement(t.tournament_id, $event)">{{ t.tournament_name }}</a></td>
           <td>{{ t.start_date | date:'yyyy-MM-dd' }}</td>
           <td>{{ t.end_date | date:'yyyy-MM-dd' }}</td>
           <td class="actions">

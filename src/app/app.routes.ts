@@ -32,7 +32,7 @@ export const routes: Routes = [
   { path: 'contact', component: Contact },
   { path: 'live-dashboard', component: LiveDashboardComponent },
   { path: 'add-tournament', component: AddTournamentComponent },
-  { path: 'tournament-details', component: TeamManagementComponent },
+  { path: 'tournament-details/:id', component: TeamManagementComponent },
   { path: 'add-new-rounds', component: AddNewRoundsComponent},
   { path: 'scorer/:matchId', component: ScorerComponent },
   { path: 'result/:matchId', component: Result },

@@ -30,6 +30,9 @@
     </div>
 
     <h5>Select Teams</h5>
+    <div class="alert alert-info" role="alert" *ngIf="selectedTeams.length < 2">
+      Please select at least 2 teams for the pool.
+    </div>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 mb-4">
       <div class="col" *ngFor="let pool of pools; let i = index">
         <div
@@ -53,7 +56,7 @@
       </div>
     </div>
 
-    <button class="btn btn-success me-2" (click)="savePool()" [disabled]="poolForm.invalid || !selectedTeams.length">
+    <button class="btn btn-success me-2" (click)="savePool()" [disabled]="poolForm.invalid || selectedTeams.length < 2">
       {{ isEditing ? 'Update Pool' : 'Add Pool' }}
     </button>
     <button class="btn btn-secondary" (click)="cancel()">Cancel</button>

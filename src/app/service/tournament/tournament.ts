@@ -32,7 +32,7 @@ export class TournamentService {
   }
 
 getTournamentById(tournamentId: string) {
-    const url = `${this.getTournamentByIdUrl}/${tournamentId}`;
+    const url = this.getTournamentByIdUrl.replace(':tournament_id', tournamentId);
     return this.http.get(url);
   }
 }
