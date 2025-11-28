@@ -149,7 +149,7 @@ export class ScheduleMatchTeamSelection {
     this.scheduleService.scheduleMatch(body).subscribe({
       next: (res: any) => {
         alert('Match scheduled successfully');
-        this.router.navigate(['/match-details'], { state: { match: res.match } });
+        this.router.navigate(['/matches'], { state: { tournamentId: this.tournamentId } });
       },
       error: (err: any) => {
         console.error('Schedule error', err);
