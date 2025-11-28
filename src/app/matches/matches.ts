@@ -1,14 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatchService } from '../match.service';
+import { ScheduleService } from '../service/schedule.service';
 
 interface Match {
+  matchId?: string;
   team1: string;
   team2: string;
   ground: string;
   city: string;
-  matchTime: string; // formatted string from API
+  matchDate?: string; // ISO date
+  matchTime?: string; // formatted string
+  status?: string;
+  home_score?: number;
+  away_score?: number;
+  remaining_time?: string;
 }
 
 @Component({
@@ -20,15 +28,37 @@ interface Match {
 export class Matches implements OnInit {
   matches: Match[] = [];
   tournamentId: string | null = null;
+  loading = false;
 
   ngOnInit() {
-    // Replace with actual API call
-    // Example:
-    // this.http.get<Match[]>('/api/matches').subscribe(data => {
-    //   this.matches = data;
-    // });
+    this.loading = true;
+    if (this.tournamentId) {
+      this.scheduleService.getMatchesByTournament(this.tournamentId).subscribe({
+        next: (data: any[]) => {
+          this.matches = data.map((m: any) => ({
+            matchId: m.match_id || m._id,
+            team1: m.home_team_name || m.team1_name || '',
+            team2: m.away_team_name || m.team2_name || '',
+            ground: m.venue || m.ground || '',
+            city: m.city || '',
+            matchDate: m.match_date || m.matchDate,
+            matchTime: m.match_time || m.matchTime || '',
+            status: m.status,
+            home_score: typeof m.home_score !== 'undefined' ? m.home_score : m.home_score || 0,
+            away_score: typeof m.away_score !== 'undefined' ? m.away_score : m.away_score || 0,
+            remaining_time: m.remaining_time || m.remainingTime || ''
+          }));
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          console.error('Failed to load tournament matches', err);
+          this.loading = false;
+        }
+      });
+   }
   }
-  constructor(private router: Router) {
+  constructor(private router: Router, private matchService: MatchService, private cdr: ChangeDetectorRef, private scheduleService: ScheduleService) {
      const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as {tournamentId?: string };
     this.tournamentId = state?.tournamentId || '';

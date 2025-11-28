@@ -10,7 +10,10 @@
         <tr>
           <th>Match Between</th>
           <th>Ground/City</th>
-          <th>Match Time</th>
+          <th>Date / Time</th>
+          <th>Score</th>
+          <th>Status</th>
+          <th>Remaining</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -22,7 +25,15 @@
             <a href="#" class="team-link">{{ m.team2 }}</a>
           </td>
           <td>{{ m.ground }}<br>{{ m.city }}</td>
-          <td>{{ m.matchTime }}</td>
+          <td>
+            <div *ngIf="m.matchDate">{{ m.matchDate | date:'mediumDate' }}</div>
+            <div *ngIf="m.matchTime">{{ m.matchTime }}</div>
+          </td>
+          <td>
+            <strong>{{ m.home_score || 0 }}</strong> - <strong>{{ m.away_score || 0 }}</strong>
+          </td>
+          <td>{{ m.status || 'Unknown' }}</td>
+          <td>{{ m.remaining_time || '-' }}</td>
           <td class="actions">
             <button (click)="editMatch(i)">✏️</button>
             <button (click)="deleteMatch(i)">🗑️</button>

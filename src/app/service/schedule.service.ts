@@ -25,4 +25,10 @@ export class ScheduleService {
   scheduleMatch(body: ScheduleMatchRequest): Observable<any> {
     return this.http.post<any>(this.url, body);
   }
+
+  // Get matches for a specific tournament
+  getMatchesByTournament(tournamentId: string): Observable<any[]> {
+    const endpoint = `${environment.baseUrl}/api/tournamentId/${tournamentId}/matches`;
+    return this.http.get<any[]>(endpoint);
+  }
 }

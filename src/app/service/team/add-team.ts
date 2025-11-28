@@ -20,6 +20,11 @@ export class AddTeam {
       const url = environment.baseUrl + environment.endpoints.getTeamsByTournamentId.replace(':tournament_id', tournamentId);
       return this.http.get(url);
     }
+    // Get a single team by id
+    getTeamById(teamId: string): Observable<any> {
+      const url = `${environment.baseUrl}/api/team/${teamId}`;
+      return this.http.get(url);
+    }
   }
 
 

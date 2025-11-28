@@ -4,7 +4,7 @@ import { TournamentService } from '../service/tournament.service';
 import { AddTeam } from '../service/team/add-team';
 import { ScheduleService } from '../service/schedule.service';
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 // import { NgModelProvideForms } from '@angular/forms';
@@ -52,7 +52,8 @@ export class ScheduleMatchTeamSelection {
     private scheduleService: ScheduleService,
     private addTeamService: AddTeam,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
      const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { tournamentId?: string };
@@ -93,6 +94,7 @@ export class ScheduleMatchTeamSelection {
               name: t.team_name || t.teamName || t.name || '',
               shortName: t.shortName || ''
             }));
+             this.cdr.detectChanges();
           } else {
             console.warn('Unexpected teams payload', data);
             this.teams = [];
@@ -114,7 +116,7 @@ export class ScheduleMatchTeamSelection {
   }
 
   goToPreviousStep(): void {
-    this.router.navigate(['/select-round']);
+    this.router.navigate(['/matches', { state: { tournamentId: this.tournamentId } }]);
   }
 
   goToNextStep(): void {
