@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Match {
   team1: string;
@@ -18,6 +19,7 @@ interface Match {
 })
 export class Matches implements OnInit {
   matches: Match[] = [];
+  tournamentId: string | null = null;
 
   ngOnInit() {
     // Replace with actual API call
@@ -26,9 +28,14 @@ export class Matches implements OnInit {
     //   this.matches = data;
     // });
   }
+  constructor(private router: Router) {
+     const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as {tournamentId?: string };
+    this.tournamentId = state?.tournamentId || '';
+  }
 
   scheduleMatch() {
-    alert('Schedule match clicked!');
+    this.router.navigate(['/schedule-match'] , { state: { tournamentId: this.tournamentId } });
   }
 
   editMatch(index: number) {

@@ -1,32 +1,60 @@
 <div class="container">
   <div class="card">
     <h2>Schedule a Match</h2>
+    <p class="note">Let's start the battle!!</p>
 
-    <p class="note">
-      Let's start the battle!!
-    </p>
+  <form [formGroup]="form">
 
-    <div class="teams">
-      <div class="team">
-        <label for="teamA">Select Team A:</label>
-        <select [(ngModel)]="selectedTeamA" id="teamA">
-          <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
-        </select>
+        <div class="teams">
+        <div class="team">
+          <label for="teamA">Select Team A:</label>
+          <select formControlName="home_team" id="teamA" required>
+            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+          </select>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team">
+          <label for="teamB">Select Team B:</label>
+          <select formControlName="away_team" id="teamB" required>
+            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+          </select>
+        </div>
       </div>
 
-      <div class="vs">VS</div>
-
-      <div class="team">
-        <label for="teamB">Select Team B:</label>
-        <select [(ngModel)]="selectedTeamB" id="teamB">
-          <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
-        </select>
+      
+      <div>
+  <label for="match_type">Match Type:</label>
+  <input id="match_type" formControlName="match_type" required />
       </div>
-    </div>
+      <div>
+  <label for="city">City:</label>
+  <input id="city" formControlName="city" required />
+      </div>
+      <div>
+  <label for="venue">Venue:</label>
+  <input id="venue" formControlName="venue" required />
+      </div>
+      <div>
+  <label for="match_date">Match Date:</label>
+  <input id="match_date" type="date" formControlName="match_date" required />
+      </div>
+      <div>
+  <label for="referee_name_one">Referee 1:</label>
+  <input id="referee_name_one" formControlName="referee_name_one" required />
+      </div>
+      <div>
+  <label for="referee_name_two">Referee 2:</label>
+  <input id="referee_name_two" formControlName="referee_name_two" required />
+      </div>
+      <div>
+  <label for="scorer_name">Scorer:</label>
+  <input id="scorer_name" formControlName="scorer_name" required />
+      </div>
 
-    <div class="button-group">
-      <button class="btn back" (click)="goToPreviousStep()">BACK</button>
-      <button class="btn next" [disabled]="!selectedTeamA || !selectedTeamB" (click)="goToNextStep()">NEXT</button>
-    </div>
+      <div class="button-group">
+        <button class="btn back" type="button" (click)="goToPreviousStep()">BACK</button>
+  <button class="btn next" type="button" [disabled]="form.invalid" (click)="goToNextStep()">NEXT</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -95,9 +95,7 @@ cities = [
   constructor(private fb: FormBuilder, private router: Router, private addTeamService: AddTeam, private tournamentService: TournamentService) {
     // Get tournamentId from navigation state
     const nav = this.router.getCurrentNavigation();
-    console.log('Navigation State:', nav?.extras.state);
     const state = nav?.extras.state as { tournamentId?: string };
-    console.log('Extracted State:', state);
     this.tournamentId = state?.tournamentId || null;
     this.teamForm = this.fb.group({
       team_name: ['', Validators.required],

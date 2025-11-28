@@ -15,6 +15,48 @@
   text-align: center;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+form label {
+  flex: 1 0 140px;
+  text-align: right;
+  margin-right: 16px;
+  font-weight: 500;
+}
+
+form input,
+form select {
+  flex: 2 0 200px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+form input[type="date"] {
+  min-width: 0;
+}
+
+.teams {
+  margin-bottom: 24px;
+}
+
+.vs {
+  margin: 0 18px;
+}
+
 .steps {
   display: flex;
   justify-content: space-between;
@@ -73,6 +115,7 @@
 .button-group {
   display: flex;
   justify-content: space-between;
+  margin-top: 24px;
 }
 
 .btn {
