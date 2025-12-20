@@ -12,9 +12,17 @@ export interface ScheduleMatchRequest {
   city: string;
   venue: string;
   match_date: string;
-  referee_name_one: string;
-  referee_name_two: string;
   scorer_name: string;
+}
+
+export interface AddMatchLiveRequest {
+  team1_name: string;
+  team2_name: string;
+  venue: string;
+  match_date: string; // YYYY-MM-DD
+  match_time: string; // HH:mm
+  team1_players: string[];
+  team2_players: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,8 +30,18 @@ export class ScheduleService {
   private url = environment.baseUrl + '/api/match';
   constructor(private http: HttpClient) {}
 
-  scheduleMatch(body: ScheduleMatchRequest): Observable<any> {
-    return this.http.post<any>(this.url, body);
+  // NOTE: legacy `scheduleMatch` removed in favor of tournament-scoped `addMatchLive` which writes to match-live collection
+  // Use: addMatchLive(tournamentName, body)
+  addMatchLive(tournamentname: string, body: AddMatchLiveRequest): Observable<any> {
+    // POST to /api/:tournamentname/addMatchLive endpoint with server-side validation
+    const endpoint = `${environment.baseUrl}/api/${tournamentname}/addMatchLive`;
+    return this.http.post<any>(endpoint, body);
+  }
+
+  // GET match-lives for a specific tournament by tournament name
+  getMatchLivesByTournamentName(tournamentname: string): Observable<any[]> {
+    const endpoint = `${environment.baseUrl}/api/${tournamentname}/matchlives`;
+    return this.http.get<any[]>(endpoint);
   }
 
   // Get matches for a specific tournament

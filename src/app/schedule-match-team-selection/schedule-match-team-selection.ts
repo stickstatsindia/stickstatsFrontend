@@ -6,7 +6,7 @@ import { ScheduleService } from '../service/schedule.service';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 // import { NgModelProvideForms } from '@angular/forms';
 
 
@@ -25,8 +25,6 @@ interface ScheduleMatchRequest {
   city: string;
   venue: string;
   match_date: string;
-  referee_name_one: string;
-  referee_name_two: string;
   scorer_name: string;
 }
 
@@ -44,6 +42,7 @@ export class ScheduleMatchTeamSelection {
   tournaments: any[] = [];
   form!: FormGroup;
   tournamentId: string | null = null;
+  resolvedTournamentName: string | null = null;
 
   constructor(
     private http: HttpClient,
@@ -71,15 +70,26 @@ export class ScheduleMatchTeamSelection {
       tournament_name: [''],
       home_team: [null, Validators.required],
       away_team: [null, Validators.required],
-      rounds: [''],
-      match_type: ['', Validators.required],
-      city: [''],
-      venue: [''],
-      match_date: [''],
-      referee_name_one: [''],
-      referee_name_two: [''],
-      scorer_name: ['']
+      venue: ['', Validators.required],
+      match_date: ['', [Validators.required, this.futureDateValidator()]],
+      match_time: ['', Validators.required],
+      team1_players_raw: [''],
+      team2_players_raw: ['']
     });
+  }
+
+  // Validator that ensures the selected date is strictly in the future (not today)
+  private futureDateValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const val = control.value;
+      if (!val) return null;
+      // Normalize dates to midnight so time parts don't affect comparison
+      const input = new Date(val);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      input.setHours(0, 0, 0, 0);
+      return input > today ? null : { notFuture: true };
+    };
   }
 
 
@@ -110,7 +120,20 @@ export class ScheduleMatchTeamSelection {
 
   fetchTournaments(): void {
     this.tournamentService.getTournaments().subscribe({
-      next: (data: any) => this.tournaments = data,
+      next: (data: any) => {
+        this.tournaments = data || [];
+        // if a tournamentId was passed, resolve its name early so submit doesn't race with async fetch
+        if (this.tournamentId) {
+          const found = this.tournaments.find((t: any) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
+          if (found) {
+            this.resolvedTournamentName = found.tournament_name || found.name || '';
+            // populate form control so users see it (and submit will use it)
+            if (this.form && this.form.controls['tournament_name']) {
+              this.form.controls['tournament_name'].setValue(this.resolvedTournamentName);
+            }
+          }
+        }
+      },
       error: (err: any) => console.error('Failed to load tournaments:', err)
     });
   }
@@ -129,33 +152,52 @@ export class ScheduleMatchTeamSelection {
       return;
     }
 
-    let tournamentName = vals.tournament_name;
+    // prefer pre-resolved tournament name (set after tournaments load), fall back to form value or lookup
+    let tournamentName = this.resolvedTournamentName || vals.tournament_name;
     if (!tournamentName) {
-      const found = this.tournaments.find((t: any) => t.tournament_id === this.tournamentId);
-      if (found) tournamentName = found.tournament_name;
+      const found = this.tournaments.find((t: any) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
+      if (found) tournamentName = found.tournament_name || found.name;
     }
 
-    const body: ScheduleMatchRequest = {
-      tournament_name: tournamentName,
-      home_team_name: home.name,
-      away_team_name: away.name,
-      rounds: vals.rounds,
-      match_type: vals.match_type,
-      city: vals.city,
+    if (!tournamentName) {
+      alert('Tournament name not found');
+      return;
+    }
+
+    // parse player lists (newline or comma separated)
+    const parsePlayers = (raw: string) => raw ? raw.split(/\r?\n|,/) .map((s: string) => s.trim()).filter(Boolean) : [];
+
+    // Validate match_date control explicitly (to produce a clear alert if invalid)
+    const dateCtrl = this.form.controls['match_date'];
+    if (dateCtrl.invalid) {
+      if (dateCtrl.hasError('required')) {
+        alert('Match date is required');
+      } else if (dateCtrl.hasError('notFuture')) {
+        alert('Match date must be in the future');
+      } else {
+        alert('Match date is invalid');
+      }
+      return;
+    }
+
+    const liveBody = {
+      team1_name: home.name,
+      team2_name: away.name,
       venue: vals.venue,
       match_date: vals.match_date,
-      referee_name_one: vals.referee_name_one,
-      referee_name_two: vals.referee_name_two,
-      scorer_name: vals.scorer_name
+      match_time: vals.match_time,
+      team1_players: parsePlayers(vals.team1_players_raw || ''),
+      team2_players: parsePlayers(vals.team2_players_raw || '')
     };
-    this.scheduleService.scheduleMatch(body).subscribe({
+
+    this.scheduleService.addMatchLive(tournamentName, liveBody).subscribe({
       next: (res: any) => {
-        alert('Match scheduled successfully');
+        alert('Live match scheduled successfully');
         this.router.navigate(['/matches'], { state: { tournamentId: this.tournamentId } });
       },
       error: (err: any) => {
         console.error('Schedule error', err);
-        alert('Unable to schedule match');
+        alert('Unable to schedule live match');
       }
     });
   }

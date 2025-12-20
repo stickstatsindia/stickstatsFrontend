@@ -21,15 +21,6 @@
         </div>
       </div>
 
-      
-      <div>
-  <label for="match_type">Match Type:</label>
-  <input id="match_type" formControlName="match_type" required />
-      </div>
-      <div>
-  <label for="city">City:</label>
-  <input id="city" formControlName="city" required />
-      </div>
       <div>
   <label for="venue">Venue:</label>
   <input id="venue" formControlName="venue" required />
@@ -37,19 +28,25 @@
       <div>
   <label for="match_date">Match Date:</label>
   <input id="match_date" type="date" formControlName="match_date" required />
+          <div *ngIf="form.controls['match_date'].invalid && (form.controls['match_date'].touched || form.controls['match_date'].dirty)">
+            <small class="error" *ngIf="form.controls['match_date'].hasError('required')">Match date is required.</small>
+            <small class="error" *ngIf="form.controls['match_date'].hasError('notFuture')">Match date must be in the future.</small>
+          </div>
       </div>
-      <div>
-  <label for="referee_name_one">Referee 1:</label>
-  <input id="referee_name_one" formControlName="referee_name_one" required />
-      </div>
-      <div>
-  <label for="referee_name_two">Referee 2:</label>
-  <input id="referee_name_two" formControlName="referee_name_two" required />
-      </div>
-      <div>
-  <label for="scorer_name">Scorer:</label>
-  <input id="scorer_name" formControlName="scorer_name" required />
-      </div>
+        <div>
+      <label for="match_time">Match Time:</label>
+      <input id="match_time" type="time" formControlName="match_time" required />
+        </div>
+
+        <div>
+      <label for="team1_players_raw">Team A Players (one per line or comma-separated):</label>
+      <textarea id="team1_players_raw" formControlName="team1_players_raw" rows="3"></textarea>
+        </div>
+
+        <div>
+      <label for="team2_players_raw">Team B Players (one per line or comma-separated):</label>
+      <textarea id="team2_players_raw" formControlName="team2_players_raw" rows="3"></textarea>
+        </div>
 
       <div class="button-group">
         <button class="btn back" type="button" (click)="goToPreviousStep()">BACK</button>
