@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { TournamentService } from '../service/tournament.service';
 import { AddTeam } from '../service/team/add-team';
 import { ScheduleService } from '../service/schedule.service';
@@ -7,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
+import { MembersService } from '../service/members/members-service';
 // import { NgModelProvideForms } from '@angular/forms';
 
 
@@ -43,26 +43,75 @@ export class ScheduleMatchTeamSelection {
   form!: FormGroup;
   tournamentId: string | null = null;
   resolvedTournamentName: string | null = null;
+  team1Members: any[] = [];
+  team2Members: any[] = [];
+  // members are fetched and managed internally, no UI flags required
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private tournamentService: TournamentService,
     private scheduleService: ScheduleService,
     private addTeamService: AddTeam,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private membersService: MembersService
   ) {
      const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as { tournamentId?: string };
       this.tournamentId = state?.tournamentId || null;
   }
 
+  setupTeamSelectionListeners() {
+    const homeCtrl = this.form.controls['home_team'];
+    const awayCtrl = this.form.controls['away_team'];
+
+    homeCtrl.valueChanges.subscribe((team: any) => {
+      if (team && team.id) {
+        this.loadTeam1Members(team.id);
+      } else {
+        this.team1Members = [];
+      }
+    });
+
+    awayCtrl.valueChanges.subscribe((team: any) => {
+      if (team && team.id) {
+        this.loadTeam2Members(team.id);
+      } else {
+        this.team2Members = [];
+      }
+    });
+  }
+
+  loadTeam1Members(teamId: string) {
+    this.membersService.getMembers(teamId).subscribe({
+      next: (members: any[]) => {
+        this.team1Members = members || [];
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Failed to load team1 members', err);
+      }
+    });
+  }
+
+  loadTeam2Members(teamId: string) {
+    this.membersService.getMembers(teamId).subscribe({
+      next: (members: any[]) => {
+        this.team2Members = members || [];
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Failed to load team2 members', err);
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.buildForm();
     this.fetchTournaments();
     this.fetchTeams();
+    this.setupTeamSelectionListeners();
   }
 
   buildForm() {
@@ -73,8 +122,7 @@ export class ScheduleMatchTeamSelection {
       venue: ['', Validators.required],
       match_date: ['', [Validators.required, this.futureDateValidator()]],
       match_time: ['', Validators.required],
-      team1_players_raw: [''],
-      team2_players_raw: ['']
+      // team member textareas removed; members are fetched from API
     });
   }
 
@@ -186,8 +234,8 @@ export class ScheduleMatchTeamSelection {
       venue: vals.venue,
       match_date: vals.match_date,
       match_time: vals.match_time,
-      team1_players: parsePlayers(vals.team1_players_raw || ''),
-      team2_players: parsePlayers(vals.team2_players_raw || '')
+      team1_players: this.team1Members.map(m => (m.name || m.user_id || '').toString()),
+      team2_players: this.team2Members.map(m => (m.name || m.user_id || '').toString())
     };
 
     this.scheduleService.addMatchLive(tournamentName, liveBody).subscribe({

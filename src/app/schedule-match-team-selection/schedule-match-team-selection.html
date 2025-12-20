@@ -38,15 +38,7 @@
       <input id="match_time" type="time" formControlName="match_time" required />
         </div>
 
-        <div>
-      <label for="team1_players_raw">Team A Players (one per line or comma-separated):</label>
-      <textarea id="team1_players_raw" formControlName="team1_players_raw" rows="3"></textarea>
-        </div>
-
-        <div>
-      <label for="team2_players_raw">Team B Players (one per line or comma-separated):</label>
-      <textarea id="team2_players_raw" formControlName="team2_players_raw" rows="3"></textarea>
-        </div>
+        <!-- Team members are fetched and managed internally; no UI display per requirement -->
 
       <div class="button-group">
         <button class="btn back" type="button" (click)="goToPreviousStep()">BACK</button>
