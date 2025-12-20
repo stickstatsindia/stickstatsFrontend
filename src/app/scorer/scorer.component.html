@@ -68,7 +68,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Team</mat-label>
-          <mat-select [(ngModel)]="selectedTeam">
+          <mat-select [(ngModel)]="selectedTeam" (ngModelChange)="onTeamSelect($event)">
             <mat-option [value]="team1Name">{{ team1Name }}</mat-option>
             <mat-option [value]="team2Name">{{ team2Name }}</mat-option>
           </mat-select>
@@ -78,7 +78,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="selectedPlayer">
-            <mat-option *ngFor="let player of players" [value]="player">{{ player }}</mat-option>
+            <mat-option *ngFor="let player of filteredPlayers" [value]="player">{{ player }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -120,7 +120,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Team</mat-label>
-          <mat-select [(ngModel)]="penaltyShootoutTeam">
+          <mat-select [(ngModel)]="penaltyShootoutTeam" (ngModelChange)="onPenaltyTeamSelect($event)">
             <mat-option [value]="team1Name">{{ team1Name }}</mat-option>
             <mat-option [value]="team2Name">{{ team2Name }}</mat-option>
           </mat-select>
@@ -130,7 +130,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="penaltyShootoutPlayer">
-            <mat-option *ngFor="let player of players" [value]="player">{{ player }}</mat-option>
+            <mat-option *ngFor="let player of penaltyFilteredPlayers" [value]="player">{{ player }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

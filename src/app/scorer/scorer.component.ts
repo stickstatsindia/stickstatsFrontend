@@ -65,7 +65,9 @@ export class ScorerComponent {
  
   selectedTeam = '';
   selectedPlayer = '';
-  players = ['Player 1', 'Player 2', 'Player 3'];
+  // keep separate arrays for each team's players
+  team1Players: string[] = [];
+  team2Players: string[] = [];
  
   matchEvents: any[] = [];
  
@@ -91,8 +93,12 @@ export class ScorerComponent {
           this.quarters = data.quarters;
           this.currentQuarter = data.current_quarter;
 
-          // Merge both team players into one list (or keep them separate)
-          this.players = [...data.team1_players, ...data.team2_players];
+          // Normalize players to string names and keep per-team lists
+          const toNames = (arr: any[]) => (Array.isArray(arr) ? arr.map(p => typeof p === 'string' ? p : (p.name || p.user_id || 'Unknown')) : []);
+          this.team1Players = toNames(data.team1_players);
+          this.team2Players = toNames(data.team2_players);
+
+          // Do not auto-select a team or player on load; user will choose explicitly
 
           this.matchEvents = data.match_events;
 
@@ -107,6 +113,32 @@ export class ScorerComponent {
           }
         });
       });
+  }
+
+  // Getter to return players for currently selected team (main event)
+  get filteredPlayers(): string[] {
+    if (this.selectedTeam === this.team1Name) return this.team1Players;
+    if (this.selectedTeam === this.team2Name) return this.team2Players;
+    return [];
+  }
+
+  // Getter to return players for penalty shootout selected team
+  get penaltyFilteredPlayers(): string[] {
+    if (this.penaltyShootoutTeam === this.team1Name) return this.team1Players;
+    if (this.penaltyShootoutTeam === this.team2Name) return this.team2Players;
+    return [];
+  }
+
+  onTeamSelect(team: string) {
+    this.selectedTeam = team;
+    // clear player selection; user must explicitly choose a player after selecting team
+    this.selectedPlayer = '';
+  }
+
+  onPenaltyTeamSelect(team: string) {
+    this.penaltyShootoutTeam = team;
+    // clear penalty player selection; require explicit user selection
+    this.penaltyShootoutPlayer = '';
   }
 
   ngOnDestroy(): void {
