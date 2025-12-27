@@ -85,3 +85,21 @@ th {
     width: 100%;
   }
 }
+
+
+.score-btn {
+  background: linear-gradient(135deg, #1e88e5, #42a5f5);
+  color: rgb(117, 236, 149);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 6px;
+  transition: 0.2s ease;
+}
+
+.score-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #1565c0, #1e88e5);
+}

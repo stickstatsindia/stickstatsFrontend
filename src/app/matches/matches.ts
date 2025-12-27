@@ -130,4 +130,25 @@ export class Matches implements OnInit {
   openSettings(index: number) {
     alert(`Settings for match: ${this.matches[index].team1} vs ${this.matches[index].team2}`);
   }
+
+  startScoring(match: Match) {
+  if (!match.matchId) {
+    alert('Match ID not found!');
+    return;
+  }
+
+  this.router.navigate(
+    ['/scorer/' + match.matchId],
+    {
+      state: {
+        matchId: match.matchId,
+        team1: match.team1,
+        team2: match.team2,
+        tournamentId: this.tournamentId
+      }
+    }
+  );
 }
+
+}
+
