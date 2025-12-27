@@ -19,8 +19,8 @@ interface MatchData {
   venue: string;
   tournament: string;
   teams: {
-    home: { name: string; logo: string; players: any[]; stats: any };
-    away: { name: string; logo: string; players: any[]; stats: any };
+    home: { name: string; id: string; logo: string; players: any[]; stats: any };
+    away: { name: string; id: string; logo: string; players: any[]; stats: any };
   };
   score: { home: number; away: number };
   status: string;
@@ -248,6 +248,7 @@ export class Result implements OnInit, OnDestroy {
 
     this.http.get<any>(url).subscribe({
       next: (data) => {
+        console.log('📥 Raw match data received:', data);
         // Map the flattened API response to the structured MatchData interface
         const mappedData: MatchData = {
           matchId: data.match_id,
@@ -263,12 +264,14 @@ export class Result implements OnInit, OnDestroy {
           teams: {
             home: {
               name: data.team1_name || 'Home Team',
+              id: data.team1_id || '',
               logo: data.home_team_logo_url || 'path/to/default/home/logo.svg',
               players: data.home_players || [],
               stats: { ...this.statsTemplate } // initialize safely
             },
             away: {
               name: data.team2_name || 'Away Team',
+              id: data.team2_id || '',
               logo: data.away_team_logo_url || 'path/to/default/away/logo.svg',
               players: data.away_players || [],
               stats: { ...this.statsTemplate } // initialize safely
