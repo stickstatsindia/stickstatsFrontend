@@ -34,7 +34,7 @@ export class PlayerProfileComponent {
     totalGoalScore: 0
   };
 
-  menu = ['MATCHES', 'STATS', 'AWARDS', 'BADGES', 'TEAMS', 'PHOTOS', 'CONNECTIONS', 'PROFILE'];
+  menu = ['MATCHES', 'STATS', 'TEAMS', 'PROFILE'];
   selectedTab = 'MATCHES';
 
   onTabSelect(tab: string) {
