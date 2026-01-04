@@ -1,113 +1,210 @@
-/* Settings dropdown styles */
-.settings-dropdown {
-  position: absolute;
-  top: 32px;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  z-index: 10;
-  min-width: 120px;
-  display: flex;
-  flex-direction: column;
-  padding: 4px 0;
-}
-.settings-dropdown button {
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 8px 16px;
-  width: 100%;
-  font-size: 15px;
-  color: #333;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.settings-dropdown button:hover {
-  background: #f5f5f5;
-}
-.container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 10px;
+/* --- Global & Container --- */
+:host {
+  display: grid;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #7FBF7F 10%, #4A90A4 100%);
 }
 
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03), 0 20px 48px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Header Section --- */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
 h2 {
-  font-size: 28px;
-  margin: 0 0 10px 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .add-btn {
-  padding: 8px 12px;
-  border: 1px solid #1aa39b;
-  background: none;
-  color: #1aa39b;
+  padding: 10px 20px;
+  background: #1aa39b;
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 12px;
   cursor: pointer;
-  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(26, 163, 155, 0.2);
 }
 
 .add-btn:hover {
-  background: #1aa39b;
-  color: white;
+  background: #14857f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(26, 163, 155, 0.3);
 }
 
+/* --- Table Styling (Modern Card-Row Style) --- */
+.table-wrapper {
+  /* overflow-x: visible ensures dropdown isn't cut off horizontally */
+  overflow-x: visible; 
+  position: relative;
+}
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  min-width: 600px; /* Helps responsive layout */
-}
-
-th, td {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  text-align: left;
+  border-collapse: separate;
+  border-spacing: 0 12px; 
+  margin-top: -12px; 
 }
 
 th {
-  background-color: #f5f5f5;
+  padding: 12px 20px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #64748b;
+  font-weight: 700;
+  border: none;
+  text-align: left;
 }
 
+/* --- THE FIX: Stacking Context Management --- */
+tbody tr {
+  background-color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+/* This class is added via [class.active-row] in HTML when settings are open */
+tbody tr.active-row {
+  z-index: 100; /* Elevates the entire row above the rows below it */
+}
+
+tbody tr td {
+  padding: 18px 20px;
+  background: #fdfdfd;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+tbody tr td:first-child {
+  border-left: 1px solid #f1f5f9;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+tbody tr td:last-child {
+  border-right: 1px solid #f1f5f9;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+
+
+tbody tr:hover td {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Typography & Links --- */
 .name-link {
   color: #1aa39b;
+  font-weight: 700;
   text-decoration: none;
+  font-size: 1rem;
 }
 
 .name-link:hover {
   text-decoration: underline;
 }
 
+/* --- Actions & Dropdown --- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .actions button {
-  border: none;
-  background: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  margin-right: 5px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
 }
 
-.no-data {
-  padding: 20px;
-  color: #666;
-  font-style: italic;
+.edit-btn { background: #eff6ff; color: #3b82f6; }
+.edit-btn:hover { background: #dbeafe; }
+
+.delete-btn { background: #fef2f2; color: #ef4444; }
+.delete-btn:hover { background: #fee2e2; }
+
+.settings-btn { 
+  background: #f8fafc; 
+  color: #64748b; 
+  border: 1px solid #e2e8f0; 
+}
+.settings-btn:hover { background: #f1f5f9; }
+
+/* Dropdown Container */
+.settings-dropdown-wrapper {
+  /* position: relative;
+  display: inline-block; */
 }
 
-/* Mobile adjustments */
-@media (max-width: 600px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.settings-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  min-width: 160px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000; /* Ensures content inside is on top */
+  padding: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dropdownFadeIn 0.2s ease-out;
+}
 
-  .add-btn {
-    margin-top: 10px;
-    width: 100%;
-  }
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.settings-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #475569 !important; /* Force dark text color */
+  font-size: 0.9rem;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  box-shadow: none;
+}
+
+.settings-dropdown button:hover {
+  background: #f1f5f9;
+  color: #1aa39b !important;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .container { margin: 10px; padding: 15px; }
+  h2 { font-size: 1.4rem; }
+  .header { flex-direction: column; gap: 15px; align-items: flex-start; }
+  .add-btn { width: 100%; }
 }

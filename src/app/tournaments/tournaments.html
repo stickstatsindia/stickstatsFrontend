@@ -20,10 +20,10 @@
           <td>{{ t.start_date | date:'yyyy-MM-dd' }}</td>
           <td>{{ t.end_date | date:'yyyy-MM-dd' }}</td>
           <td class="actions">
-            <button (click)="editTournament(i)">✏️</button>
-            <button (click)="deleteTournament(i)">🗑️</button>
+            <button class="edit-btn" (click)="editTournament(i)">Edit</button>
+            <button class="delete-btn" (click)="deleteTournament(i)">Delete</button>
             <div class="settings-dropdown-wrapper" style="display:inline-block;position:relative;">
-              <button (click)="openSettings(i)">⚙️</button>
+              <button  (click)="openSettings(i)">Settings</button>
               <div *ngIf="settingsOpenIndex === i" class="settings-dropdown">
                 <button (click)="goToTeams(t.tournament_id)">Teams</button>
                 <button (click)="goToGroups(t.tournament_id)">Groups</button>
