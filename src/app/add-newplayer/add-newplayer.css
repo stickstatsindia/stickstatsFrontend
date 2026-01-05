@@ -1,6 +1,26 @@
 /* Modal and layout styles */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:  linear-gradient(135deg, #4788ead1 40%, #62b362 60%);
+  padding: 40px 20px;
+}
+
+/* Card */
+.player-card {
+  width: 100%;
+  max-width: 760px;
+  background:linear-gradient(135deg, #62b362 40%, #4788ead1 60%);
+  border-radius: 16px;
+  padding: 30px 34px 34px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  color: #fff;
+}
+
 .modal-container {
-  background: #fff;
+  background: #f9f9fa;
   border-radius: 8px;
   width: 600px;
   max-width: 98vw;
@@ -18,6 +38,7 @@
 .modal-title {
   font-size: 1.5rem;
   font-weight: 700;
+  text-align: center;
 }
 .close-btn {
   background: none;

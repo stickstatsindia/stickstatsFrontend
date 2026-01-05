@@ -23,11 +23,11 @@ html, body, app-root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #EAFAEA; /* Global background */
+  /* background-color: #EAFAEA; Global background */
 }
 
 /* Ensure container stretches */
 .home-container {
   min-height: 100vh; /* Full height */
-  background-color: #EAFAEA; /* Match background */
+  /* background-color: #EAFAEA; Match background */
 }

@@ -1,7 +1,15 @@
 /* Page background */
+
+:host {
+  min-height: 100vh;
+  display: flex;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #409db7 40%, #2db12d 60%);
+}
+
 .container {
   min-height: 100vh;
-  background: #eaf7ec;
+  /* background: #10ef32; */
   display: flex;
   justify-content: center;
   align-items: center;

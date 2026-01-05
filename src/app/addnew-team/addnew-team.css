@@ -1,110 +1,163 @@
+/* ===============================
+   Page Wrapper
+================================ */
 .add-team-page {
-  width: 100vw;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background: #f0f4f8;
-  padding-top: 40px;
+  background: linear-gradient(135deg, #409db7 40%, #2db12d 60%);
+  padding: 32px 16px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
+
+/* ===============================
+   Heading
+================================ */
 .add-team-heading {
   text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #2c3e50;
-  letter-spacing: 1px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 24px;
 }
+
+/* ===============================
+   Form Container
+================================ */
 .add-team-container {
-  display: flex;
-  /* align-items: center; */
-  justify-content: center;
-  gap: 0;
-  padding: 0;
-  border: 1px solid #131111;
-  width: 700px;
-  height: 400px;
-  margin: 40px auto;
-  background: #f5f7fa;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-  overflow: hidden;
-  align-items: stretch; /* ensure both sides stretch equally */
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* .add-team-container {
-  display: flex;
-
-} */
-
+/* ===============================
+   Left Section (Logo)
+================================ */
 .left {
-  flex: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #e3e8ee;
-  height: 100%;
+  align-items: flex-start;
 }
+
 .left img {
   width: 200px;
   height: 200px;
+  border-radius: 12px;
   object-fit: cover;
-  border: 2px solid #ccc;
-  border-radius: 50%; /* Make it a circle */
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  display: block;
-}
-/* .right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  height: 100%;
-  padding: 2rem 1.5rem;
-} */
-
-.right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* prevent center overlap */
-  padding: 2rem;
-  position: relative; /* makes z-index work */
-  z-index: 2; /* keep this above the left */
-}
-
-
-.right label {
-  font-weight: 500;
-  color: #333;
-  align-self: flex-start;
-}
-.right input, .right select {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  font-size: 1rem;
-  background: #f8fafc;
-}
-.right button {
-  background: #4ba3c7;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.7rem 0;
-  font-size: 1rem;
-  font-weight: 600;
+  border: 2px dashed #c7d2fe;
+  padding: 12px;
+  background: #eef2ff;
   cursor: pointer;
-  width: 100%;
-  margin-top: 1.5rem;
-  transition: background 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.right button:hover {
-  background: #82e8f3;
+
+.left img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+/* ===============================
+   Right Section
+================================ */
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===============================
+   Input Groups
+================================ */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Text Input & Select */
+.input-group input,
+.input-group select {
+  height: 42px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+/* Focus State */
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ===============================
+   Error Messages
+================================ */
+.error,
+.bold {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ===============================
+   Submit Button
+================================ */
+button[type="submit"] {
+  background: #4089d7;
+  color: #ffffff;
+  border: none;
+  height: 44px;
+  padding: 0 28px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+button[type="submit"]:hover {
+  background: #2db12d;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+button[type="submit"]:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===============================
+   Responsive Design
+================================ */
+@media (max-width: 768px) {
+  .add-team-container {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .left {
+    justify-content: center;
+  }
+
+  .left img {
+    width: 160px;
+    height: 160px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
 }

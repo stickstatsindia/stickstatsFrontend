@@ -1,5 +1,7 @@
-<div class="container mt-4">
-  <h2 class="mb-4 text-center">Add Tournament</h2>
+<div class="page-wrapper">
+<div class="container">
+  <div class="form-card">
+  <h2 class="page-title">Add New Tournament</h2>
   <form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()">
 
     <!-- Tournament Name & Category -->
@@ -66,9 +68,10 @@
         </div> -->
 
         <!-- Auto fetch organizer name via phone -->
-        <div class="col-md-6 form-group">
-          <label for="organiserName" class="form-label">Organiser Name* </label>
-          <small><strong> (Will be auto fetched via organizer phone number)</strong></small>
+        <div class="col-md-8 form-group">
+          <label for="organiserName" class="form-label">Organiser Name   </label>
+          <div><small>Will be auto fetched via organizer phone number**</small></div>
+          
           <input type="text" id="organiserName" class="form-control" formControlName="organiserName"
             placeholder="Organiser Name" readonly> <!--  readonly -->
           <!-- Show custom error -->
@@ -95,8 +98,8 @@
     </div>
 
     <!-- Country Code, Organiser Contact & Tournament Format -->
-    <div class="row">
-      <div class="col-md-4 form-group">
+     <div>
+        <div class="col-md-2 form-group">
         <label for="countryCode" class="form-label">Country Code*</label>
         <select id="countryCode" class="form-control" formControlName="countryCode">
           <option value="">Select</option>
@@ -108,10 +111,14 @@
           Country code is required.
         </div>
       </div>
-      <div class="col-md-4 form-group">
-        <label for="organiserContact" class="form-label">Organiser Contact* </label> <small> <strong> (The organizer
+     </div>
+    <div class="row">
+
+      <div class="col-md-6 form-group">
+        <div></div>
+        <label for="organiserContact" class="form-label">Organiser Contact* </label> <small>  (The organizer
             must be a registered
-            user!!!)</strong></small>
+            user!!!)</small>
         <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact"
           placeholder="Phone Number" (blur)="fetchOrganizerByPhone()">
         <div *ngIf="tournamentForm.get('organiserContact')?.touched && tournamentForm.get('organiserContact')?.errors">
@@ -164,7 +171,9 @@
 
     <!-- Submit Button -->
     <div class="text-center mt-3 pb-5">
-      <button type="submit" [disabled]="tournamentForm.invalid" class="btn btn-primary col-md-3 py-2 ">Submit</button>
+      <button type="submit" [disabled]="tournamentForm.invalid" class="btn btn-primary col-md-3  ">Submit</button>
     </div>
   </form>
+</div>
+</div>
 </div>
