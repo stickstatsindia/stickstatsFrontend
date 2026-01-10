@@ -202,8 +202,82 @@ tbody tr:hover td {
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-  .container { margin: 10px; padding: 15px; }
-  h2 { font-size: 1.4rem; }
-  .header { flex-direction: column; gap: 15px; align-items: flex-start; }
-  .add-btn { width: 100%; }
+
+  .container {
+    margin: 0;
+    padding: 12px;
+    border-radius: 0;
+  }
+
+  /* Hide table header */
+  thead {
+    display: none;
+  }
+
+  table, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  tbody tr {
+    margin-bottom: 16px;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  }
+
+  tbody tr td {
+    padding: 12px 14px;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  tbody tr td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+  }
+
+  tbody tr td:first-child {
+    border-radius: 14px 14px 0 0;
+  }
+
+  tbody tr td:last-child {
+    border-radius: 0 0 14px 14px;
+  }
+
+  /* Header */
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  /* Actions */
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .actions button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .settings-dropdown {
+    right: 0;
+    left: 0;
+    max-width: 100%;
+  }
+  .settings-dropdown-wrapper{
+    width: 100%;
+  }
 }

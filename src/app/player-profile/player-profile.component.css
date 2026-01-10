@@ -7,56 +7,62 @@
   --muted: #666;
 }
 
-/* Page */
+/* =========================
+   Page Background
+========================= */
 .profile-page {
-  background: linear-gradient(135deg, #7FBF7F 0%, #4A90A4 100%);
-  padding: 40px 20px;
   min-height: 100vh;
+  padding: 32px 16px;
+  background: linear-gradient(135deg, #7FBF7F 0%, #4A90A4 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* Card */
-.profile-card,
-.player-profile-card {
+/* =========================
+   Profile Card
+========================= */
+.profile-card {
+  width: 100%;
   max-width: 1100px;
-  margin: 40px auto;
-  padding: 40px 56px;
-  border-radius: 24px;
   background: #ffffff;
-  position: relative;
-  z-index: 2;
+  border-radius: 24px;
+  padding: 40px 48px;
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.12),
     0 24px 60px rgba(44, 62, 80, 0.25);
 }
 
-/* Main Row */
+/* =========================
+   Top Row
+========================= */
 .profile-main-row {
   display: flex;
+  justify-content: space-between;
   gap: 48px;
   align-items: flex-start;
-  justify-content: space-between;
 }
 
-/* Image (disabled safely) */
-.profile-logo-section {
-  display: none;
-}
-
-/* Info */
+/* =========================
+   Info Section
+========================= */
 .profile-info-section {
   flex: 1;
-  max-width: 700px;
 }
 
 .profile-name {
   font-size: 2.4rem;
   font-weight: 900;
   color: var(--dark);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .profile-info-section p {
-  color: var(--muted);
   margin-top: 8px;
+  color: var(--muted);
   font-size: 1rem;
 }
 
@@ -66,58 +72,53 @@
   font-size: 0.7rem;
   padding: 4px 8px;
   border-radius: 8px;
-  margin-left: 10px;
 }
 
-/* Stats Row (Matches / Goals / Assists as pills) */
+/* =========================
+   Stats Pills
+========================= */
 .profile-stats-row {
   display: flex;
-  gap: 20px;
+  gap: 18px;
   margin-top: 28px;
   flex-wrap: wrap;
 }
 
 .stat-box {
+  min-width: 130px;
   background: var(--bg);
   border-radius: 20px;
-  padding: 14px 22px;
-  min-width: 140px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: default;
+  padding: 14px 20px;
+  text-align: center;
   transition: all 0.25s ease;
 }
 
-.stat-box:hover,
-.stat-box.active {
+.stat-box:hover {
   background: var(--primary);
 }
 
 .stat-box:hover .stat-label,
-.stat-box:hover .stat-value,
-.stat-box.active .stat-label,
-.stat-box.active .stat-value {
+.stat-box:hover .stat-value {
   color: #ffffff;
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  font-weight: 600;
-  color: var(--muted);
   letter-spacing: 0.6px;
+  color: var(--muted);
 }
 
 .stat-value {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--dark);
   margin-top: 4px;
 }
 
-/* Tabs */
+/* =========================
+   Tabs
+========================= */
 .profile-navbar {
   margin-top: 48px;
   background: var(--bg);
@@ -127,16 +128,16 @@
 
 .profile-tabs {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .profile-tab {
-  padding: 10px 20px;
+  padding: 10px 18px;
+  border-radius: 20px;
   font-weight: 700;
   color: var(--muted);
-  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -144,32 +145,32 @@
 .profile-tab.active,
 .profile-tab:hover {
   background: var(--primary);
-  color: white;
+  color: #609eae;
 }
 
-/* Stats Bar */
+/* =========================
+   Stats Bar
+========================= */
 .stats-bar {
-  margin-top: 40px;
+  margin-top: 32px;
   padding: 24px;
   background: linear-gradient(135deg, var(--primary-light), var(--primary));
   border-radius: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
 }
 
 .stat-bar-item {
-  background: white;
-  padding: 14px 18px;
+  background: #ffffff;
+  padding: 14px;
   border-radius: 14px;
-  min-width: 120px;
   text-align: center;
   box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
 }
 
 .stat-bar-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -180,18 +181,48 @@
   color: var(--dark);
 }
 
-/* Responsive */
+/* =========================
+   Tablet
+========================= */
 @media (max-width: 900px) {
   .profile-main-row {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+  }
+
+  .profile-info-section {
+    width: 100%;
   }
 
   .profile-stats-row {
     justify-content: center;
   }
+}
+
+/* =========================
+   Mobile
+========================= */
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 28px 20px;
+  }
+
+  .profile-name {
+    font-size: 1.9rem;
+    justify-content: center;
+  }
 
   .profile-tabs {
-    justify-content: center;
+    gap: 8px;
+  }
+
+  .profile-tab {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+  }
+
+  .stats-bar {
+    padding: 16px;
   }
 }

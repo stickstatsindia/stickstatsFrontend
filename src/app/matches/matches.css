@@ -191,24 +191,77 @@ td strong {
 /* ==============================
    Responsive
 ================================ */
+/* ==============================
+   Mobile Card Layout
+================================ */
 @media (max-width: 768px) {
-  .container {
-    margin: 20px;
-    padding: 20px;
+
+  table,
+  thead,
+  tbody,
+  th,
+  tr {
+    display: block;
   }
 
-  .header {
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    margin-bottom: 18px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    padding: 12px;
+  }
+
+  tbody tr td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    background: transparent;
+    box-shadow: none;
+    text-align: right;
+  }
+
+  tbody tr td:last-child {
+    border-bottom: none;
+  }
+
+  tbody tr td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    text-align: left;
+  }
+
+  /* Match teams styling */
+  tbody tr td[data-label="Match"] {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    text-align: left;
+    gap: 6px;
   }
 
-  .schedule-btn {
+  /* Actions buttons */
+  .actions {
+    flex-direction: column;
+    gap: 8px;
     width: 100%;
   }
 
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
+  .actions button {
+    width: 100%;
+  }
+
+  .score-btn {
+    width: 100%;
   }
 }
