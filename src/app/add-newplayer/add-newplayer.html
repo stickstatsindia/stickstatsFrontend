@@ -22,12 +22,15 @@
         <div class="form-fields">
           <label>
             Player Name* (Will be auto fetch via phone number)
-            <input formControlName="playerName" placeholder="Player Name" />
+            <input formControlName="playerName" placeholder="Player Name" readonly />
           </label>
           <label>
             Phone Number* (Player have to be a registered user)
             <input formControlName="phone_number" placeholder="Valid Phone Number" maxlength="10" />
           </label>
+        </div>
+        <div class="error" *ngIf="errorMessage">
+          <div class="text-danger">{{ errorMessage }}</div>
         </div>
         <div class="error" *ngIf="playerForm.get('phone_number')?.touched && playerForm.get('phone_number')?.invalid">
           <div class="text-danger" *ngIf="playerForm.get('phone_number')?.errors?.['required']">
