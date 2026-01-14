@@ -1,11 +1,12 @@
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
- 
+import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-player-profile',
   standalone: true, // ✅ very important
-  imports: [CommonModule], // ✅ include CommonModule here
+  imports: [CommonModule, RouterModule], // ✅ include CommonModule here
   templateUrl: './player-profile.component.html',
   styleUrls: ['./player-profile.component.css']
 })
