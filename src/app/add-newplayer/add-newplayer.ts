@@ -16,9 +16,10 @@ export class AddNewplayerComponent {
   // Remove other tabs and just keep phone number entry
   selectedTab = 0; // Since we only have one tab now
   playerForm: FormGroup;
-  logoPreview: string | ArrayBuffer | null = null;
   team_id: string | null = null;
   errorMessage: string | null = null;
+  successMessage: string | null = null;
+  messageType: 'success' | 'error' | null = null;
 
   constructor(private fb: FormBuilder, private memeberService: MembersService, private tournamentService: TournamentService, private router: Router) {
     const nav = this.router.getCurrentNavigation();
@@ -28,8 +29,7 @@ export class AddNewplayerComponent {
     this.team_id= state?.teamId || null;
     this.playerForm = this.fb.group({
       playerName: ['', Validators.required],
-      phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      teamLogo: [null]
+      phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
     });
 
     // Listen for phone number changes to auto-fetch player name
@@ -47,6 +47,8 @@ export class AddNewplayerComponent {
     const phone = this.playerForm.get('phone_number')?.value;
     if (!phone || this.playerForm.get('phone_number')?.invalid) {
       this.errorMessage = null;
+      this.successMessage = null;
+      this.messageType = null;
       return;
     }
 
@@ -60,22 +62,13 @@ export class AddNewplayerComponent {
       error: () => {
         console.error("❌ No user found with phone:", phone);
         this.errorMessage = "No user found with this phone number. User must register first!";
+        this.successMessage = null;
+        this.messageType = 'error';
         this.playerForm.patchValue({ playerName: '' });
       }
     });
   }
 
-  onLogoChange(event: any) {
-    const file = event.target.files[0];
-    if (file && file.size < 100 * 1024) {
-      const reader = new FileReader();
-      reader.onload = e => this.logoPreview = reader.result;
-      reader.readAsDataURL(file);
-      this.playerForm.patchValue({ teamLogo: file });
-    } else {
-      alert('Logo must be <100kb');
-    }
-  }
   teamtId:string=""; // Example team ID
   addTeam() {
     if (this.playerForm.valid) {
@@ -83,6 +76,7 @@ export class AddNewplayerComponent {
       // alert('Team added!');
       console.log('Form Submitted', this.teamtId);
     if (this.playerForm.valid) {
+      // Remove teamLogo from submission - only send playerName and phone_number
       const teamData = { ...this.playerForm.value, teamId: this.team_id };
       console.log('Team Data:', teamData);
       // if (!this.tournamentId) {
@@ -92,13 +86,21 @@ export class AddNewplayerComponent {
        this.memeberService.addMember(teamData).subscribe({
             next: (response: any) => {
               console.log('Tournament added successfully:', response);
-               
+              this.successMessage = response.message || 'Player added successfully!';
+              this.errorMessage = null;
+              this.messageType = 'success';
+              
+              // Auto-navigate after 2 seconds
+              setTimeout(() => {
                 this.router.navigate(['/team-members'], { state: { teamId: this.team_id } });
-           
+              }, 2000);
            
             },
             error: (err: any) => {
               console.error('Error adding tournament:', err);
+              this.errorMessage = err.error?.error || 'Error adding player. Please try again.';
+              this.successMessage = null;
+              this.messageType = 'error';
             }
           });
       console.log('Team data sent to service:', teamData);

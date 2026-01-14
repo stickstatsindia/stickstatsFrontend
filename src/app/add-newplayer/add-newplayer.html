@@ -12,16 +12,11 @@
     <form [formGroup]="playerForm" (ngSubmit)="addTeam()">
       <div class="form-row">
         <div class="logo-upload">
-          <label for="logoInput" class="logo-box">
-            <ng-container *ngIf="!logoPreview">
-              <span class="logo-placeholder">&#128247;</span>
-            </ng-container>
-            <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo Preview" />
-            <input id="logoInput" type="file" accept="image/*" (change)="onLogoChange($event)" hidden />
-          </label>
+          <div class="logo-box">
+            <span class="logo-placeholder">👤</span>
+          </div>
           <div class="logo-desc">
-            <strong>Add Player Profile Picture</strong>
-            <div class="logo-hint">(Dimension: 300px x 300px; Size: &lt;100kb)</div>
+            <strong>Player Profile </strong>
           </div>
         </div>
         <div class="form-fields">
@@ -34,9 +29,15 @@
             <input formControlName="phone_number" placeholder="Valid Phone Number" maxlength="10" />
           </label>
         </div>
-        <div class="error" *ngIf="errorMessage">
-          <div class="text-danger">{{ errorMessage }}</div>
+        <!-- Success Message from GET API (fetchPlayerByPhone) -->
+        <div class="message success" *ngIf="successMessage && messageType === 'success'">
+          <div class="text-success">✓ {{ successMessage }}</div>
         </div>
+        <!-- Error Message from GET API (fetchPlayerByPhone) -->
+        <div class="message error" *ngIf="errorMessage && messageType === 'error'">
+          <div class="text-danger">✗ {{ errorMessage }}</div>
+        </div>
+        <!-- Validation Errors -->
         <div class="error" *ngIf="playerForm.get('phone_number')?.touched && playerForm.get('phone_number')?.invalid">
           <div class="text-danger" *ngIf="playerForm.get('phone_number')?.errors?.['required']">
             Phone number is required.
