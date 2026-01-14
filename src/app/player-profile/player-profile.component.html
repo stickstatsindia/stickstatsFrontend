@@ -1,11 +1,14 @@
 
+<div class="profile-page">
 <div class="profile-card">
   <div class="profile-main-row">
-    <div class="profile-logo-section">
+    <!-- <div class="profile-logo-section">
       <img [src]="profile.imageUrl" alt="Profile" />
-    </div>
+    </div> -->
     <div class="profile-info-section">
-      <h2 class="profile-name">{{ profile.name }} <span *ngIf="profile.isPro" class="pro-badge"></span></h2>
+      <h2 class="profile-name">{{ profile.name }} 
+        <span *ngIf="profile.isPro" class="pro-badge"></span>
+      </h2>
       <p><strong>Location:</strong> {{ profile.location }}</p>
       <p><strong>Position:</strong> {{ profile.battingStyle }}</p>
     </div>
@@ -47,4 +50,5 @@
     <div class="stat-bar-item"><span class="stat-bar-label">Assists</span><span class="stat-bar-value">{{ stats.assists }}</span></div>
     <div class="stat-bar-item"><span class="stat-bar-label">Total Goal Score</span><span class="stat-bar-value">{{ stats.totalGoalScore }}</span></div>
   </div>
+</div>
 </div>

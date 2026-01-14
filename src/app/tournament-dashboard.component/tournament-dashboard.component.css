@@ -1,85 +1,139 @@
+/* =========================
+   Dashboard Wrapper
+========================= */
 .dashboard-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-}
-
-.header {
-  background-color: #b71c1c;
-  color: white;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.profile-section {
+  min-height: calc(100vh - 70px); /* adjust if navbar height differs */
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.profile-img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  background: linear-gradient(135deg, #7FBF7F 50%, #4A90A4 50%);
+  padding: 40px 20px;
+}
+
+/* =========================
+   Content Card
+========================= */
+.content {
   text-align: center;
+  max-width: 640px;
+  padding: 40px 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.6s ease-out;
 }
 
+/* =========================
+   Heading
+========================= */
 .content h2 {
-  font-size: 28px;
-  margin-bottom: 15px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
 }
 
+/* =========================
+   Description Text
+========================= */
 .content p {
   font-size: 16px;
-  margin-bottom: 30px;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 32px;
 }
 
+/* =========================
+   Button Group
+========================= */
 .button-group {
   display: flex;
-  gap: 15px;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
+/* =========================
+   Base Button
+========================= */
 .btn {
-  padding: 12px 20px;
-  border: none;
+  padding: 12px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  border-radius: 4px;
-  font-size: 14px;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+  min-width: 200px;
 }
 
+/* =========================
+   Outline Button
+========================= */
 .btn.outline {
-  background-color: white;
-  border: 2px solid #00bfa5;
-  color: #00bfa5;
+  background: transparent;
+  color: #00b894;
+  border-color: #00b894;
 }
 
 .btn.outline:hover {
-  background-color: #e0f2f1;
+  background: #00b894;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 184, 148, 0.3);
 }
 
+/* =========================
+   Filled Button
+========================= */
 .btn.filled {
-  background-color: #00bfa5;
-  color: white;
+  background: #00b894;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 184, 148, 0.35);
 }
 
 .btn.filled:hover {
-  background-color: #009e88;
+  background: #009f7f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 184, 148, 0.45);
+}
+
+/* =========================
+   Button Active State
+========================= */
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   Responsive Design
+========================= */
+@media (max-width: 576px) {
+  .content {
+    padding: 30px 20px;
+  }
+
+  .content h2 {
+    font-size: 26px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* =========================
+   Animations
+========================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

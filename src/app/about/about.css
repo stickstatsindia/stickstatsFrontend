@@ -1,69 +1,142 @@
-/* Team Card */
+/* ================= ROOT ================= */
+main {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #ffffff;
+}
+
+/* ================= SECTION BACKGROUNDS ================= */
+.about-section,
+.team-section,
+main section {
+  background: #5BA5C0;
+}
+
+/* Alternate soft contrast */
+main section:nth-child(even) {
+  background: #7FBF7F;
+}
+
+/* ================= HEADINGS ================= */
+h2, h3, h5 {
+  color: #ffffff;
+}
+
+p {
+  color: #f1f7f9;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ================= FEATURE / TEAM CARDS ================= */
 .team-card {
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  transition: all 0.3s ease-in-out;
-  background:transparent;
-  padding: 25px 20px;
+  background: linear-gradient(135deg, #003153 50%, #01051b 50%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
   height: 100%;
-  position: relative;
-  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .team-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Team Image */
-.team-img {
+/* ================= TEAM IMAGE ================= */
+.team-card img {
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  margin: 0 auto 15px;
-  display: block;
-  border: 4px solid #0b2561; /* your theme blue */
-  transition: transform 0.3s ease;
+  margin-bottom: 15px;
+  /* background: #ffffff; */
+  padding: 4px;
 }
 
-.team-card:hover .team-img {
-  transform: scale(1.05);
-}
-
-/* Name & Role */
+/* ================= TEAM TEXT ================= */
 .team-card h5 {
+  margin-bottom: 4px;
   font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 5px;
-  color: #222;
 }
 
-.team-card small {
-  font-size: 0.95rem;
-  color: #6c757d;
+.team-card span {
+  font-size: 0.85rem;
+  opacity: 0.85;
 }
 
-/* Social Icons */
+/* ================= SOCIAL ICONS ================= */
 .social-icons {
-  margin-top: 15px;
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
 }
 
 .social-icons a {
-  color: #0b2561;
-  font-size: 18px;
-  margin: 0 8px;
-  transition: all 0.3s ease;
-  display: inline-block;
+  color: #ffffff;
+  font-size: 1rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
 }
 
 .social-icons a:hover {
-  color: #1abc9c;
-  transform: translateY(-3px);
+  opacity: 1;
+  transform: scale(1.15);
 }
 
+/* ================= WHY CHOOSE US ================= */
+section p {
+  margin-bottom: 0.5rem;
+}
 
-.container{
-  padding-bottom: 3%;
+/* ================= CAROUSEL ================= */
+.carousel-item {
+  padding: 10px 0;
+}
+
+/* Keep carousel controls minimal */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: brightness(0) invert(1);
+}
+
+/* Indicators clean look */
+.carousel-indicators button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.carousel-indicators .active {
+  background-color: #ffffff;
+}
+
+/* ================= CTA BUTTON ================= */
+.btn-primary {
+  background: #ffffff;
+  color: #2db12d;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: #f1f7f9;
+  color: #1e7f4a;
+  transform: translateY(-2px);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .team-card {
+    padding: 20px 16px;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
 }

@@ -16,14 +16,14 @@
       </thead>
       <tbody>
         <tr *ngFor="let t of tournaments; let i = index">
-          <td><a href="#" class="name-link" (click)="goToTeamManagement(t.tournament_id, $event)">{{ t.tournament_name }}</a></td>
-          <td>{{ t.start_date | date:'yyyy-MM-dd' }}</td>
-          <td>{{ t.end_date | date:'yyyy-MM-dd' }}</td>
-          <td class="actions">
-            <button (click)="editTournament(i)">✏️</button>
-            <button (click)="deleteTournament(i)">🗑️</button>
-            <div class="settings-dropdown-wrapper" style="display:inline-block;position:relative;">
-              <button (click)="openSettings(i)">⚙️</button>
+          <td data-label="Tournament"><a href="#" class="name-link" (click)="goToTeamManagement(t.tournament_id, $event)">{{ t.tournament_name }}</a></td>
+          <td data-label="From Date">{{ t.start_date | date:'yyyy-MM-dd' }}</td>
+          <td data-label="To Date">{{ t.end_date | date:'yyyy-MM-dd' }}</td>
+          <td data-label="Actions" class="actions">
+            <button class="edit-btn" (click)="editTournament(i)">Edit</button>
+            <button class="delete-btn" (click)="deleteTournament(i)">Delete</button>
+            <div class="settings-dropdown-wrapper" style="position:relative;">
+              <button class="btn btn-info dropdown-toggle" type="button" (click)="openSettings(i)">Settings</button>
               <div *ngIf="settingsOpenIndex === i" class="settings-dropdown">
                 <button (click)="goToTeams(t.tournament_id)">Teams</button>
                 <button (click)="goToGroups(t.tournament_id)">Groups</button>

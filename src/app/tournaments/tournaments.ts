@@ -51,6 +51,7 @@ export class Tournaments implements OnInit, OnDestroy {
         }
       });
   }
+  
 
   ngOnDestroy() {
     if (this.routerSub) {
