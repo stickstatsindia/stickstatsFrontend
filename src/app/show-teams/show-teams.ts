@@ -10,7 +10,7 @@ interface Team {
   _id: string;
   team_id: string;
   team_name: string;
-  city: string;
+  location: string;
   logo?: string;
   memberCount?: number;
 }
@@ -49,7 +49,14 @@ export class ShowTeamsComponent implements OnInit {
   fetchTeams() {
     if (this.tournamentId) {
       this.teamservice.getTeamsByTournamentId(this.tournamentId).subscribe((data: any) => {
-        this.teams = data as Team[];
+        this.teams = data.map((item: any) => ({
+          _id: item._id,
+          team_id: item.team_id,
+          team_name: item.team_name,
+          location: item.location,
+          logo: item.logo_url,
+          memberCount: 0
+        }));
          this.cdr.detectChanges();
         console.log('Teams loaded:', this.teams);
 
