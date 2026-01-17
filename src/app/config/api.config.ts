@@ -8,8 +8,8 @@ export const environment = {
   endpoints: {
     getTeams: '/api/teams',
     addTeam: '/api/tournament/:tournament_id/team',
-    updateTeam: '/api/teams/update',
-    deleteTeam: '/api/teams/delete',
+    updateTeam: '/api/teams/:team_id',
+    deleteTeam: '/api/teams/:team_id',
     getTournaments: '/api/tournaments',
     addTournament: '/api/addtournaments',
     getTournamentById: '/api/tournaments/:tournament_id',

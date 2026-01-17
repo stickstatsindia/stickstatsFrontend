@@ -108,17 +108,26 @@ export class ShowTeamsComponent implements OnInit {
   }
 
   onEditTeam(team: Team) {
-    this.router.navigate(['/edit-team'], {
+    this.router.navigate(['/addnew-team'], {
       queryParams: {
-        teamId: team._id,
+        teamId: team.team_id,
         tournamentId: this.tournamentId
       }
     });
   }
 
   onDeleteTeam(team: Team) {
-    if (confirm(`Delete team ${team.team_name}?`)) {
-      this.teams = this.teams.filter(t => t !== team);
+    if (confirm(`Are you sure you want to delete "${team.team_name}"? This action cannot be undone.`)) {
+      this.teamservice.deleteTeam(team.team_id).subscribe({
+        next: () => {
+          alert('Team deleted successfully');
+          this.fetchTeams(); // Reload the list
+        },
+        error: (err: any) => {
+          console.error('Delete failed', err);
+          alert('Failed to delete team: ' + (err.error?.error || 'Unknown error'));
+        }
+      });
     }
   }
 get displayedEndRow() {
