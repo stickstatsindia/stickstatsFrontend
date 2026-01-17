@@ -26,7 +26,7 @@
               <button class="btn btn-info dropdown-toggle" type="button" (click)="openSettings(i)">Settings</button>
               <div *ngIf="settingsOpenIndex === i" class="settings-dropdown">
                 <button (click)="goToTeams(t.tournament_id)">Teams</button>
-                <button (click)="goToGroups(t.tournament_id)">Groups</button>
+                <button (click)="goToGroups(t.tournament_id)">Pools</button>
                 <button (click)="goToMatches(t.tournament_id)">Matches</button>
               </div>
             </div>
