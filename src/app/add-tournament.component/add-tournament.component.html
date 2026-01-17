@@ -20,7 +20,7 @@
         <div class="d-flex flex-wrap gap-2">
           <button type="button" *ngFor="let cat of tournamentCategories" class="btn"
             [ngClass]="{'btn-primary': selectedCategory === cat, 'btn-outline-primary': selectedCategory !== cat}"
-            (click)="toggleCategory(cat)">
+            (click)="toggleCategory(cat)" [disabled]="isEdit">
             {{cat}}
           </button>
         </div>
@@ -46,7 +46,7 @@
         <div class="d-flex flex-wrap gap-2">
           <button type="button" *ngFor="let type of groundTypes" class="btn"
             [ngClass]="{'btn-success': selectedGroundType === type, 'btn-outline-success': selectedGroundType !== type}"
-            (click)="toggleGroundType(type)">
+            (click)="toggleGroundType(type)" [disabled]="isEdit">
             {{type}}
           </button>
         </div>
@@ -86,7 +86,7 @@
         <div class="d-flex flex-wrap gap-2">
           <button type="button" *ngFor="let mt of matchTypes" class="btn btn-toggle"
             [ngClass]="{'btn-warning': selectedMatchType === mt, 'btn-outline-warning': selectedMatchType !== mt}"
-            (click)="toggleMatchType(mt)">
+            (click)="toggleMatchType(mt)" [disabled]="isEdit">
             {{mt}}
           </button>
         </div>
@@ -120,7 +120,7 @@
             must be a registered
             user!!!)</small>
         <input type="text" id="organiserContact" class="form-control" formControlName="organiserContact"
-          placeholder="Phone Number" (blur)="fetchOrganizerByPhone()">
+          placeholder="Phone Number" (blur)="fetchOrganizerDetails()">
         <div *ngIf="tournamentForm.get('organiserContact')?.touched && tournamentForm.get('organiserContact')?.errors">
           <small class="text-danger" *ngIf="tournamentForm.get('organiserContact')?.errors?.['required']">
             Phone number is required
@@ -135,7 +135,7 @@
         <div class="d-flex flex-wrap gap-2">
           <button type="button" *ngFor="let format of tournamentFormats" class="btn btn-toggle"
             [ngClass]="{'btn-warning': selectedFormat === format, 'btn-outline-warning': selectedFormat !== format}"
-            (click)="toggleFormat(format)">
+            (click)="toggleFormat(format)" [disabled]="isEdit">
             {{format}}
           </button>
         </div>

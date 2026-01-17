@@ -50,6 +50,7 @@ export const routes: Routes = [
   { path: 'addnew-player', component: AddNewplayerComponent},
   { path: 'show-teams', component: ShowTeamsComponent },
   {path: 'team-members', component: TeamMembersComponent},
+  { path: 'edit-tournament/:tournament_id', component: AddTournamentComponent},
   //Add new path before this
   { path: '**', redirectTo: '' }
 ];
