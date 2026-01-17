@@ -65,6 +65,14 @@ export class AddTournamentComponent {
     this.isEdit = true;
     this.loadTournamentForEdit();
   }
+
+    // Auto-convert tournament name to title case
+    this.tournamentForm.get('tournament_name')?.valueChanges.subscribe(value => {
+      if (value) {
+        const titleCased = this.toTitleCase(value);
+        this.tournamentForm.get('tournament_name')?.setValue(titleCased, { emitEvent: false });
+      }
+    });
 }
 loadTournamentForEdit(): void {
   this.tournamentService.getTournamentById(this.tournamentId)
@@ -289,6 +297,11 @@ updateTournament(): void {
       }
     });
 }
+
+  // Helper method to convert string to title case
+  private toTitleCase(str: string): string {
+    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
 
 }
 

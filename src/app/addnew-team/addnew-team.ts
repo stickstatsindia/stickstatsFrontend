@@ -88,7 +88,8 @@ cities = [
   "Varanasi",
   "Vijayawada",
   "Visakhapatnam",
-  "Warangal"
+  "Warangal",
+  "Other"
 ];
 
 
@@ -114,6 +115,14 @@ cities = [
       this.isEdit = true;
       this.loadTeamForEdit();
     }
+
+    // Auto-convert team name to title case
+    this.teamForm.get('team_name')?.valueChanges.subscribe(value => {
+      if (value) {
+        const titleCased = this.toTitleCase(value);
+        this.teamForm.get('team_name')?.setValue(titleCased, { emitEvent: false });
+      }
+    });
   }
 
   loadTeamForEdit() {
@@ -186,5 +195,10 @@ cities = [
         alert('Failed to update team: ' + (err.error?.error || 'Unknown error'));
       }
     });
+  }
+
+  // Helper method to convert string to title case
+  private toTitleCase(str: string): string {
+    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   }
 }
