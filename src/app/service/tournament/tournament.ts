@@ -9,6 +9,7 @@ export class TournamentService {
   addTournamentUrl = environment.baseUrl + environment.endpoints.addTournament;
   getTournamentUrl = environment.baseUrl + environment.endpoints.getTournaments;
   getUserByPhoneUrl = environment.baseUrl + environment.endpoints.getUserByPhone;
+  getUserByIdUrl = environment.baseUrl + environment.endpoints.getUserById;
   getTournamentByIdUrl = environment.baseUrl + environment.endpoints.getTournamentById;
   constructor(private http: HttpClient) {
     console.log('Add Tournament URL:', this.addTournamentUrl);
@@ -31,8 +32,23 @@ export class TournamentService {
     return this.http.get(url);
   }
 
+  getUserById(userId: string) {
+    const url = this.getUserByIdUrl.replace(':user_id', userId);
+    return this.http.get(url);
+  }
+
 getTournamentById(tournamentId: string) {
     const url = this.getTournamentByIdUrl.replace(':tournament_id', tournamentId);
     return this.http.get(url);
+  }
+
+ editTournament(tournamentId: string, data: any) {
+    const url = environment.baseUrl + environment.endpoints.editTournament.replace(':tournament_id', tournamentId);
+    return this.http.put(url, data);
+  }
+
+  deleteTournament(tournamentId: string) {
+    const url = environment.baseUrl + environment.endpoints.editTournament.replace(':tournament_id', tournamentId);
+    return this.http.delete(url);
   }
 }

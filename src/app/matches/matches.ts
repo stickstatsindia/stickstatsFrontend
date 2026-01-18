@@ -122,8 +122,23 @@ export class Matches implements OnInit {
   }
 
   deleteMatch(index: number) {
-    if (confirm('Are you sure you want to delete this match?')) {
-      this.matches.splice(index, 1);
+    const match = this.matches[index];
+    if (!match.matchId) {
+      alert('Match ID not found!');
+      return;
+    }
+    if (confirm(`Are you sure you want to delete the match between "${match.team1}" and "${match.team2}"?`)) {
+      this.matchService.deleteMatch(match.matchId).subscribe({
+        next: () => {
+          alert('Match deleted successfully');
+          this.matches.splice(index, 1);
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          console.error('Delete failed', err);
+          alert('Failed to delete match: ' + (err.error?.error || 'Unknown error'));
+        }
+      });
     }
   }
 

@@ -75,19 +75,30 @@ export class Tournaments implements OnInit, OnDestroy {
     this.router.navigate(['/add-tournament']);
   }
 
-  editTournament(index: number) {
-    alert(`Edit tournament: ${this.tournaments[index].tournament_name}`);
-  }
+ editTournament(index: string) {
+  this.router.navigate(
+    ['/edit-tournament', index],
+    { state: { isEdit: true, tournamentId: index } }
+  );
+}
 
-  deleteTournament(index: number) {
-    if (confirm('Are you sure you want to delete this tournament?')) {
-      this.tournaments.splice(index, 1);
+  deleteTournament(tournamentId: string) {
+    if (confirm('Are you sure you want to delete this tournament? This action cannot be undone.')) {
+      this.tournamentService.deleteTournament(tournamentId)
+        .subscribe({
+          next: () => {
+            alert('Tournament deleted successfully');
+            this.loadTournaments(); // Reload the list
+          },
+          error: (err: any) => {
+            alert('Failed to delete tournament: ' + (err.error?.error || 'Unknown error'));
+          }
+        });
     }
   }
 
   openSettings(index: number) {
     this.settingsOpenIndex = this.settingsOpenIndex === index ? null : index;
-    console.log('Settings opened for index:', index);
   }
 
   goToTeams(tournamentId: string) {
@@ -109,7 +120,6 @@ export class Tournaments implements OnInit, OnDestroy {
     event.preventDefault();
     console.log('Tournament ID:', tournamentId);
     if (!tournamentId) {
-      console.error('No tournament ID provided');
       return;
     }
     this.router.navigate(['/tournament-details', tournamentId]);

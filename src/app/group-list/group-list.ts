@@ -51,6 +51,12 @@ export class GroupListComponent implements OnInit {
   }
 
   private loadPools() {
+    if (!this.tournamentId) {
+      this.error = 'No tournament selected. Please navigate from a tournament.';
+      this.isLoading = false;
+      return;
+    }
+
     this.isLoading = true;
     this.error = null;
 

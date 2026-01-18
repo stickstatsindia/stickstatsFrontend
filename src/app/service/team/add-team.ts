@@ -25,7 +25,15 @@ export class AddTeam {
       const url = `${environment.baseUrl}/api/team/${teamId}`;
       return this.http.get(url);
     }
+
+    updateTeam(teamId: string, teamData: any): Observable<any> {
+      const url = environment.baseUrl + environment.endpoints.updateTeam.replace(':team_id', teamId);
+      return this.http.put(url, teamData);
+    }
+
+    deleteTeam(teamId: string): Observable<any> {
+      const url = environment.baseUrl + environment.endpoints.deleteTeam.replace(':team_id', teamId);
+      return this.http.delete(url);
+    }
+
   }
-
-
-

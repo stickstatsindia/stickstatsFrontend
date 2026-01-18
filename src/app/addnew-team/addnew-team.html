@@ -1,5 +1,5 @@
 <div class="add-team-page">
-  <h2 class="add-team-heading">Create New Team</h2>
+  <h2 class="add-team-heading">{{ isEdit ? 'Edit Team' : 'Create New Team' }}</h2>
 
   <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="add-team-container">
     <div>
@@ -28,7 +28,7 @@
       </div>
       <div class="input-group">
        <label>City:</label>
-      <select formControlName="city">
+      <select formControlName="city" [disabled]="isEdit">
         <option value="">Select City</option>
         <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
       </select>
@@ -42,7 +42,7 @@
 
     
 
-      <button class="btn btn-primary" type="submit" value="Submit">Submit</button>
+      <button class="btn btn-primary" type="submit" value="Submit">{{ isEdit ? 'Update' : 'Submit' }}</button>
     </div>
 
   </form>
