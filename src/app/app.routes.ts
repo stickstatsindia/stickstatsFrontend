@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { About } from './about/about';
 import { Contact } from './contact/contact';
-import { ProfileForm } from './profile-form/profile-form';
+import { ProfileForm as AuthenticationComponent } from './profile-form/profile-form';
 import { LiveDashboardComponent } from './liveDashboard/live-dashboard/live-dashboard';
 import { AddTournamentComponent } from './add-tournament.component/add-tournament.component';
 import { PlayerProfileComponent } from './player-profile/player-profile.component';
@@ -24,9 +24,12 @@ import { ShowTeamsComponent } from './show-teams/show-teams';
 import { AddGroupComponent } from './add-group/add-group';
 import { TeamMembersComponent } from './team-members/team-members';
 
+import { AuthenticationComponent as Auth } from './authentication/authentication.component';
+
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'profile-form', component: ProfileForm },
+  { path: 'profile-form', component: AuthenticationComponent },
+  { path: 'auth', component: Auth },
   { path: 'about', component: About },
   { path: 'player-profile', component: PlayerProfileComponent },
   { path: 'contact', component: Contact },
