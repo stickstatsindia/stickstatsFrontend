@@ -82,7 +82,7 @@ export class TeamMembersComponent implements OnInit {
 
   onMemberClick(member: TeamMember) {
     // Navigate to player profile with member data
-    this.router.navigate(['player-profile']);
+    this.router.navigate(['player-profile'], { state: { member: member } });
   }
 
   getInitials(fullName: string): string {
