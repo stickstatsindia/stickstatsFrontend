@@ -38,11 +38,8 @@ export class TeamMembersComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {
-    console.log('TeamMembersComponent initialized');
     const nav = this.router.getCurrentNavigation();
-    console.log('Navigation State:', nav?.extras.state);
     const state = nav?.extras.state as { teamId?: string };
-    console.log('Extracted State:', state);
     this.team_id = state?.teamId || null;
   }
 
@@ -62,13 +59,11 @@ export class TeamMembersComponent implements OnInit {
     this.isLoading = true;
     this.memberService.getMembers(this.team_id).subscribe({
       next: (members: TeamMember[]) => {
-        console.log('Team members loaded:', members);
         this.teamMembers = members;
         this.isLoading = false; // ✅ FIXED
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading team members:', err);
         this.error = 'Failed to load team members';
         this.isLoading = false;
       }
@@ -83,6 +78,11 @@ export class TeamMembersComponent implements OnInit {
         tournamentId: this.tournamentId
       }
     });
+  }
+
+  onMemberClick(member: TeamMember) {
+    // Navigate to player profile with member data
+    this.router.navigate(['player-profile'], { state: { member: member } });
   }
 
   getInitials(fullName: string): string {

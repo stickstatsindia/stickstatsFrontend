@@ -51,6 +51,12 @@ export class GroupListComponent implements OnInit {
   }
 
   private loadPools() {
+    if (!this.tournamentId) {
+      this.error = 'No tournament selected. Please navigate from a tournament.';
+      this.isLoading = false;
+      return;
+    }
+
     this.isLoading = true;
     this.error = null;
 
@@ -87,7 +93,7 @@ export class GroupListComponent implements OnInit {
   deleteGroup(pool: Pool) {
     if (confirm(`Delete pool "${pool.name}"?`)) {
       this.isLoading = true;
-      this.poolService.deletePool(pool.name).subscribe({
+      this.poolService.deletePool(this.tournamentId, pool.name).subscribe({
         next: () => {
           this.loadPools();
           this.isLoading = false;

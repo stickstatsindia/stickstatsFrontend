@@ -170,4 +170,9 @@ export class MatchService {
       .put<any>(`${this.baseUrl}/matches/${matchId}`, this.toSnakeCase(match))
       .pipe(map(m => this.toCamelCase(m)));
   }
+
+  // Delete a match
+  deleteMatch(matchId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/matches/${matchId}`);
+  }
 }

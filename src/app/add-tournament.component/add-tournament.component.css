@@ -1,154 +1,193 @@
-.form-section {
-  padding: 32px 24px;
-  max-width: 900px;
-  margin: 40px auto;
-  background: #f8fafc;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(60, 72, 88, 0.08);
+/* Page background */
+.page-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #85dcf4 30%, #4A90A4 50%);
+  padding: 30px 0;
 }
 
-.section-title,
-h2 {
-  font-size: 2.2rem;
+/* Container adjustment */
+.container {
+  max-width: 1100px;
+}
+
+/* Card */
+.form-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 30px 35px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Page title */
+.page-title {
+  font-size: 26px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 24px;
-  color: #233142;
-  letter-spacing: 1px;
+  margin-bottom: 30px;
+  color: #2c3e50;
 }
 
+/* Form labels */
 .form-label {
-  font-weight: 500;
-  color: #233142;
+  font-weight: 600;
+  color: #34495e;
   margin-bottom: 6px;
 }
 
-.form-group {
-  margin-bottom: 16px; /* reduce spacing between form fields */
-}
-
-input.form-control,
-select.form-select {
+/* Inputs & selects */
+.form-control {
   border-radius: 8px;
-  border: 1px solid #cfd8dc;
-  padding: 10px 14px;
-  font-size: 1rem;
-  background: #fff;
-  transition: border-color 0.2s;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input.form-control:focus,
-select.form-select:focus {
-  border-color: #3a4b57;
-  box-shadow: 0 0 0 2px #e0e7ef;
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
 }
 
-.btn-toggle,
+/* Readonly input */
+.form-control[readonly] {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+/* Form groups spacing */
+.form-group {
+  margin-bottom: 18px;
+}
+
+/* Row spacing */
+.row {
+  margin-bottom: 10px;
+}
+
+/* Toggle buttons (category, ground type, etc.) */
 .btn {
-  margin: 4px 6px 4px 0;
-  border-radius: 22px;
-  padding: 8px 22px;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  outline: none;
-  border: none;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.btn-toggle,
-.btn-primary,
-.btn-success,
-.btn-warning {
-  color: #fff;
-}
-
-.btn-outline-primary,
-.btn-outline-success,
-.btn-outline-warning {
-  background: #fff;
-  color: #3a4b57;
-  border: 1.5px solid #3a4b57;
-}
-
-.btn-primary,
-.btn-toggle.btn-primary {
-  background: #3a4b57;
-}
-
-.btn-success,
-.btn-toggle.btn-success {
-  background: #2e7d32;
-}
-
-.btn-warning,
-.btn-toggle.btn-warning {
-  background: #f9a825;
-}
-
+/* Hover effect for outline buttons */
 .btn-outline-primary:hover,
 .btn-outline-success:hover,
 .btn-outline-warning:hover {
-  background: #e0e7ef;
-  color: #233142;
+  color: #fff;
 }
 
-.btn-toggle:hover,
-.btn-primary:hover,
-.btn-success:hover,
-.btn-warning:hover {
-  filter: brightness(0.92);
-  box-shadow: 0 2px 8px rgba(60, 72, 88, 0.08);
+/* Active toggle feel */
+.btn-primary,
+.btn-success,
+.btn-warning {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.form-check-label {
-  margin-left: 8px;
-  font-size: 1rem;
-  color: #233142;
+/* Toggle button group spacing */
+.d-flex.gap-2 {
+  row-gap: 10px;
 }
 
-.text-center {
-  margin-top: 24px;
+/* Error text */
+.text-danger {
+  font-size: 13px;
+  margin-top: 4px;
 }
 
-input[type="date"].form-control {
-  max-width: 200px;
-  display: inline-block;
-  padding: 8px 10px;
-  font-size: 0.95rem;
+/* Alert error */
+.alert-danger {
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
 
-/* Reduce spacing between date fields */
+/* Small helper text */
+small {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+/* Date row spacing */
 .date-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px; /* tighter spacing */
+  margin-top: 10px;
 }
 
-/* Override Bootstrap's default spacing if needed */
-.col-md-6 {
-  margin-bottom: 12px; /* reduced from default */
+
+/* Submit Button Enhancement */
+button[type="submit"] {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 12px 40px;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-/* Responsive adjustments */
+/* Hover effect */
+button[type="submit"]:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(13, 110, 253, 0.35);
+}
+
+/* Click (active) effect */
+button[type="submit"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 6px 14px rgba(13, 110, 253, 0.4);
+}
+
+/* Disabled state */
+button[type="submit"]:disabled {
+  background: linear-gradient(135deg, #adb5bd, #6c757d);
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+/* Subtle shine animation */
+button[type="submit"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+/* Shine on hover */
+button[type="submit"]:hover::after {
+  left: 140%;
+}
+
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-  .form-section,
-  .container {
-    padding: 16px 4px;
-    max-width: 100%;
+  .form-card {
+    padding: 20px;
   }
 
-  .row {
-    flex-direction: column;
+  .page-title {
+    font-size: 22px;
   }
 
-  .col-md-6 {
-    width: 100%;
-    margin-bottom: 16px;
-  }
-
-  .date-row {
-    flex-direction: column;
-    gap: 8px;
+  .btn {
+    font-size: 12px;
+    padding: 6px 14px;
   }
 }

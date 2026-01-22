@@ -17,7 +17,7 @@
       <tbody>
         <tr *ngFor="let team of pagedTeams">
           <td>{{ team.team_name }}</td>
-          <td>{{ team.city }}</td>
+          <td>{{ team.location }}</td>
           <td>
             <button class="members-btn" (click)="onMembersAction(team)">
               {{ team.memberCount === 0 || team.memberCount == null
@@ -26,10 +26,10 @@
             </button>
           </td>
           <td>
-            <button class="action-btn" (click)="onEditTeam(team)">
+            <button class="action-btn" (click)="onEditTeam(team)" title="Edit Team">
               <span class="material-icons">edit</span>
             </button>
-            <button class="action-btn" (click)="onDeleteTeam(team)">
+            <button class="action-btn" (click)="onDeleteTeam(team)" title="Delete Team">
               <span class="material-icons">delete</span>
             </button>
           </td>

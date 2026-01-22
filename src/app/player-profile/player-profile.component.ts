@@ -1,22 +1,75 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
- 
+import { RouterModule, Router } from '@angular/router';
+import { TournamentService } from '../service/tournament/tournament';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-player-profile',
   standalone: true, // ✅ very important
-  imports: [CommonModule], // ✅ include CommonModule here
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule], // ✅ include CommonModule here
   templateUrl: './player-profile.component.html',
   styleUrls: ['./player-profile.component.css']
 })
-export class PlayerProfileComponent {
+export class PlayerProfileComponent implements OnInit {
+  member: any;
+  user: any;
+  isEditMode = false;
+  editForm: any = {};
+
+  constructor(private router: Router, private tournamentService: TournamentService) {}
+
+  ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    this.member = navigation?.extras.state?.['member'];
+    if (this.member) {
+      this.profile.name = this.member.name;
+      this.profile.imageUrl = this.member.profile_pic || '👤';
+      this.fetchUserDetails();
+    }
+  }
+
+  fetchUserDetails() {
+    if (this.member?.user_id) {
+      this.tournamentService.getUserById(this.member.user_id).subscribe({
+        next: (user: any) => {
+          this.user = user;
+          this.editForm = {
+            full_name: user.full_name,
+            phone_number: user.phone_number
+          };
+        },
+        error: (err) => {
+          console.error('Error fetching user:', err);
+        }
+      });
+    }
+  }
+
+  goBack() {
+    this.router.navigate(['/team-members']);
+  }
+
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+  }
+
+  saveProfile() {
+    // Since no PUT endpoint, just update locally for now
+    this.user.full_name = this.editForm.full_name;
+    this.user.phone_number = this.editForm.phone_number;
+    this.isEditMode = false;
+    // TODO: Add PUT API call when backend supports it
+  }
+
   profile = {
-    name: 'evejeet singh',
+    name: '',
     location: 'Baramulla',
     views: 7,
     isPro: true,
     battingStyle: 'Right Hand',
-    imageUrl: 'https://via.placeholder.com/100x100.png?text=Profile',
+    imageUrl: '👤',
     matches: 1,
     runs: 0,
     wickets: 0
@@ -34,7 +87,7 @@ export class PlayerProfileComponent {
     totalGoalScore: 0
   };
 
-  menu = ['MATCHES', 'STATS', 'TEAMS', 'PROFILE'];
+  menu = ['MATCHES', 'STATS', 'AWARDS', 'BADGES', 'TEAMS', 'PHOTOS', 'CONNECTIONS', 'PROFILE'];
   selectedTab = 'MATCHES';
 
   onTabSelect(tab: string) {
