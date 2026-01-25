@@ -1,37 +1,117 @@
+/* =========================
+   Contact Page Background
+========================= */
 .color {
-  background-color: #c0c5ce;  /* page background */
-  min-height: 100vh;          /* full screen height */
-  padding: 2rem 0;            /* some top-bottom spacing */
+  min-height: 100vh;
+  padding: 32px 16px;
+  background: linear-gradient(135deg, #7FBF7F 0%, #4A90A4 100%);
+
+  display: flex;
+  flex-direction: column;          /* stack heading + content */
+  align-items: center;
 }
 
+/* =========================
+   Contact Page Heading
+========================= */
+.contact-heading {
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0f2f3f;
+  margin-bottom: 50px;
+  letter-spacing: -0.5px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Highlight part of heading */
+.contact-heading span {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 6px 14px;
+  border-radius: 12px;
+}
+
+/* =========================
+   Container Alignment Fix
+========================= */
+.container {
+  max-width: 1200px;
+}
+
+/* Ensure row centers vertically */
+.row.align-items-center {
+  min-height: 420px;
+}
+
+/* =========================
+   Logo Column
+========================= */
+.color .col-md-6:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================
+   Contact Form Card
+========================= */
 form {
-  background: #ffff;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 480px;               /* better balance with logo */
+  background: #ffffff;
+  padding: 40px 48px;
+  border-radius: 24px;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.12),
+    0 24px 60px rgba(44, 62, 80, 0.25);
 }
 
-.card-body {
-  padding: 2rem;   
-}
-
+/* =========================
+   Inputs
+========================= */
 .form-control {
-  font-size: 1.1rem;
-  padding: 0.75rem;
+  font-size: 1.05rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 
+.form-control:focus {
+  border-color: #4A90A4;
+  box-shadow: 0 0 0 2px rgba(74, 144, 164, 0.25);
+}
 
+/* =========================
+   Image Styling
+========================= */
 .color img {
   max-height: 25em;
-  width: auto;
-  height: auto;
-  background: transparent;
-  border-radius: 12px;              /* smooth corners */
-  box-shadow: 0 8px 20px #051780;  /* elevation effect */
+  border-radius: 24px;
+  box-shadow: 0 10px 28px rgba(44, 62, 80, 0.28);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .color img:hover {
-  transform: translateY(-5px);      /* slight lift on hover */
-  box-shadow: 0 12px 28px rgba(53, 115, 238, 0.963); /* stronger shadow */
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(44, 62, 80, 0.38);
+}
+
+/* =========================
+   Mobile Responsive
+========================= */
+@media (max-width: 900px) {
+  .row.align-items-center {
+    min-height: auto;
+  }
+
+  .contact-heading {
+    font-size: 2.1rem;
+    margin-bottom: 32px;
+  }
+
+  form {
+    padding: 28px 22px;
+  }
 }
