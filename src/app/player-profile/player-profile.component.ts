@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
 import { RouterModule, Router } from '@angular/router';
 import { TournamentService } from '../service/tournament/tournament';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-player-profile',
@@ -13,38 +14,38 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./player-profile.component.css']
 })
 export class PlayerProfileComponent implements OnInit {
-  member: any;
   user: any;
   isEditMode = false;
   editForm: any = {};
 
-  constructor(private router: Router, private tournamentService: TournamentService) {}
+  constructor(private router: Router, private tournamentService: TournamentService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    const navigation = this.router.getCurrentNavigation();
-    this.member = navigation?.extras.state?.['member'];
-    if (this.member) {
-      this.profile.name = this.member.name;
-      this.profile.imageUrl = this.member.profile_pic || '👤';
-      this.fetchUserDetails();
+    const userId = this.route.snapshot.queryParamMap.get('userId');
+    if (userId) {
+      this.fetchUserDetails(userId);
     }
   }
 
-  fetchUserDetails() {
-    if (this.member?.user_id) {
-      this.tournamentService.getUserById(this.member.user_id).subscribe({
-        next: (user: any) => {
-          this.user = user;
-          this.editForm = {
-            full_name: user.full_name,
-            phone_number: user.phone_number
-          };
-        },
-        error: (err) => {
-          console.error('Error fetching user:', err);
-        }
-      });
-    }
+  fetchUserDetails(userId: string) {
+    this.tournamentService.getUserById(userId).subscribe({
+      next: (user: any) => {
+        this.user = user;
+        console.log('User details:', this.user);
+        this.editForm = {
+          full_name: user.full_name,
+          phone_number: user.phone_number
+        };
+        // Update profile with user data
+        this.profile.name = user.full_name;
+        this.profile.imageUrl = user.profile_pic || '👤';
+        // Add other fields if available
+        if (user.position) this.profile.battingStyle = user.position; // assuming position is batting style
+      },
+      error: (err) => {
+        console.error('Error fetching user:', err);
+      }
+    });
   }
 
   goBack() {

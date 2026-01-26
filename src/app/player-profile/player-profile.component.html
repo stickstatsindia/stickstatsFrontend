@@ -2,15 +2,14 @@
 <div class="profile-page">
   <button (click)="goBack()" class="back-button">← Back</button>
 
-  <div class="profile-card" *ngIf="member">
+  <div class="profile-card" *ngIf="user">
     <div class="profile-main-row">
       <div class="profile-logo-section">
         <div class="logo-box">{{ profile.imageUrl }}</div>
       </div>
       <div class="profile-info-section">
-        <h2 class="profile-name">{{ member.name }}</h2>
-        <p><strong>Phone:</strong> {{ member.phone_number }}</p>
-        <p><strong>Role:</strong> {{ member.role }}</p>
+        <h2 class="profile-name">{{ profile.name }}</h2>
+        <p><strong>Phone:</strong> {{ user.phone_number }}</p>
         <button (click)="toggleEditMode()" class="edit-button">{{ isEditMode ? 'Cancel' : 'Edit Profile' }}</button>
       </div>
     </div>
