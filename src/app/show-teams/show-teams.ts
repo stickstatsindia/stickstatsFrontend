@@ -58,7 +58,6 @@ export class ShowTeamsComponent implements OnInit {
           memberCount: 0
         }));
          this.cdr.detectChanges();
-        console.log('Teams loaded:', this.teams);
 
         // fetch member count for each team
         this.teams.forEach(team => {
