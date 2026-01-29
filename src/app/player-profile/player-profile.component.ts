@@ -341,7 +341,7 @@ export class PlayerProfileComponent implements OnInit {
     this.tournamentService.getUserById(userId).subscribe({
      next: (user: PlayerUser)  => {
         this.user = user;
-
+        this.cdr.detectChanges();
         // set profile data
         this.profile.name = user.full_name;
         this.profile.imageUrl = user.profile_pic || '👤';
