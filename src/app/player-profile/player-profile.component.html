@@ -81,5 +81,14 @@
       </div>
 
     </div>
+    <div *ngIf="selectedTab === 'AWARDS'">
+    <app-awards [userId]="user.id"></app-awards>
+    </div>
+    <div *ngIf="selectedTab === 'MATCHES'">
+    <app-player-matches [userId]="user.id"></app-player-matches>
+    </div>
+     <div *ngIf="selectedTab === 'TEAMS'">
+    <app-playet-teams [userId]="user.id"></app-playet-teams>
+    </div>
   </div>
 </div>

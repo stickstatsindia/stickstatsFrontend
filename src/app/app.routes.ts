@@ -25,6 +25,7 @@ import { AddGroupComponent } from './add-group/add-group';
 import { TeamMembersComponent } from './team-members/team-members';
 
 import { AuthenticationComponent as Auth } from './authentication/authentication.component';
+import { Awards } from './awards/awards';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -52,6 +53,7 @@ export const routes: Routes = [
   { path: 'matches', component: Matches },
   { path: 'addnew-player', component: AddNewplayerComponent},
   { path: 'show-teams', component: ShowTeamsComponent },
+  { path: 'player/awards', component: Awards },
   {path: 'team-members', component: TeamMembersComponent},
   { path: 'edit-tournament/:tournament_id', component: AddTournamentComponent},
   //Add new path before this
