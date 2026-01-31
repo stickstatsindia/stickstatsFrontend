@@ -82,7 +82,7 @@ export class TeamMembersComponent implements OnInit {
 
   onMemberClick(member: TeamMember) {
     // Navigate to player profile with user_id as query param
-    this.router.navigate(['player-profile'], { queryParams: { userId: member.user_id } });
+    this.router.navigate(['player-profile' , member.user_id],   { state: {userId: member.user_id } }) ;
   }
 
   getInitials(fullName: string): string {

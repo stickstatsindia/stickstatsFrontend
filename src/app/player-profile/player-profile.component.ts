@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -82,17 +82,21 @@ export class PlayerProfileComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private tournamentService: TournamentService,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.paramMap.get('userId');
-    if (!userId) {
-      console.error('No userId found in route');
-      return;
-    }
-
-    this.fetchUserProfile(userId);
+    // const userId = this.route.snapshot.paramMap.get('userId');
+     this.route.params.subscribe(params => {
+      const userId = params['user_id'];
+      if (!userId) {
+        console.error('No userId found in route');
+        return;
+      }
+      this.fetchUserProfile(userId);
+      this.cdr.detectChanges();
+     });
   }
 
   getPlayerStats(userId: string) {
@@ -151,6 +155,7 @@ export class PlayerProfileComponent implements OnInit {
 
       this.profile.matches = this.stats.totalMatches;
       this.profile.runs = this.stats.goals;
+       this.cdr.detectChanges();
     });
 
   }
