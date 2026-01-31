@@ -115,7 +115,8 @@ config = environment;
     return this.http.put(`/api/pools/${oldPool.id}`, updatedPool);
   }
 
-  deletePool(pool: any) {
-    return this.http.delete(`/api/pools/${pool.id}`);
+  deletePool(tournamentId: string, poolName: string): Observable<any> {
+    const url = environment.baseUrl + environment.endpoints.addPool.replace(':tournament_id', tournamentId);
+    return this.http.delete(url, { body: { pool_name: poolName } });
   }
 }

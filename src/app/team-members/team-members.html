@@ -18,7 +18,7 @@
 <!-- ✅ Members Grid -->
 <div class="members-grid" *ngIf="!isLoading && !error">
   <!-- Show members if available -->
-  <div class="member-card" *ngFor="let member of teamMembers">
+  <div class="member-card" *ngFor="let member of teamMembers" (click)="onMemberClick(member)" style="cursor: pointer;">
     <div class="member-avatar" [attr.data-initials]="getInitials(member.name)">
       <div class="initials">{{ getInitials(member.name) }}</div>
       <div class="role-badge">{{ member.role }}</div>

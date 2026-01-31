@@ -59,12 +59,22 @@ export class AddGroupComponent implements OnInit {
       });
     }
   }
-
+  // Helper method to convert string to title case
+  private toTitleCase(str: string): string {
+    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
   ngOnInit(): void {
     if (this.tournamentId) {
       this.teamService.getTeamsByTournamentId(this.tournamentId).subscribe({
         next: (teams: Team[]) => {
           this.pools = teams;
+          if (this.isEditing && this.originalPool) {
+            // Pre-select teams that are in the current pool
+            this.selectedTeams = this.pools
+              .map((team, index) => ({ team, index }))
+              .filter(({ team }) => team.pool?.name === this.originalPool.name)
+              .map(({ index }) => index);
+          }
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -72,6 +82,13 @@ export class AddGroupComponent implements OnInit {
         }
       });
     }
+
+      this.poolForm.get('pool_name')?.valueChanges.subscribe(value => {
+      if (value) {
+        const titleCased = this.toTitleCase(value);
+        this.poolForm.get('pool_name')?.setValue(titleCased, { emitEvent: false });
+      }
+    });
   }
 
   toggleTeamSelection(index: number): void {
@@ -143,7 +160,7 @@ export class AddGroupComponent implements OnInit {
   }
 
   isTeamInPool(team: Team): boolean {
-    return team.pool !== undefined && team.pool !== null && Object.keys(team.pool).length > 0;
+    return team.pool !== undefined && team.pool !== null && Object.keys(team.pool).length > 0 && (!this.isEditing || team.pool?.name !== this.originalPool?.name);
   }
 
   hasMinimumTeams(): boolean {

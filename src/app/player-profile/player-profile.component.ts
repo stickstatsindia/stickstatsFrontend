@@ -1,80 +1,179 @@
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // ✅ Needed for *ngFor, *ngIf
- 
+import { TournamentService } from '../service/tournament/tournament';
+import { Awards } from '../awards/awards';
+import { PlayerMatches } from '../player-matches/player-matches';
+import { PlayerTeams } from '../player-teams/player-teams';
+
+interface PlayerUser {
+  user_id: string;
+  full_name: string;
+  phone_number?: string;
+  profile_pic?: string;
+  position?: string;
+  player_stats?: PlayerStats;
+}
+
+interface PlayerStats {
+  totalMatches: number;
+  goals: number;
+  fieldGoals: number;
+  pc: number;
+  ps: number;
+  assists: number;
+  redCards: number;
+  yellowCards: number;
+  greenCards: number;
+  totalGoalScore: number;
+}
+
 @Component({
   selector: 'app-player-profile',
-  standalone: true, // ✅ very important
-  imports: [CommonModule], // ✅ include CommonModule here
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    Awards,
+    PlayerMatches,
+    PlayerTeams
+  ],
   templateUrl: './player-profile.component.html',
   styleUrls: ['./player-profile.component.css']
 })
-export class PlayerProfileComponent {
+export class PlayerProfileComponent implements OnInit {
+
+  user!: PlayerUser;
+
   profile = {
-    name: 'evejeet singh',
-    location: 'Baramulla',
-    views: 7,
+    name: '',
     isPro: true,
-    battingStyle: 'Right Hand',
-    imageUrl: 'https://via.placeholder.com/100x100.png?text=Profile',
-    matches: 1,
-    runs: 0,
-    wickets: 0
+    position: '-',
+    imageUrl: '👤',
+    matches: 0,
+    runs: 0
   };
 
-  stats = {
+  stats: PlayerStats = {
     totalMatches: 0,
+    goals: 0,
+    fieldGoals: 0,
     pc: 0,
     ps: 0,
-    redCards: 0,
-    greenCards: 0,
-    yellowCards: 0,
-    fieldGoals: 0,
     assists: 0,
+    redCards: 0,
+    yellowCards: 0,
+    greenCards: 0,
     totalGoalScore: 0
   };
 
-  menu = ['MATCHES', 'STATS', 'TEAMS', 'PROFILE'];
+  menu = ['MATCHES', 'STATS', 'AWARDS', 'TEAMS'];
   selectedTab = 'MATCHES';
 
-  onTabSelect(tab: string) {
-    this.selectedTab = tab;
-    if (tab === 'STATS') {
-      this.fetchStatsFromBackend();
-    }
+  isEditMode = false;
+  editForm: any = {};
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private tournamentService: TournamentService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    // const userId = this.route.snapshot.paramMap.get('userId');
+     this.route.params.subscribe(params => {
+      const userId = params['user_id'];
+      if (!userId) {
+        console.error('No userId found in route');
+        return;
+      }
+      this.fetchUserProfile(userId);
+      this.cdr.detectChanges();
+     });
   }
 
-  fetchStatsFromBackend() {
-    // Simulate backend API call
-    setTimeout(() => {
+  getPlayerStats(userId: string) {
+    return this.http.get<any>(`http://localhost:3000/api/player-stats/${userId}`);
+  }
+
+  fetchUserProfile(userId: string): void {
+    this.tournamentService.getUserById(userId).subscribe({
+      next: (user) => {
+        this.user = user;
+
+        // Profile info
+        this.profile.name = user.full_name;
+        this.profile.position = user.position || '-';
+        this.profile.imageUrl = user.profile_pic || '👤';
+
+        // Stats (from backend)
+        // const ps = user.player_stats || {};
+
+        // this.stats = {
+        //   totalMatches: ps.totalMatches || 0,
+        //   goals: ps.goals || 0,
+        //   fieldGoals: ps.fieldGoals || 0,
+        //   pc: ps.pc || 0,
+        //   ps: ps.ps || 0,
+        //   assists: ps.assists || 0,
+        //   redCards: ps.redCards || 0,
+        //   yellowCards: ps.yellowCards || 0,
+        //   greenCards: ps.greenCards || 0,
+        //   totalGoalScore: ps.totalGoalScore || 0
+        // };
+
+        this.profile.matches = this.stats.totalMatches;
+        this.profile.runs = this.stats.goals;
+      },
+      error: (err) => {
+        console.error('Error fetching player profile', err);
+      }
+    });
+
+    this.getPlayerStats(userId).subscribe(stats => {
+      console.log('Player stats:', stats); // 🔴 keep this temporarily
+
       this.stats = {
-        totalMatches: 12,
-        pc: 5,
-        ps: 3,
-        redCards: 1,
-        greenCards: 2,
-        yellowCards: 4,
-        fieldGoals: 7,
-        assists: 6,
-        totalGoalScore: 15
+        totalMatches: stats.totalMatches || 0,
+        goals: stats.goals || 0,
+        fieldGoals: stats.goals || 0,
+        pc: stats.pc || 0,
+        ps: stats.ps || 0,
+        assists: 0,
+        redCards: stats.redCards || 0,
+        yellowCards: stats.yellowCards || 0,
+        greenCards: stats.greenCards || 0,
+        totalGoalScore: stats.totalGoalScore || 0
       };
-    }, 500);
-    // Replace above with real API call in production
+
+      this.profile.matches = this.stats.totalMatches;
+      this.profile.runs = this.stats.goals;
+       this.cdr.detectChanges();
+    });
+
   }
 
-  getTabRoute(tab: string): string {
-    // Map tab names to routes (customize as needed)
-    switch (tab) {
-      case 'MATCHES': return '/player/matches';
-      case 'STATS': return '/player/stats';
-      case 'AWARDS': return '/player/awards';
-      case 'BADGES': return '/player/badges';
-      case 'TEAMS': return '/player/teams';
-      case 'PHOTOS': return '/player/photos';
-      case 'CONNECTIONS': return '/player/connections';
-      case 'PROFILE': return '/player/profile';
-      default: return '/player/profile';
-    }
+  onTabSelect(tab: string): void {
+    this.selectedTab = tab;
+  }
+
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
+  }
+
+  saveProfile(): void {
+    // optional future API call
+    this.isEditMode = false;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/team-members']);
   }
 }
- 

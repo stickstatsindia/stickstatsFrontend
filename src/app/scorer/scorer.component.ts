@@ -64,15 +64,15 @@ export class ScorerComponent {
   currentQuarter = 'Q1';
  
   selectedTeam = '';
-  selectedPlayer = '';
+  selectedPlayer: any = null;
   // keep separate arrays for each team's players
-  team1Players: string[] = [];
-  team2Players: string[] = [];
+  team1Players: { player_id: string; player_name: string }[] = [];
+  team2Players: { player_id: string; player_name: string }[] = [];
  
   matchEvents: any[] = [];
  
   penaltyShootoutTeam = '';
-  penaltyShootoutPlayer = '';
+  penaltyShootoutPlayer: { player_id: string; player_name: string } | null = null;
   penaltyOutcome = '';
 
 
@@ -95,8 +95,10 @@ export class ScorerComponent {
 
           // Normalize players to string names and keep per-team lists
           const toNames = (arr: any[]) => (Array.isArray(arr) ? arr.map(p => typeof p === 'string' ? p : (p.name || p.user_id || 'Unknown')) : []);
-          this.team1Players = toNames(data.team1_players);
-          this.team2Players = toNames(data.team2_players);
+          
+          this.team1Players = data.team1_players || [];
+          this.team2Players = data.team2_players || [];
+
 
           // Do not auto-select a team or player on load; user will choose explicitly
 
@@ -116,14 +118,14 @@ export class ScorerComponent {
   }
 
   // Getter to return players for currently selected team (main event)
-  get filteredPlayers(): string[] {
+  get filteredPlayers() {
     if (this.selectedTeam === this.team1Name) return this.team1Players;
     if (this.selectedTeam === this.team2Name) return this.team2Players;
     return [];
   }
 
   // Getter to return players for penalty shootout selected team
-  get penaltyFilteredPlayers(): string[] {
+  get penaltyFilteredPlayers() {
     if (this.penaltyShootoutTeam === this.team1Name) return this.team1Players;
     if (this.penaltyShootoutTeam === this.team2Name) return this.team2Players;
     return [];
@@ -138,7 +140,7 @@ export class ScorerComponent {
   onPenaltyTeamSelect(team: string) {
     this.penaltyShootoutTeam = team;
     // clear penalty player selection; require explicit user selection
-    this.penaltyShootoutPlayer = '';
+    this.penaltyShootoutPlayer = null;
   }
 
   ngOnDestroy(): void {
@@ -185,10 +187,15 @@ export class ScorerComponent {
   
   // Enhanced penalty recording with socket emission
   recordPenalty() {
+    if (!this.penaltyShootoutPlayer) {
+      console.error('No penalty shootout player selected.');
+      return;
+    }
     const event = {
       time: `${this.displayMinutes}:${this.displaySeconds}`,
       team: this.penaltyShootoutTeam,
-      player: this.penaltyShootoutPlayer,
+      player_id: this.penaltyShootoutPlayer.player_id,
+      player_name: this.penaltyShootoutPlayer.player_name,
       type: 'Penalty Shootout',
       quarter: this.currentQuarter,
       outcome: this.penaltyOutcome
@@ -386,13 +393,17 @@ export class ScorerComponent {
   }
 
   addEvent(type: string) {
+    if (!this.selectedPlayer) return;
+
     const team = this.selectedTeam;
-    const player = this.selectedPlayer;
+    const player_id = this.selectedPlayer.player_id;
+    const player_name = this.selectedPlayer.player_name;
     const quarter = this.currentQuarter;
     const event = {
       time: `${this.displayMinutes}:${this.displaySeconds}`,
       team,
-      player,
+      player_id,
+      player_name,
       type,
       quarter
     };
