@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-phone-auth',
@@ -8,17 +11,19 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthenticationComponent implements OnInit {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document,  @Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {
-    this.loadPhoneEmailScript();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadPhoneEmailScript();
+    }
   }
 
   loadPhoneEmailScript() {
-    const script = document.createElement('script');
+    const script = this.document.createElement('script');
     script.src = 'https://www.phone.email/sign_in_button_v1.js';
     script.async = true;
-    document.body.appendChild(script);
+    this.document.body.appendChild(script);
 
     (window as any).phoneEmailListener = (userObj: any) => {
       const { user_json_url } = userObj;

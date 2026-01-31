@@ -1,22 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 import { TournamentService } from '../service/tournament/tournament';
-import { MembersService } from '../service/members/members-service';
 import { Awards } from '../awards/awards';
 import { PlayerMatches } from '../player-matches/player-matches';
-import { PlayetTeams } from '../playet-teams/playet-teams';
+import { PlayerTeams } from '../player-teams/player-teams';
 
 interface PlayerUser {
-  id: string;
+  user_id: string;
   full_name: string;
-  phone_number: string;
+  phone_number?: string;
   profile_pic?: string;
   position?: string;
+  player_stats?: PlayerStats;
 }
 
 interface PlayerStats {
@@ -35,183 +34,137 @@ interface PlayerStats {
 @Component({
   selector: 'app-player-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, PlayetTeams, PlayerMatches, ReactiveFormsModule, Awards],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    Awards,
+    PlayerMatches,
+    PlayerTeams
+  ],
   templateUrl: './player-profile.component.html',
   styleUrls: ['./player-profile.component.css']
 })
 export class PlayerProfileComponent implements OnInit {
 
   user!: PlayerUser;
-  isEditMode = false;
-  editForm: any = {};
 
   profile = {
     name: '',
-    views: 7,
     isPro: true,
-    battingStyle: '',
+    position: '-',
     imageUrl: '👤',
     matches: 0,
-    runs: 0,
-    wickets: 0
+    runs: 0
   };
 
   stats: PlayerStats = {
     totalMatches: 0,
     goals: 0,
+    fieldGoals: 0,
     pc: 0,
     ps: 0,
-    redCards: 0,
-    greenCards: 0,
-    yellowCards: 0,
-    fieldGoals: 0,
     assists: 0,
+    redCards: 0,
+    yellowCards: 0,
+    greenCards: 0,
     totalGoalScore: 0
   };
 
   menu = ['MATCHES', 'STATS', 'AWARDS', 'TEAMS'];
   selectedTab = 'MATCHES';
 
+  isEditMode = false;
+  editForm: any = {};
+
   constructor(
     private router: Router,
-    private tournamentService: TournamentService,
     private route: ActivatedRoute,
-    private membersService: MembersService,
-    private cdr: ChangeDetectorRef
+    private tournamentService: TournamentService,
+    private http: HttpClient
   ) {}
 
-  // ngOnInit(): void {
-  //   const userId = this.route.snapshot.queryParamMap.get('userId');
-  //   if (userId) {
-  //     this.loadProfileData(userId);
-  //   }
-  // }
-
   ngOnInit(): void {
-  const userId = this.route.snapshot.queryParamMap.get('userId');
-  if (userId) {
-    this.tournamentService.getUserById(userId).subscribe({
-     next: (user: PlayerUser)  => {
-        this.user = user;
-        this.cdr.detectChanges();
-        // set profile data
-        this.profile.name = user.full_name;
-        this.profile.imageUrl = user.profile_pic || '👤';
-        this.profile.battingStyle = user.position || '';
-        this.cdr.detectChanges();
-        // now fetch matches and calculate stats
-        this.membersService.getAllMatches().subscribe({
-          next: (matches: any[]) => {
-            const calculatedStats = this.calculatePlayerStats(matches, user.full_name);
-            this.stats = { ...calculatedStats };
-            this.profile.matches = calculatedStats.totalMatches;
-            this.profile.runs = calculatedStats.goals;
+    const userId = this.route.snapshot.paramMap.get('userId');
+    if (!userId) {
+      console.error('No userId found in route');
+      return;
+    }
 
-            this.cdr.detectChanges(); // ensures Angular updates the UI
-          },
-          error: err => console.error('Error fetching matches:', err)
-        });
-      },
-      error: err => console.error('Error fetching user:', err)
-    });
+    this.fetchUserProfile(userId);
   }
-}
 
+  getPlayerStats(userId: string) {
+    return this.http.get<any>(`http://localhost:3000/api/player-stats/${userId}`);
+  }
 
-  loadProfileData(userId: string): void {
-    forkJoin({
-      user: this.tournamentService.getUserById(userId) as Observable<PlayerUser>,
-      matches: this.membersService.getAllMatches() as Observable<any[]>
-    }).subscribe({
-      next: ({ user, matches }) => {
+  fetchUserProfile(userId: string): void {
+    this.tournamentService.getUserById(userId).subscribe({
+      next: (user) => {
         this.user = user;
 
-        // Set profile info
+        // Profile info
         this.profile.name = user.full_name;
+        this.profile.position = user.position || '-';
         this.profile.imageUrl = user.profile_pic || '👤';
-        this.profile.battingStyle = user.position || '';
-        this.cdr.detectChanges();
 
-        // Calculate stats
-        const calculatedStats = this.calculatePlayerStats(matches, user.full_name);
-        this.stats = { ...calculatedStats };
-        this.profile.matches = calculatedStats.totalMatches;
-        this.profile.runs = calculatedStats.goals;
-        window.location.reload();
-        // Trigger change detection
-        this.cdr.detectChanges();
+        // Stats (from backend)
+        // const ps = user.player_stats || {};
+
+        // this.stats = {
+        //   totalMatches: ps.totalMatches || 0,
+        //   goals: ps.goals || 0,
+        //   fieldGoals: ps.fieldGoals || 0,
+        //   pc: ps.pc || 0,
+        //   ps: ps.ps || 0,
+        //   assists: ps.assists || 0,
+        //   redCards: ps.redCards || 0,
+        //   yellowCards: ps.yellowCards || 0,
+        //   greenCards: ps.greenCards || 0,
+        //   totalGoalScore: ps.totalGoalScore || 0
+        // };
+
+        this.profile.matches = this.stats.totalMatches;
+        this.profile.runs = this.stats.goals;
       },
       error: (err) => {
-        console.error('Error loading profile data:', err);
+        console.error('Error fetching player profile', err);
       }
     });
-  }
 
-  calculatePlayerStats(matches: any[], playerName: string): PlayerStats {
-    const stats: PlayerStats = {
-      totalMatches: 0,
-      goals: 0,
-      fieldGoals: 0,
-      pc: 0,
-      ps: 0,
-      assists: 0,
-      redCards: 0,
-      yellowCards: 0,
-      greenCards: 0,
-      totalGoalScore: 0
-    };
+    this.getPlayerStats(userId).subscribe(stats => {
+      console.log('Player stats:', stats); // 🔴 keep this temporarily
 
-    matches.forEach(match => {
-      const played =
-        match.team1_players?.includes(playerName) ||
-        match.team2_players?.includes(playerName);
+      this.stats = {
+        totalMatches: stats.totalMatches || 0,
+        goals: stats.goals || 0,
+        fieldGoals: stats.goals || 0,
+        pc: stats.pc || 0,
+        ps: stats.ps || 0,
+        assists: 0,
+        redCards: stats.redCards || 0,
+        yellowCards: stats.yellowCards || 0,
+        greenCards: stats.greenCards || 0,
+        totalGoalScore: stats.totalGoalScore || 0
+      };
 
-      if (played) stats.totalMatches++;
-
-      match.match_events?.forEach((event: any) => {
-        if (event.player !== playerName) return;
-
-        switch (event.type) {
-          case 'Goal':
-            stats.goals++;
-            stats.fieldGoals++;
-            break;
-          case 'Penalty Corner Scored':
-            stats.pc++;
-            break;
-          case 'Penalty Stroke Scored':
-            stats.ps++;
-            break;
-          case 'Red Card':
-            stats.redCards++;
-            break;
-          case 'Yellow Card':
-            stats.yellowCards++;
-            break;
-          case 'Green Card':
-            stats.greenCards++;
-            break;
-        }
-      });
+      this.profile.matches = this.stats.totalMatches;
+      this.profile.runs = this.stats.goals;
     });
 
-    stats.totalGoalScore = stats.goals + stats.pc + stats.ps;
-    return stats;
   }
 
-onTabSelect(tab: string): void {
-  this.selectedTab = tab;
-}
-
-
+  onTabSelect(tab: string): void {
+    this.selectedTab = tab;
+  }
 
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
   }
 
   saveProfile(): void {
-    this.user.full_name = this.editForm.full_name;
-    this.user.phone_number = this.editForm.phone_number;
+    // optional future API call
     this.isEditMode = false;
   }
 

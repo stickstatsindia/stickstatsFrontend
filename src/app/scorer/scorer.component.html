@@ -78,7 +78,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="selectedPlayer">
-            <mat-option *ngFor="let player of filteredPlayers" [value]="player">{{ player }}</mat-option>
+            <mat-option *ngFor="let player of filteredPlayers" [value]="player">{{ player.player_name }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -108,7 +108,7 @@
     <h6>Match Events</h6>
     <mat-list>
       <mat-list-item *ngFor="let event of matchEvents">
-        {{ event.time }} - {{ event.team }} - {{ event.player }} - {{ event.type }} ({{ event.quarter }})
+        {{ event.time }} - {{ event.team }} - {{ event.player_name }} - {{ event.type }} ({{ event.quarter }})
       </mat-list-item>
     </mat-list>
   </mat-card>
@@ -130,7 +130,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="penaltyShootoutPlayer">
-            <mat-option *ngFor="let player of penaltyFilteredPlayers" [value]="player">{{ player }}</mat-option>
+            <mat-option *ngFor="let player of penaltyFilteredPlayers" [value]="player">{{ player.player_name }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

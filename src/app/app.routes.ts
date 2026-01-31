@@ -32,7 +32,7 @@ export const routes: Routes = [
   { path: 'profile-form', component: AuthenticationComponent },
   { path: 'auth', component: Auth },
   { path: 'about', component: About },
-  { path: 'player-profile', component: PlayerProfileComponent },
+  { path: 'player-profile/:userId', component: PlayerProfileComponent },
   { path: 'contact', component: Contact },
   { path: 'live-dashboard', component: LiveDashboardComponent },
   { path: 'add-tournament', component: AddTournamentComponent },

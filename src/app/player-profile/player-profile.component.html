@@ -9,7 +9,7 @@
           <span *ngIf="profile.isPro" class="pro-badge"></span>
         </h2>
 
-        <p><strong>Position:</strong> {{ profile.battingStyle || '-' }}</p>
+        <p><strong>Position:</strong> {{ profile.position || '-' }}</p>
       </div>
 
       <div class="profile-stats-row">
@@ -82,13 +82,13 @@
 
     </div>
     <div *ngIf="selectedTab === 'AWARDS'">
-    <app-awards [userId]="user.id"></app-awards>
+    <app-awards></app-awards>
     </div>
     <div *ngIf="selectedTab === 'MATCHES'">
-    <app-player-matches [userId]="user.id"></app-player-matches>
+    <app-player-matches></app-player-matches>
     </div>
      <div *ngIf="selectedTab === 'TEAMS'">
-    <app-playet-teams [userId]="user.id"></app-playet-teams>
+    <app-player-teams></app-player-teams>
     </div>
   </div>
 </div>
