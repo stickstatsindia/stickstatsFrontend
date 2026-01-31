@@ -1,223 +1,180 @@
-<div class="landing-page">
-  <!-- Header -->
-  <header class="header">
-    <div class="container">
-      <div class="logo">STICKSTATS</div>
-      <!-- <nav class="nav">
-        <a href="#home">Home</a>
-        <a href="#tournament">Our Tournament</a>
-        <a href="#help">For Whom</a>
-        <a href="#contact">Contact</a>
-        <a href="#faq">F.A.Q</a>
-      </nav> -->
-      <!-- <button class="cta-btn">Get 14 Days of Unlocked Content</button> -->
-    </div>
-  </header>
+<!-- ================= HERO ================= -->
+<section class="hero-section text-white">
+  <div class="container">
+    <div class="row align-items-center min-vh-75">
+      <div class="col-lg-6 text-center text-lg-start">
+        <h1 class="fw-bold display-5">
+          The Digital Home of Community Hockey
+        </h1>
+        <p class="lead mt-3">
+          Track live matches, follow player performance, and manage tournaments
+          all in one reliable hockey platform.
+        </p>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">STICKSTATS</h1>
-        <h2 class="hero-subtitle">Organize and Join<br>The Tournaments</h2>
-        <button class="primary-btn">CREATE A TOURNAMENT</button>
-      </div>
-      <div class="hero-image">
-        <div class="image-placeholder basketball">
-          <span>🏑</span>
+        <div class="mt-4">
+          <!-- <button class="btn btn-success btn-lg rounded-pill me-3">
+            Explore Matches
+          </button> -->
+          <button (click)="goToRegister()" class="btn btn-outline-light btn-lg rounded-pill">Register Now</button>
+          <!-- <button class="btn btn-outline-light btn-lg rounded-pill" onclick="goToRegister()">
+            Create Tournament
+          </button> -->
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Features Section -->
-  <section class="features">
-    <div class="container">
-      <div class="feature-card dark">
-        <span class="badge">Coming</span>
-        <p>Tracked by 4G+<br>participants in the<br>last 8 years</p>
-      </div>
-      <div class="feature-description">
-        <h3>Dive into the world of thrilling tournaments categorized by their unique features,</h3>
-        <p>rich historical significance, and unforgettable experiences that await you.</p>
+      <div class="col-lg-6 text-center mt-5 mt-lg-0">
+        <img
+          src="assets/clogo.jpeg"
+          alt="Hockey Platform"
+          class="img-fluid hero-image rounded"
+        />
       </div>
     </div>
-  </section>
-
-  <!-- Tournament Card -->
-  <section class="tournament-section">
-    <div class="container">
-      <div class="tabs">
-        <button 
-          *ngFor="let tab of tabs" 
-          class="tab" 
-          [class.active]="activeTab === tab"
-          (click)="setActiveTab(tab)">
-          {{ tab }}
-        </button>
-      </div>
-      <div class="tournament-card">
-        <div class="card-content">
-          <h2>Hockey Clash: The Ultimate Showdown!</h2>
-          <p>Get ready for Hockey Clash, an exciting world championship that features exceptional players from around the globe.</p>
-          <div class="card-footer">
-            <span class="date">Sep 24</span>
-            <button class="icon-btn">→</button>
-          </div>
-        </div>
-        <div class="card-images">
-          <div class="image-placeholder tennis">
-            <span>🏑</span>
-          </div>
-          <div class="image-grid">
-            <div class="small-image">
-              <span>🏸</span>
-            </div>
-            <div class="small-image">
-              <span>🏓</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="testimonials">
-    <div class="container">
-      <h2>Organizers, Players, and Visitors Who Found Our Services Beneficial.</h2>
-      <p class="subtitle">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do.</p>
-      
-      <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <p>STICKSTATS transformed tournaments. Built networks with valuable, career-changing contacts, and met lifelong friends in my field. Off-court, the diversity and acceptance are strong.</p>
-          <button class="learn-more">LEARN MORE STORIES →</button>
-        </div>
-        <div class="image-placeholder tennis-action">
-          <span>🎾</span>
-        </div>
-        <div class="image-placeholder soccer">
-          <span>⚽</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats Section -->
-  <section class="stats-section">
-    <div class="container">
-      <div class="stats-content">
-        <div class="image-placeholder basketball-player">
-          <span>🏀</span>
-        </div>
-        <div class="stats-text">
-          <h2>Success is often the result of bold decisions that not only shape our present but also pave the way for a brighter future.</h2>
-          <div class="stats-cards">
-            <div class="stat-card" *ngFor="let stat of stats">
-              <div class="stat-icon">{{ stat.icon }}</div>
-              <div class="stat-number">{{ stat.number }}</div>
-              <div class="stat-label">{{ stat.label }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live Stats -->
-  <section class="live-stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="live-card green">
-          <h3>Live Stats & Leaderboards</h3>
-          <p>Stay up to date with the leaderboard and performance stats that showcase the top competitors.</p>
-          <button class="secondary-btn">Get Into Engagement</button>
-        </div>
-        <div class="live-card dark-card">
-          <div class="match-header">
-            <span>Live Scores</span>
-            <span>Basketball League</span>
-          </div>
-          <div class="team-list">
-            <div class="team" *ngFor="let team of teams">
-              {{ team.flag }} {{ team.name }} - {{ team.points }}
-            </div>
-          </div>
-          <div class="match-score">
-            <div class="team-score">
-              <span>🇺🇸</span>
-              <span>TEAM 01</span>
-            </div>
-            <div class="score-display">
-              <span class="score">1-1</span>
-            </div>
-            <div class="team-score">
-              <span>🇪🇸</span>
-              <span>TEAM 02</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ Section -->
-  <section class="faq-section">
-    <div class="container">
-      <h2>Guide to Setting Up Events, Tracking Progress, and Managing Participants.</h2>
-      <div class="faq-list">
-        <div class="faq-item" *ngFor="let item of faqItems; let i = index">
-          <span>{{ item.question }}</span>
-          <button (click)="toggleFaq(i)">{{ item.expanded ? '−' : '+' }}</button>
-        </div>
-      </div>
-      <button class="primary-btn">Get Into Engagement →</button>
-      <div class="image-placeholder soccer-foot">
-        <span>⚽</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="container">
-      <h3>Ready to host your next tournament?</h3>
-      <h2>LET'S GO!</h2>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h4>STICKSTATS</h4>
-          <p>STICKSTATS connects players and fans worldwide across tournaments at world-class venues.</p>
-          <p>© 2025 STICKSTATS Inc. All rights reserved.</p>
-        </div>
-        <div class="footer-col">
-          <h5>Pages</h5>
-          <a *ngFor="let link of footerLinks.pages" href="#">{{ link }}</a>
-        </div>
-        <div class="footer-col">
-          <h5>Resource</h5>
-          <a *ngFor="let link of footerLinks.resource" href="#">{{ link }}</a>
-        </div>
-        <div class="footer-col">
-          <h5>Quick Links</h5>
-          <a *ngFor="let link of footerLinks.quickLinks" href="#">{{ link }}</a>
-        </div>
-      </div>
-      <div class="social-icons">
-        <button>f</button>
-        <button>in</button>
-        <button>📷</button>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Bottom Banner -->
-  <div class="bottom-banner">
-    <h1 style="font-size: 17rem; margin: 0;">STICKSTATS</h1>
   </div>
-</div>
+</section>
+
+<!-- ================= TRUST / PURPOSE ================= -->
+<section class="purpose-section py-5 bg-opacity-10">
+  <div class="container">
+    <div class="row text-center mb-4">
+      <div class="col">
+        <h2 class="fw-bold">Why Trust STICKSTATS</h2>
+        <p class="text-muted mt-2">
+          Built with the needs of grassroots hockey at its core
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Accurate -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+          <div
+            class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+            style="width: 60px; height: 60px;"
+          >
+            <span class="material-icons text-primary fs-3">verified</span>
+          </div>
+          <h5 class="fw-bold">Accurate</h5>
+          <p class="text-muted mt-2 mb-0">
+            Verified scoring ensures every goal, card, and stat is recorded
+            with precision.
+          </p>
+        </div>
+      </div>
+
+      <!-- Inclusive -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+          <div
+            class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+            style="width: 60px; height: 60px;"
+          >
+            <span class="material-icons text-success fs-3">groups</span>
+          </div>
+          <h5 class="fw-bold">Inclusive</h5>
+          <p class="text-muted mt-2 mb-0">
+            Built for schools, academies, and grassroots communities not
+            just professionals.
+          </p>
+        </div>
+      </div>
+
+      <!-- Reliable -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+          <div
+            class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+            style="width: 60px; height: 60px;"
+          >
+            <span class="material-icons text-warning fs-3">shield</span>
+          </div>
+          <h5 class="fw-bold">Reliable</h5>
+          <p class="text-muted mt-2 mb-0">
+            A stable platform trusted by organizers, players, and fans during
+            live matches.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="features-section text-white py-5">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">Platform Capabilities</h2>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card h-100">
+          <h5 class="fw-bold mb-3">Live Match Scoring</h5>
+          <p>
+            Update and view match events in real time with instant sync
+            across devices.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card h-100">
+          <h5 class="fw-bold mb-3">Player Performance Tracking</h5>
+          <p>
+            Automatically build player profiles with match stats and
+            historical performance.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card h-100">
+          <h5 class="fw-bold mb-3">Tournament Operations</h5>
+          <p>
+            Manage fixtures, points tables, and results without spreadsheets
+            or manual errors.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMMUNITY ================= -->
+<section class="community-section py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h2 class="fw-bold">
+          Designed for the Hockey Community
+        </h2>
+        <p class="mt-3">
+          From school tournaments to district-level leagues, STICKSTATS
+          supports every stage of the game by making data accessible,
+          shareable, and permanent.
+        </p>
+      </div>
+
+      <div class="col-lg-6 text-center">
+        <img
+          src="assets/community.jpeg"
+          alt="Hockey Community"
+          class="img-fluid rounded"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta-section text-center text-white py-5">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Start Building Your Hockey Story</h2>
+    <p class="mb-4">
+      Create matches, track players, and grow your tournaments digitally.
+    </p>
+
+    <button class="btn btn-lg btn-light rounded-pill px-5" (click)="goToRegister()">
+      Get Started
+    </button>
+  </div>
+</section>

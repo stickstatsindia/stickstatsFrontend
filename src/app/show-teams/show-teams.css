@@ -43,7 +43,7 @@
 }
 
 /* ===============================
-   Table Card
+   Desktop Table Card
 ================================ */
 .teams-table-card {
   background: #ffffff;
@@ -73,12 +73,6 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.sort-arrow {
-  margin-left: 6px;
-  font-size: 11px;
-  color: #6b7280;
-}
-
 .teams-table td {
   padding: 14px 16px;
   font-size: 14px;
@@ -104,6 +98,7 @@
   border-radius: 999px;
   cursor: pointer;
   transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
 .members-btn:hover {
@@ -140,17 +135,7 @@
 }
 
 /* ===============================
-   Empty State
-================================ */
-.no-data {
-  padding: 40px;
-  text-align: center;
-  font-size: 14px;
-  color: #6b7280;
-}
-
-/* ===============================
-   Footer / Pagination
+   Table Footer / Pagination
 ================================ */
 .teams-table-footer {
   display: flex;
@@ -205,7 +190,50 @@
 }
 
 /* ===============================
-   Responsive (Mobile)
+   Mobile Layout (NEW & CLEAN)
+================================ */
+.teams-mobile {
+  margin-top: 12px;
+}
+
+/* Mobile Card */
+.team-mobile-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.team-mobile-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.team-city {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.team-mobile-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ===============================
+   Responsive Tweaks
 ================================ */
 @media (max-width: 768px) {
   .teams-header {
@@ -214,41 +242,9 @@
     gap: 12px;
   }
 
-  .teams-table thead {
-    display: none;
-  }
-
-  .teams-table,
-  .teams-table tbody,
-  .teams-table tr,
-  .teams-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .teams-table tr {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 12px 0;
-  }
-
-  .teams-table td {
-    padding: 8px 16px;
-    text-align: right;
-    position: relative;
-  }
-
-  .teams-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 16px;
-    font-weight: 600;
-    color: #6b7280;
-    text-align: left;
-  }
-
   .teams-table-footer {
     flex-direction: column;
-    gap: 12px;
     align-items: flex-start;
+    gap: 10px;
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class Home {
   tabs = ['All Games', 'Basketball', 'Football', 'Volleyball'];
   activeTab = 'All Games';
+  constructor(private router: Router) {}
 
   faqItems = [
     { question: 'How do I create a tournament on STICKSTATS?', expanded: false },
@@ -44,6 +46,10 @@ export class Home {
   toggleFaq(index: number) {
     this.faqItems[index].expanded = !this.faqItems[index].expanded;
   }
+    goToRegister() {
+    this.router.navigate(['/profile-form']);
+  }
+
 }
 
 
