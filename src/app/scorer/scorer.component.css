@@ -102,6 +102,10 @@ select, input {
 .mt-2 {
   margin-top: 1rem;
 }
+.disabled-card {
+  pointer-events: none;
+  opacity: 0.6;
+}
 
 .d-flex {
   display: flex;

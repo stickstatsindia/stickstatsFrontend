@@ -62,7 +62,7 @@
   </mat-card>
 
   <!-- Match Event -->
-  <mat-card class="mb-4 p-3">
+  <mat-card class="mb-4 p-3" [class.disabled-card]="!timerStarted && !isPaused">
     <h6>Add Match Event</h6>
     <div class="row">
       <div class="col">
@@ -104,7 +104,7 @@
   </mat-card>
 
   <!-- Match Events -->
-  <mat-card class="mb-4 p-3">
+  <mat-card class="mb-4 p-3" [class.disabled-card]="!timerStarted && !isPaused">
     <h6>Match Events</h6>
     <mat-list>
       <mat-list-item *ngFor="let event of matchEvents">
@@ -113,8 +113,19 @@
     </mat-list>
   </mat-card>
 
+
+    <mat-card class="mb-4 p-3" [class.disabled-card]="!timerStarted && !isPaused">
+    <h6>Match Controls</h6>
+    <div class="mt-2 d-flex flex-wrap gap-2">
+      <button mat-raised-button color="warn" (click)="enablePenaltyShootout()" [disabled]="penaltyShootoutEnabled || matchFinished">
+        ⚽ Match Tie (Enable Penalty Shootout)
+      </button>
+    </div>
+  </mat-card>
+
+
   <!-- Penalty Shootout -->
-  <mat-card class="mb-4 p-3">
+  <mat-card class="mb-4 p-3" [class.disabled-card]="!penaltyShootoutEnabled">
     <h6>Penalty Shootout</h6>
     <div class="row">
       <div class="col">
@@ -151,7 +162,7 @@
   </mat-card>
 
   <!-- Match Control Section -->
-  <mat-card class="mb-4 p-3">
+  <mat-card class="mb-4 p-3" [class.disabled-card]="!timerStarted && !isPaused">
     <h6>Match Controls</h6>
     <div class="mt-2 d-flex flex-wrap gap-2">
       <button mat-raised-button color="warn" (click)="enablePenaltyShootout()" [disabled]="penaltyShootoutEnabled || matchFinished">
