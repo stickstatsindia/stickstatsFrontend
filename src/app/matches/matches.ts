@@ -152,6 +152,39 @@ export class Matches implements OnInit {
     return;
   }
 
+  // Update match status to 'In Progress'
+  this.matchService.updateMatchStatus(match.matchId, 'In Progress').subscribe({
+    next: () => {
+      console.log('Match status updated to In Progress');
+      // Update local match status
+      match.status = 'In Progress';
+      this.cdr.detectChanges();
+      // Navigate to scorer
+      this.router.navigate(
+        ['/scorer/' + match.matchId],
+        {
+          state: {
+            matchId: match.matchId,
+            team1: match.team1,
+            team2: match.team2,
+            tournamentId: this.tournamentId
+          }
+        }
+      );
+    },
+    error: (err: any) => {
+      console.error('Error updating match status:', err);
+      alert('Failed to update match status');
+    }
+  });
+}
+
+resumeScoring(match: Match) {
+  if (!match.matchId) {
+    alert('Match ID not found!');
+    return;
+  }
+
   this.router.navigate(
     ['/scorer/' + match.matchId],
     {
@@ -163,6 +196,15 @@ export class Matches implements OnInit {
       }
     }
   );
+}
+
+viewScoring(match: Match) {
+  if (!match.matchId) {
+    alert('Match ID not found!');
+    return;
+  }
+
+  this.router.navigate(['/results', match.matchId]);
 }
 
 }

@@ -178,6 +178,30 @@ td strong {
   background: #14857f;
 }
 
+/* Resume Scoring Button */
+.resume-btn {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+}
+
+.resume-btn:hover {
+  background: #d97706;
+}
+
+/* View Scoring Button */
+.view-btn {
+  background: #8b5cf6;
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+}
+
+.view-btn:hover {
+  background: #7c3aed;
+}
+
 /* ==============================
    Empty State
 ================================ */

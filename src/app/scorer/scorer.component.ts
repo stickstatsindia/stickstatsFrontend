@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
 import { io, Socket } from "socket.io-client";
@@ -48,6 +48,11 @@ export class ScorerComponent {
   interval: any;
   isPaused = false;
   private totalSeconds = 0;
+  timerStarted = false;
+  penaltyShootoutEnabled = false;
+  matchTied = false;
+  allQuartersCompleted = false;
+  matchFinished = false;
  
   team1Name = 'Team A';
   team2Name = 'Team B';
@@ -77,7 +82,7 @@ export class ScorerComponent {
 
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
     this.socket = io("http://localhost:3000");
@@ -92,6 +97,11 @@ export class ScorerComponent {
           this.totalScore = { team1: data.team1_score, team2: data.team2_score };
           this.quarters = data.quarters;
           this.currentQuarter = data.current_quarter;
+
+          // ✅ Load match status
+          if (data.status === 'Finished') {
+            this.matchFinished = true;
+          }
 
           // Normalize players to string names and keep per-team lists
           const toNames = (arr: any[]) => (Array.isArray(arr) ? arr.map(p => typeof p === 'string' ? p : (p.name || p.user_id || 'Unknown')) : []);
@@ -191,6 +201,13 @@ export class ScorerComponent {
       console.error('No penalty shootout player selected.');
       return;
     }
+    
+    // ✅ Prevent recording penalties if match is finished
+    if (this.matchFinished) {
+      alert('Cannot record events for a finished match.');
+      return;
+    }
+    
     const event = {
       time: `${this.displayMinutes}:${this.displaySeconds}`,
       team: this.penaltyShootoutTeam,
@@ -258,7 +275,12 @@ export class ScorerComponent {
     this.http.post(`http://localhost:3000/api/matches/${this.matchId}/status`, { 
       status: status 
     }).subscribe({
-      next: () => console.log('Match status updated'),
+      next: () => {
+        console.log('Match status updated');
+        if (status === 'Finished') {
+          this.matchFinished = true;
+        }
+      },
       error: (err) => console.error('Error updating match status:', err)
     });
 
@@ -267,6 +289,34 @@ export class ScorerComponent {
       matchId: this.matchId,
       status: status
     });
+  }
+
+  // ✅ NEW: Enable penalty shootout when match is tied
+  enablePenaltyShootout(): void {
+    this.matchTied = true;
+    this.penaltyShootoutEnabled = true;
+    console.log('⚠️ Match is tied. Penalty shootout enabled!');
+  }
+
+  // ✅ NEW: Finish match and redirect to results
+  finishMatch(): void {
+    if (this.currentQuarter !== 'Q4') {
+      alert('All quarters must be completed before finishing the match.');
+      return;
+    }
+
+    if (confirm('Are you sure you want to finish this match?')) {
+      this.updateMatchStatus('Finished');
+      setTimeout(() => {
+        this.router.navigate(['/results', this.matchId]);
+      }, 1000);
+    }
+  }
+
+  // ✅ NEW: Mark all quarters as completed
+  completeAllQuarters(): void {
+    this.allQuartersCompleted = true;
+    console.log('✅ All quarters completed. Finish button is now enabled.');
   }
 
 
@@ -336,8 +386,7 @@ export class ScorerComponent {
     // Nothing to count
     if (this.totalSeconds <= 0) return;
 
-    this.isPaused = false;
-
+    this.isPaused = false;    this.timerStarted = true; // ✅ Disable quarter dropdown
     this.intervalId = setInterval(() => {
       if (this.totalSeconds <= 0) {
         this.stopTimer();
@@ -358,6 +407,7 @@ export class ScorerComponent {
     clearInterval(this.intervalId);
     this.intervalId = null;
     this.isPaused = true;
+    this.timerStarted = false; // ✅ Allow quarter dropdown again
 
     // ✅ save immediately when paused
     this.saveTimerState();
@@ -367,6 +417,7 @@ export class ScorerComponent {
   resumeTimer(): void {
     if (!this.isPaused) return;
     this.isPaused = false;
+    this.timerStarted = true; // ✅ Re-enable the running state
     this.startTimer(); // reuses guard
   }
 
@@ -383,6 +434,7 @@ export class ScorerComponent {
     }
 
     this.isPaused = false;
+    this.timerStarted = false; // ✅ Allow quarter dropdown again
     this.minutes = 0;
     this.seconds = 0;
     this.totalSeconds = 0;
@@ -394,6 +446,12 @@ export class ScorerComponent {
 
   addEvent(type: string) {
     if (!this.selectedPlayer) return;
+    
+    // ✅ Prevent recording events if match is finished
+    if (this.matchFinished) {
+      alert('Cannot record events for a finished match.');
+      return;
+    }
 
     const team = this.selectedTeam;
     const player_id = this.selectedPlayer.player_id;

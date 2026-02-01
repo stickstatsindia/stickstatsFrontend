@@ -98,6 +98,60 @@ select, input {
 }
   */
 
+/* Match Control Section Styling */
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:not([disabled]) {
+  cursor: pointer;
+}
+
+/* Tie and Finish Button Styling */
+button[color="warn"] {
+  background-color: #dc2626 !important;
+  color: white;
+}
+
+button[color="warn"]:hover:not([disabled]) {
+  background-color: #b91c1c !important;
+}
+
+button[color="accent"] {
+  background-color: #f59e0b !important;
+  color: white;
+}
+
+button[color="accent"]:hover:not([disabled]) {
+  background-color: #d97706 !important;
+}
+
+button[color="primary"] {
+  background-color: #3b82f6 !important;
+  color: white;
+}
+
+button[color="primary"]:hover:not([disabled]) {
+  background-color: #2563eb !important;
+}
+
   mat-card {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }

@@ -38,8 +38,20 @@
             <!-- <button (click)="editMatch(i)">✏️</button> -->
             <button (click)="deleteMatch(i)">🗑️</button>
             <!-- <button (click)="openSettings(i)">⚙️</button> -->
-            <button class="score-btn" (click)="startScoring(m)">
+            
+            <!-- Start Scoring Button for Not Started matches -->
+            <button *ngIf="!m.status || m.status === 'Upcoming'" class="score-btn" (click)="startScoring(m)">
               ▶ Start Scoring
+            </button>
+
+            <!-- Resume Scoring Button for In Progress matches -->
+            <button *ngIf="m.status === 'Live'" class="resume-btn" (click)="resumeScoring(m)">
+              ⏸ Resume Scoring
+            </button>
+
+            <!-- View Scoring Button for Finished matches -->
+            <button *ngIf="m.status === 'Finished'" class="view-btn" (click)="viewScoring(m)">
+              👁 View Scoring
             </button>
           </td>
         </tr>

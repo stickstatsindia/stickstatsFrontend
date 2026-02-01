@@ -175,4 +175,9 @@ export class MatchService {
   deleteMatch(matchId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/matches/${matchId}`);
   }
+
+  // ✅ NEW: Update match status
+  updateMatchStatus(matchId: string, status: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/matches/${matchId}/status`, { status });
+  }
 }

@@ -45,18 +45,18 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
-          <mat-select [(ngModel)]="currentQuarter">
+          <mat-select [(ngModel)]="currentQuarter" [disabled]="timerStarted">
             <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-raised-button color="primary" (click)="setTime()">Set Time</button>
-      <button mat-raised-button color="accent" (click)="startTimer()">Start</button>
-      <button mat-raised-button (click)="pauseTimer()">Pause</button>
-      <button mat-raised-button (click)="resumeTimer()">Resume</button>
-      <button mat-raised-button color="warn" (click)="stopTimer()">Stop</button>
+      <button mat-raised-button color="primary" (click)="setTime()" [disabled]="timerStarted || isPaused">Set Time</button>
+      <button mat-raised-button color="accent" (click)="startTimer()" [disabled]="timerStarted || isPaused">Start</button>
+      <button mat-raised-button (click)="pauseTimer()" [disabled]="!timerStarted || isPaused">Pause</button>
+      <button mat-raised-button (click)="resumeTimer()" [disabled]="!isPaused">Resume</button>
+      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="!isPaused && !timerStarted">Stop</button>
     </div>
 
   </mat-card>
@@ -85,21 +85,21 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
-          <mat-select [(ngModel)]="currentQuarter">
+          <mat-select [(ngModel)]="currentQuarter" (ngModelChange)="changeQuarter($event)" [disabled]="timerStarted">
             <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-stroked-button color="primary" (click)="addEvent('Goal')">Goal</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')">PC Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')">PC Scored</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')">PS Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')">PS Scored</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')">Green Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')">Yellow Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')">Red Card</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Goal')" [disabled]="matchFinished">Goal</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')" [disabled]="matchFinished">PC Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')" [disabled]="matchFinished">PC Scored</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')" [disabled]="matchFinished">PS Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')" [disabled]="matchFinished">PS Scored</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')" [disabled]="matchFinished">Green Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="matchFinished">Yellow Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="matchFinished">Red Card</button>
     </div>
   </mat-card>
 
@@ -145,8 +145,22 @@
       </div>
     </div>
     <div>
-      <button mat-raised-button color="primary" (click)="recordPenalty()">Record Penalty</button>
+      <button mat-raised-button color="primary" (click)="recordPenalty()" [disabled]="matchFinished">Record Penalty</button>
     </div>
     
   </mat-card>
+
+  <!-- Match Control Section -->
+  <mat-card class="mb-4 p-3">
+    <h6>Match Controls</h6>
+    <div class="mt-2 d-flex flex-wrap gap-2">
+      <button mat-raised-button color="warn" (click)="enablePenaltyShootout()" [disabled]="penaltyShootoutEnabled || matchFinished">
+        ⚽ Match Tie (Enable Penalty Shootout)
+      </button>
+      <button mat-raised-button color="primary" (click)="finishMatch()" [disabled]="currentQuarter !== 'Q4' || matchFinished">
+        🏁 Finish Match & View Results
+      </button>
+    </div>
+  </mat-card>
+
 </div>
