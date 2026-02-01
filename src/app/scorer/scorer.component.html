@@ -157,7 +157,7 @@
       <button mat-raised-button color="warn" (click)="enablePenaltyShootout()" [disabled]="penaltyShootoutEnabled || matchFinished">
         ⚽ Match Tie (Enable Penalty Shootout)
       </button>
-      <button mat-raised-button color="primary" (click)="finishMatch()" [disabled]="currentQuarter !== 'Q4' || matchFinished">
+      <button mat-raised-button color="primary" (click)="finishMatch()">
         🏁 Finish Match & View Results
       </button>
     </div>

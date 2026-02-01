@@ -45,12 +45,12 @@
             </button>
 
             <!-- Resume Scoring Button for In Progress matches -->
-            <button *ngIf="m.status === 'Live'" class="resume-btn" (click)="resumeScoring(m)">
+            <button *ngIf="m.status === 'Live'" class="score-btn" (click)="resumeScoring(m)">
               ⏸ Resume Scoring
             </button>
 
             <!-- View Scoring Button for Finished matches -->
-            <button *ngIf="m.status === 'Finished'" class="view-btn" (click)="viewScoring(m)">
+            <button *ngIf="m.status === 'Finished'" class="score-btn" (click)="viewScoring(m)">
               👁 View Scoring
             </button>
           </td>

@@ -15,6 +15,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
 import { io, Socket } from "socket.io-client";
+import { MembersService } from '../service/members/members-service';
+import { MatchService } from '../match.service';
 
  
 @Component({
@@ -82,7 +84,7 @@ export class ScorerComponent {
 
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
+  constructor(private http: HttpClient, private memberService :MatchService,  private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
     this.socket = io("http://localhost:3000");
@@ -300,16 +302,24 @@ export class ScorerComponent {
 
   // ✅ NEW: Finish match and redirect to results
   finishMatch(): void {
-    if (this.currentQuarter !== 'Q4') {
-      alert('All quarters must be completed before finishing the match.');
-      return;
-    }
+   
 
     if (confirm('Are you sure you want to finish this match?')) {
-      this.updateMatchStatus('Finished');
-      setTimeout(() => {
-        this.router.navigate(['/results', this.matchId]);
-      }, 1000);
+      // this.updateMatchStatus('Finished');
+      // setTimeout(() => {
+      //   this.router.navigate(['/result', this.matchId]);
+      // }, 500);
+
+      this.memberService.updateMatchStatus(this.matchId, 'Finished').subscribe({
+        next: () => {
+          console.log('Match marked as Finished');   
+          this.router.navigate(['/result', this.matchId]);
+        },
+        error: (err: any) => {
+          console.error('Error finishing match:', err);
+          alert('Failed to finish match');
+        }
+      });
     }
   }
 

@@ -204,7 +204,7 @@ viewScoring(match: Match) {
     return;
   }
 
-  this.router.navigate(['/results', match.matchId]);
+  this.router.navigate(['/result', match.matchId]);
 }
 
 }
