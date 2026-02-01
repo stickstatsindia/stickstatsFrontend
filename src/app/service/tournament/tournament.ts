@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../config/api.config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class TournamentService {
     return this.http.get(url);
   }
 
-  getUserById(userId: string) {
+  getUserById(userId: string):Observable<any> {
     const url = this.getUserByIdUrl.replace(':user_id', userId);
     return this.http.get(url);
   }

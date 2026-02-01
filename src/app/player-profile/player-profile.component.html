@@ -1,89 +1,94 @@
-
 <div class="profile-page">
-  <button (click)="goBack()" class="back-button">← Back</button>
-
-  <div class="profile-card" *ngIf="member">
-    <div class="profile-main-row">
-      <div class="profile-logo-section">
-        <div class="logo-box">{{ profile.imageUrl }}</div>
-      </div>
-      <div class="profile-info-section">
-        <h2 class="profile-name">{{ member.name }}</h2>
-        <p><strong>Phone:</strong> {{ member.phone_number }}</p>
-        <p><strong>Role:</strong> {{ member.role }}</p>
-        <button (click)="toggleEditMode()" class="edit-button">{{ isEditMode ? 'Cancel' : 'Edit Profile' }}</button>
-      </div>
-    </div>
-
-    <!-- Edit Form -->
-    <div *ngIf="isEditMode && user" class="edit-form">
-      <h3>Edit Profile</h3>
-      <label>Full Name:</label>
-      <input [(ngModel)]="editForm.full_name" type="text" />
-
-      <label>Phone Number:</label>
-      <input [(ngModel)]="editForm.phone_number" type="text" />
-
-      <button (click)="saveProfile()" class="save-button">Save</button>
-    </div>
-
-    <!-- Display User Details -->
-    <div *ngIf="!isEditMode && user" class="user-details">
-      <h3>User Details</h3>
-      <p><strong>Full Name:</strong> {{ user.full_name }}</p>
-      <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Position:</strong> {{ user.position }}</p>
-    </div>
-  </div>
-
-  <!-- Rest of the profile content -->
   <div class="profile-card">
+
+    <!-- Header -->
     <div class="profile-main-row">
       <div class="profile-info-section">
-        <h2 class="profile-name">{{ profile.name }}
+        <h2 class="profile-name">
+          {{ profile.name }}
           <span *ngIf="profile.isPro" class="pro-badge"></span>
         </h2>
-        <p><strong>Location:</strong> {{ profile.location }}</p>
-        <p><strong>Position:</strong> {{ profile.battingStyle }}</p>
+
+        <p><strong>Position:</strong> {{ profile.position || '-' }}</p>
       </div>
+
       <div class="profile-stats-row">
         <div class="stat-box">
           <div class="stat-label">Matches</div>
           <div class="stat-value">{{ profile.matches }}</div>
         </div>
+
         <div class="stat-box">
           <div class="stat-label">Goals</div>
           <div class="stat-value">{{ profile.runs }}</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">Assists</div>
-          <div class="stat-value">{{ profile.runs }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="profile-navbar">
-      <div class="profile-tabs">
-        <div *ngFor="let item of menu"
-             class="profile-tab"
-             [class.active]="item === selectedTab"
-             (click)="onTabSelect(item)">
-          {{ item }}
-        </div>
       </div>
     </div>
 
-    <!-- Stats horizontal bar for STATS tab (now below tabs) -->
+    <!-- Tabs -->
+    <div class="profile-navbar">
+      <div class="profile-tabs">
+       <div *ngFor="let item of menu"
+          class="profile-tab"
+          [class.active]="item === selectedTab"
+          (click)="onTabSelect(item)">
+        {{ item }}
+      </div>
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
     <div *ngIf="selectedTab === 'STATS'" class="stats-bar">
-      <div class="stat-bar-item"><span class="stat-bar-label">Total Matches</span><span class="stat-bar-value">{{ stats.totalMatches }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">PC</span><span class="stat-bar-value">{{ stats.pc }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">PS</span><span class="stat-bar-value">{{ stats.ps }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">RED CARDS</span><span class="stat-bar-value">{{ stats.redCards }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">GREEN CARDS</span><span class="stat-bar-value">{{ stats.greenCards }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">YELLOW CARDS</span><span class="stat-bar-value">{{ stats.yellowCards }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">Field goals</span><span class="stat-bar-value">{{ stats.fieldGoals }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">Assists</span><span class="stat-bar-value">{{ stats.assists }}</span></div>
-      <div class="stat-bar-item"><span class="stat-bar-label">Total Goal Score</span><span class="stat-bar-value">{{ stats.totalGoalScore }}</span></div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Total Matches</span>
+        <span class="stat-bar-value">{{ stats.totalMatches }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Field Goals</span>
+        <span class="stat-bar-value">{{ stats.fieldGoals }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">PC</span>
+        <span class="stat-bar-value">{{ stats.pc }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">PS</span>
+        <span class="stat-bar-value">{{ stats.ps }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Red Cards</span>
+        <span class="stat-bar-value">{{ stats.redCards }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Yellow Cards</span>
+        <span class="stat-bar-value">{{ stats.yellowCards }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Green Cards</span>
+        <span class="stat-bar-value">{{ stats.greenCards }}</span>
+      </div>
+
+      <div class="stat-bar-item highlight">
+        <span class="stat-bar-label">Total Goal Score</span>
+        <span class="stat-bar-value">{{ stats.totalGoalScore }}</span>
+      </div>
+
+    </div>
+    <div *ngIf="selectedTab === 'AWARDS'">
+    <app-awards></app-awards>
+    </div>
+    <div *ngIf="selectedTab === 'MATCHES'">
+    <app-player-matches></app-player-matches>
+    </div>
+     <div *ngIf="selectedTab === 'TEAMS'">
+    <app-player-teams></app-player-teams>
     </div>
   </div>
 </div>

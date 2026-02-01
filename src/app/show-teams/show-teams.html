@@ -9,7 +9,7 @@
       <thead>
         <tr>
           <th>Team Name <span class="sort-arrow">↑</span></th>
-          <th>City</th>
+          <!-- <th>City</th> -->
           <th>Members</th>
           <th>Actions</th>
         </tr>
@@ -17,7 +17,7 @@
       <tbody>
         <tr *ngFor="let team of pagedTeams">
           <td>{{ team.team_name }}</td>
-          <td>{{ team.location }}</td>
+          <!-- <td>{{ team.city }}</td> -->
           <td>
             <button class="members-btn" (click)="onMembersAction(team)">
               {{ team.memberCount === 0 || team.memberCount == null
@@ -68,4 +68,10 @@
       </div>
     </div>
   </div>
+  
+
+  
 </div>
+
+
+

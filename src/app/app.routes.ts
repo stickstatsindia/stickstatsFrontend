@@ -25,13 +25,14 @@ import { AddGroupComponent } from './add-group/add-group';
 import { TeamMembersComponent } from './team-members/team-members';
 
 import { AuthenticationComponent as Auth } from './authentication/authentication.component';
+import { Awards } from './awards/awards';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'profile-form', component: AuthenticationComponent },
   { path: 'auth', component: Auth },
   { path: 'about', component: About },
-  { path: 'player-profile', component: PlayerProfileComponent },
+  { path: 'player-profile/:user_id', component: PlayerProfileComponent },
   { path: 'contact', component: Contact },
   { path: 'live-dashboard', component: LiveDashboardComponent },
   { path: 'add-tournament', component: AddTournamentComponent },
@@ -52,6 +53,7 @@ export const routes: Routes = [
   { path: 'matches', component: Matches },
   { path: 'addnew-player', component: AddNewplayerComponent},
   { path: 'show-teams', component: ShowTeamsComponent },
+  { path: 'player/awards', component: Awards },
   {path: 'team-members', component: TeamMembersComponent},
   { path: 'edit-tournament/:tournament_id', component: AddTournamentComponent},
   //Add new path before this
