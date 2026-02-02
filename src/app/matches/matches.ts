@@ -153,11 +153,11 @@ export class Matches implements OnInit {
   }
 
   // Update match status to 'In Progress'
-  this.matchService.updateMatchStatus(match.matchId, 'In Progress').subscribe({
+  this.matchService.updateMatchStatus(match.matchId, 'Live').subscribe({
     next: () => {
-      console.log('Match status updated to In Progress');
+      console.log('Match status updated to Live');
       // Update local match status
-      match.status = 'In Progress';
+      match.status = 'Live';
       this.cdr.detectChanges();
       // Navigate to scorer
       this.router.navigate(
