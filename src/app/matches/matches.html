@@ -36,7 +36,7 @@
           <td data-label="Remaining">{{ m.remaining_time || '-' }}</td>
           <td data-label="Actions" class="actions">
             <!-- <button (click)="editMatch(i)">✏️</button> -->
-            <button (click)="deleteMatch(i)">🗑️</button>
+            <button (click)="deleteMatch(i)" [disabled]="m.status === 'Live' || m.status === 'Finished'">🗑️</button>
             <!-- <button (click)="openSettings(i)">⚙️</button> -->
             
             <!-- Start Scoring Button for Not Started matches -->
