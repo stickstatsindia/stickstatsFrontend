@@ -254,7 +254,7 @@ export class Result implements OnInit, OnDestroy {
           matchId: data.match_id,
           date: data.match_date || '',
           venue: data.venue || '',
-          tournament: data.tournament || 'Default Tournament',
+          tournament: data.tournament_name || 'Default Tournament',
           status: data.status || 'Upcoming',
           score: { home: data.team1_score || 0, away: data.team2_score || 0 },
           events: data.match_events || [],
