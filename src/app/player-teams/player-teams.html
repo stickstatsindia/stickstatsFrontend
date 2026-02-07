@@ -1,1 +1,29 @@
-<p>player-teams works!</p>
+<div class="teams-wrapper">
+
+  <div *ngIf="loading" class="loading">
+    Loading teams...
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <div *ngIf="teams.length === 0" class="empty">
+      No teams found
+    </div>
+
+    <div
+      class="team-card"
+      *ngFor="let team of teams; trackBy: trackByTeam"
+    >
+      <h3 class="team-name">{{ team.teamName }}</h3>
+
+      <div class="team-stats">
+        <span>Matches: {{ team.matches }}</span>
+        <span class="win">W {{ team.wins }}</span>
+        <span class="loss">L {{ team.losses }}</span>
+        <span class="draw">D {{ team.draws }}</span>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

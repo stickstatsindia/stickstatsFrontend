@@ -1,11 +1,45 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-player-matches',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './player-matches.html',
-  styleUrl: './player-matches.css'
+  styleUrls: ['./player-matches.css']
 })
-export class PlayerMatches {
-@Input() userId!: string;
+export class PlayerMatches implements OnInit {
+
+  @Input() userId!: string;
+  matches: any[] = [];
+  loading = true;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.http
+      .get<any[]>(`http://localhost:3000/api/player/${this.userId}/matches`)
+      .subscribe({
+        next: data => {
+          this.matches = data;
+          this.loading = false;
+        },
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
+  }
+
+  getResult(match: any): string {
+    if (match.team1_score > match.team2_score) return 'WIN';
+    if (match.team1_score < match.team2_score) return 'LOSS';
+    return 'DRAW';
+  }
+
+  getResultClass(match: any): string {
+    const r = this.getResult(match);
+    return r === 'WIN' ? 'win' : r === 'LOSS' ? 'loss' : 'draw';
+  }
 }

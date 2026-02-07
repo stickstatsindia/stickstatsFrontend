@@ -1,0 +1,37 @@
+.match-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.score {
+  font-size: 18px;
+}
+
+.status.win { color: green; }
+.status.loss { color: red; }
+.status.draw { color: orange; }
+
+.empty {
+  text-align: center;
+  color: #999;
+  margin-top: 20px;
+}

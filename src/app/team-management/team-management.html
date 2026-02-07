@@ -1,20 +1,24 @@
-
 <div class="team-card">
+
+  <!-- Header -->
   <div class="team-main-row">
     <div class="team-logo-section">
-      <img [src]="team.logoUrl" alt="Team Logo" />
+      <img [src]="team.logoUrl" alt="Tournament Logo" />
     </div>
+
     <div class="team-info-section">
       <h2 class="team-name">{{ team.name }}</h2>
       <p><strong>Location:</strong> {{ team.location }}</p>
       <p><strong>Start Date:</strong> {{ team.startDate }}</p>
       <p><strong>End Date:</strong> {{ team.endDate }}</p>
     </div>
+
     <div class="team-stats-row">
       <div class="stat-box">
         <div class="stat-label">Matches</div>
         <div class="stat-value">{{ team.totalMatches }}</div>
       </div>
+
       <div class="stat-box">
         <div class="stat-label">Goals</div>
         <div class="stat-value">{{ team.goals }}</div>
@@ -22,34 +26,82 @@
     </div>
   </div>
 
+  <!-- Tabs -->
   <div class="team-navbar">
     <div class="team-tabs">
-      <div *ngFor="let item of menu"
-           class="team-tab"
-           [class.active]="item === selectedTab"
-           (click)="onTabSelect(item)">
+      <div
+        *ngFor="let item of menu"
+        class="team-tab"
+        [class.active]="item === selectedTab"
+        (click)="onTabSelect(item)">
         {{ item }}
       </div>
     </div>
   </div>
 
-  <!-- Stats horizontal bar for STATS tab (below tabs) -->
+  <!-- STATS TAB -->
   <div *ngIf="selectedTab === 'STATS'" class="stats-bar">
-    <div class="stat-bar-item"><span class="stat-bar-label">Total Matches</span><span class="stat-bar-value">{{ stats.totalMatches }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">PC</span><span class="stat-bar-value">{{ stats.pc }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">PS</span><span class="stat-bar-value">{{ stats.ps }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">RED CARDS</span><span class="stat-bar-value">{{ stats.redCards }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">GREEN CARDS</span><span class="stat-bar-value">{{ stats.greenCards }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">YELLOW CARDS</span><span class="stat-bar-value">{{ stats.yellowCards }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">Field goals</span><span class="stat-bar-value">{{ stats.fieldGoals }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">Assists</span><span class="stat-bar-value">{{ stats.assists }}</span></div>
-    <div class="stat-bar-item"><span class="stat-bar-label">Total Goal Score</span><span class="stat-bar-value">{{ stats.totalGoalScore }}</span></div>
+
+    <div *ngIf="loadingStats" class="loading">
+      Loading stats...
+    </div>
+
+    <ng-container *ngIf="!loadingStats">
+      <div class="stat-bar-item">
+        <span>Total Matches</span>
+        <span>{{ stats.totalMatches }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>Field Goals</span>
+        <span>{{ stats.fieldGoals }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>PC Earned</span>
+        <span>{{ stats.pcEarned }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>PC Scored</span>
+        <span>{{ stats.pcScored }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>PS Earned</span>
+        <span>{{ stats.psEarned }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>PS Scored</span>
+        <span>{{ stats.psScored }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>Penalty Shootout</span>
+        <span>{{ stats.penaltyShootout }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>Red Cards</span>
+        <span>{{ stats.redCards }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>Yellow Cards</span>
+        <span>{{ stats.yellowCards }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span>Green Cards</span>
+        <span>{{ stats.greenCards }}</span>
+      </div>
+
+      <div class="stat-bar-item highlight">
+        <span>Total Goal Score</span>
+        <span>{{ stats.totalGoalScore }}</span>
+      </div>
+    </ng-container>
   </div>
+
 </div>
-
-
-
-
-
-
-

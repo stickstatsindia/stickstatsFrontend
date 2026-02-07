@@ -20,16 +20,24 @@ interface PlayerUser {
 
 interface PlayerStats {
   totalMatches: number;
-  goals: number;
+
   fieldGoals: number;
-  pc: number;
-  ps: number;
-  assists: number;
+
+  pcEarned: number;
+  pcScored: number;
+
+  psEarned: number;
+  psScored: number;
+
+  penaltyShootout: number;
+
   redCards: number;
   yellowCards: number;
   greenCards: number;
+
   totalGoalScore: number;
 }
+
 
 @Component({
   selector: 'app-player-profile',
@@ -61,14 +69,21 @@ export class PlayerProfileComponent implements OnInit {
 
   stats: PlayerStats = {
     totalMatches: 0,
-    goals: 0,
+
     fieldGoals: 0,
-    pc: 0,
-    ps: 0,
-    assists: 0,
+
+    pcEarned: 0,
+    pcScored: 0,
+
+    psEarned: 0,
+    psScored: 0,
+
+    penaltyShootout: 0,
+
     redCards: 0,
     yellowCards: 0,
     greenCards: 0,
+
     totalGoalScore: 0
   };
 
@@ -130,7 +145,7 @@ export class PlayerProfileComponent implements OnInit {
         // };
 
         this.profile.matches = this.stats.totalMatches;
-        this.profile.runs = this.stats.goals;
+        this.profile.runs = this.stats.totalGoalScore;
       },
       error: (err) => {
         console.error('Error fetching player profile', err);
@@ -138,24 +153,34 @@ export class PlayerProfileComponent implements OnInit {
     });
 
     this.getPlayerStats(userId).subscribe(stats => {
-      console.log('Player stats:', stats); // 🔴 keep this temporarily
 
       this.stats = {
         totalMatches: stats.totalMatches || 0,
-        goals: stats.goals || 0,
-        fieldGoals: stats.goals || 0,
-        pc: stats.pc || 0,
-        ps: stats.ps || 0,
-        assists: 0,
+
+        fieldGoals: stats.fieldGoals || 0,
+
+        pcEarned: stats.pcEarned || 0,
+        pcScored: stats.pcScored || 0,
+
+        psEarned: stats.psEarned || 0,
+        psScored: stats.psScored || 0,
+
+        penaltyShootout: stats.penaltyShootout || 0,
+
         redCards: stats.redCards || 0,
         yellowCards: stats.yellowCards || 0,
         greenCards: stats.greenCards || 0,
+
         totalGoalScore: stats.totalGoalScore || 0
       };
 
+
+      console.log('Fetched player stats:', this.stats);
+
       this.profile.matches = this.stats.totalMatches;
-      this.profile.runs = this.stats.goals;
-       this.cdr.detectChanges();
+      this.profile.runs = this.stats.totalGoalScore;
+
+      this.cdr.detectChanges();
     });
 
   }
