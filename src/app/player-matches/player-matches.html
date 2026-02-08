@@ -1,1 +1,22 @@
-<p>player-matches works!</p>
+<div *ngIf="loading">Loading matches...</div>
+
+<div *ngFor="let match of matches" class="match-card">
+  <div class="match-header">
+    <span>{{ match.match_date }} • {{ match.venue }}</span>
+    <span class="status" [ngClass]="match.result.toLowerCase()">
+      {{ match.result }}
+    </span>
+  </div>
+
+  <div class="score-row">
+    <span class="team">{{ match.playerTeam }}</span>
+    <span class="score">
+      {{ match.playerScore }} - {{ match.opponentScore }}
+    </span>
+    <span class="team">{{ match.opponentTeam }}</span>
+  </div>
+</div>
+
+<div *ngIf="!loading && matches.length === 0" class="empty">
+  No matches played yet
+</div>

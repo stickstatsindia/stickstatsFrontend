@@ -1,0 +1,109 @@
+/* Wrapper */
+.teams-wrapper {
+  display: grid;
+  gap: 16px;
+  padding: 8px 4px;
+}
+
+/* Loading / Empty states */
+.loading,
+.empty {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  padding: 24px 0;
+}
+
+/* Team card */
+.team-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+}
+
+/* Team name */
+.team-name {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937; /* slate-800 */
+}
+
+/* Stats row */
+.team-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151; /* slate-700 */
+}
+
+/* Individual stat pills */
+.team-stats span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f3f4f6; /* gray-100 */
+}
+
+/* Win / Loss / Draw coloring */
+.team-stats .win {
+  background: #dcfce7; /* green-100 */
+  color: #166534;      /* green-800 */
+}
+
+.team-stats .loss {
+  background: #fee2e2; /* red-100 */
+  color: #7f1d1d;      /* red-800 */
+}
+
+.team-stats .draw {
+  background: #e0f2fe; /* blue-100 */
+  color: #075985;      /* blue-800 */
+}
+
+/* Matches pill slightly different */
+.team-stats span:first-child {
+  background: #eef2ff; /* indigo-100 */
+  color: #3730a3;      /* indigo-800 */
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .team-card {
+    padding: 14px;
+  }
+
+  .team-name {
+    font-size: 16px;
+  }
+
+  .team-stats {
+    gap: 10px;
+    font-size: 13px;
+  }
+}
+.team-card {
+  border-left: 5px solid #6366f1; /* indigo */
+}
+.team-card {
+  animation: fadeIn 0.25s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

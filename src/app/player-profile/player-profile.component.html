@@ -51,13 +51,28 @@
       </div>
 
       <div class="stat-bar-item">
-        <span class="stat-bar-label">PC</span>
-        <span class="stat-bar-value">{{ stats.pc }}</span>
+        <span class="stat-bar-label">PC Earned</span>
+        <span class="stat-bar-value">{{ stats.pcEarned }}</span>
       </div>
 
       <div class="stat-bar-item">
-        <span class="stat-bar-label">PS</span>
-        <span class="stat-bar-value">{{ stats.ps }}</span>
+        <span class="stat-bar-label">PC Scored</span>
+        <span class="stat-bar-value">{{ stats.pcScored }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">PS Earned</span>
+        <span class="stat-bar-value">{{ stats.psEarned }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">PS Scored</span>
+        <span class="stat-bar-value">{{ stats.psScored }}</span>
+      </div>
+
+      <div class="stat-bar-item">
+        <span class="stat-bar-label">Penalty Shootout</span>
+        <span class="stat-bar-value">{{ stats.penaltyShootout }}</span>
       </div>
 
       <div class="stat-bar-item">
@@ -81,14 +96,17 @@
       </div>
 
     </div>
+
+
+
     <div *ngIf="selectedTab === 'AWARDS'">
     <app-awards></app-awards>
     </div>
     <div *ngIf="selectedTab === 'MATCHES'">
-    <app-player-matches></app-player-matches>
+    <app-player-matches [userId]="user.user_id"></app-player-matches>
     </div>
      <div *ngIf="selectedTab === 'TEAMS'">
-    <app-player-teams></app-player-teams>
+    <app-player-teams [userId]="user.user_id"></app-player-teams>
     </div>
   </div>
 </div>

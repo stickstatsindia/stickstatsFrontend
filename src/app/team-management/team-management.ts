@@ -1,7 +1,7 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TournamentService } from '../service/tournament/tournament';
 
 interface Tournament {
@@ -15,7 +15,6 @@ interface Tournament {
   format: string;
   tournament_category: string;
   match_type: string;
-  __v: number;
 }
 
 interface TeamDisplay {
@@ -28,24 +27,42 @@ interface TeamDisplay {
   category: string;
   matchType: string;
   totalMatches: number;
-  viewers: number;
   goals: number;
+}
+
+interface TournamentStats {
+  totalMatches: number;
+  fieldGoals: number;
+
+  pcEarned: number;
+  pcScored: number;
+
+  psEarned: number;
+  psScored: number;
+
+  penaltyShootout: number;
+
+  redCards: number;
+  yellowCards: number;
+  greenCards: number;
+
+  totalGoalScore: number;
 }
 
 @Component({
   selector: 'app-team-management',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, HttpClientModule],
   templateUrl: './team-management.html',
   styleUrls: ['./team-management.css']
 })
 export class TeamManagementComponent implements OnInit {
-  tournamentId: string | null = null;
-  tournamentData: Tournament | null = null;
-  
+  tournamentId!: string;
+  tournamentData!: Tournament;
+
   team: TeamDisplay = {
     name: '',
-    logoUrl: 'https://via.placeholder.com/100x100.png?text=Team',
+    logoUrl: 'https://via.placeholder.com/100x100.png?text=Tournament',
     startDate: '',
     endDate: '',
     location: '',
@@ -53,102 +70,103 @@ export class TeamManagementComponent implements OnInit {
     category: '',
     matchType: '',
     totalMatches: 0,
-    viewers: 0,
     goals: 0
   };
-  
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private tournamentService: TournamentService
-  ) {}
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        console.log('Tournament ID from route params:', id);
-        this.tournamentId = id;
-        this.loadTournamentData(id);
-      } else {
-        console.error('No tournament ID available');
-        this.router.navigate(['/tournaments']);
-      }
-    });
-  }
-
-  loadTournamentData(tournamentId: string) {
-    console.log('Loading data for tournament:', tournamentId);
-    this.tournamentService.getTournamentById(tournamentId).subscribe({
-      next: (response: any) => {
-        this.tournamentData = response as Tournament;
-        console.log('Tournament data received:', this.tournamentData);
-        
-        // Format dates for display
-        const startDate = new Date(this.tournamentData.start_date).toLocaleDateString();
-        const endDate = new Date(this.tournamentData.end_date).toLocaleDateString();
-        
-        // Update the team object with the received data
-        this.team = {
-          name: this.tournamentData.tournament_name,
-          logoUrl: 'https://via.placeholder.com/100x100.png?text=Team',
-          startDate: startDate,
-          endDate: endDate,
-          location: this.tournamentData.location,
-          format: this.tournamentData.format,
-          category: this.tournamentData.tournament_category,
-          matchType: this.tournamentData.match_type,
-          totalMatches: 0, // This will need to be calculated from matches data
-          viewers: 0,      // This might come from a different API
-          goals: 0         // This might come from a different API
-        };
-      },
-      error: (error) => {
-        console.error('Error loading tournament data:', error);
-        this.router.navigate(['/tournaments']);
-      }
-    });
-  }
-
-  menu = ['MATCHES', 'STATS', 'AWARDS', 'BADGES', 'TEAMS', 'PHOTOS', 'CONNECTIONS', 'PROFILE'];
-  selectedTab = 'MATCHES';
-
-  stats = {
+  stats: TournamentStats = {
     totalMatches: 0,
-    pc: 0,
-    ps: 0,
-    psGoal: 0,
-    redCards: 0,
-    greenCards: 0,
-    yellowCards: 0,
     fieldGoals: 0,
-    assists: 0,
+
+    pcEarned: 0,
+    pcScored: 0,
+
+    psEarned: 0,
+    psScored: 0,
+
+    penaltyShootout: 0,
+
+    redCards: 0,
+    yellowCards: 0,
+    greenCards: 0,
+
     totalGoalScore: 0
   };
 
-  onTabSelect(tab: string) {
+  menu = ['MATCHES', 'STATS', 'TEAMS'];
+  selectedTab = 'MATCHES';
+
+  loadingStats = false;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private tournamentService: TournamentService,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (!id) {
+        this.router.navigate(['/tournaments']);
+        return;
+      }
+
+      this.tournamentId = id;
+      this.loadTournament();
+    });
+  }
+
+  loadTournament(): void {
+    this.tournamentService.getTournamentById(this.tournamentId).subscribe({
+      next: (tournament: any) => {
+        this.tournamentData = tournament;
+
+        this.team = {
+          name: tournament.tournament_name,
+          logoUrl: 'https://via.placeholder.com/100x100.png?text=Tournament',
+          startDate: new Date(tournament.start_date).toLocaleDateString(),
+          endDate: new Date(tournament.end_date).toLocaleDateString(),
+          location: tournament.location,
+          format: tournament.format,
+          category: tournament.tournament_category,
+          matchType: tournament.match_type,
+          totalMatches: 0,
+          goals: 0
+        };
+      },
+      error: () => {
+        this.router.navigate(['/tournaments']);
+      }
+    });
+  }
+
+  onTabSelect(tab: string): void {
     this.selectedTab = tab;
     if (tab === 'STATS') {
-      this.fetchStatsFromBackend();
+      this.fetchTournamentStats();
     }
   }
 
-  fetchStatsFromBackend() {
-    // Simulate backend API call
-    setTimeout(() => {
-      this.stats = {
-        totalMatches: 12,
-        pc: 3,
-        ps: 2,
-        psGoal: 4,
-        redCards: 1,
-        greenCards: 2,
-        yellowCards: 4,
-        fieldGoals: 7,
-        assists: 6,
-        totalGoalScore: 15
-      };
-    }, 500);
+  fetchTournamentStats(): void {
+    this.loadingStats = true;
+
+    this.http
+      .get<TournamentStats>(`http://localhost:3000/api/tournament/${this.tournamentId}/stats`)
+      .subscribe({
+        next: (stats) => {
+          console.log('Tournament stats received:', stats);
+
+          this.stats = stats;
+          this.team.totalMatches = stats.totalMatches;
+          this.team.goals = stats.totalGoalScore;
+
+          this.loadingStats = false;
+        },
+        error: (err) => {
+          console.error('Failed to load tournament stats', err);
+          this.loadingStats = false;
+        }
+      });
   }
 }
-
