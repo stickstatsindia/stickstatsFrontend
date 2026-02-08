@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -34,7 +34,7 @@ export class PlayerTeams {
 
   loading = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   private fetchTeams(): void {
     this.loading = true;
@@ -46,6 +46,7 @@ export class PlayerTeams {
         next: (data) => {
           this.teams = data || [];
           this.loading = false;
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('Failed to load player teams', err);

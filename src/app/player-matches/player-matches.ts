@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -15,7 +15,7 @@ export class PlayerMatches implements OnInit {
   matches: any[] = [];
   loading = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.http
@@ -24,12 +24,14 @@ export class PlayerMatches implements OnInit {
         next: data => {
           this.matches = data;
           this.loading = false;
+          this.cdr.markForCheck();
         },
         error: err => {
           console.error(err);
           this.loading = false;
         }
       });
+      this.cdr.markForCheck();
   }
 
   getResult(match: any): string {
