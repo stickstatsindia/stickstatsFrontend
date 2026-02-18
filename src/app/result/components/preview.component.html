@@ -14,7 +14,13 @@
             class="member-item">
           <span class="member-number">{{ i + 1 }}</span>
           <div class="member-info">
-            <span class="member-name">{{ player.name }}</span>
+            <span
+              class="member-name"
+              [class.member-link]="getPlayerProfileId(player)"
+              (click)="openPlayerProfile(player)"
+            >
+              {{ player.name || player.player_name || 'Unknown Player' }}
+            </span>
             <!-- <span class="member-age">Age: {{ player.age }}</span> -->
           </div>
         </li>
@@ -46,7 +52,13 @@
             class="member-item">
           <span class="member-number">{{ i + 1 }}</span>
           <div class="member-info">
-            <span class="member-name">{{ player.name }}</span>
+            <span
+              class="member-name"
+              [class.member-link]="getPlayerProfileId(player)"
+              (click)="openPlayerProfile(player)"
+            >
+              {{ player.name || player.player_name || 'Unknown Player' }}
+            </span>
             <!-- <span class="member-age">Age: {{ player.age }}</span> -->
           </div>
         </li>

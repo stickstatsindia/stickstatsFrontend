@@ -217,6 +217,15 @@
   white-space: nowrap;
 }
 
+.member-link {
+  color: #1a73e8;
+  cursor: pointer;
+}
+
+.member-link:hover {
+  text-decoration: underline;
+}
+
 @media (min-width: 768px) {
   .member-name {
     font-size: 0.875rem;

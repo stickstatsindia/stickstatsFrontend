@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MembersService } from '../../service/members/members-service';
 
 @Component({
@@ -15,7 +16,7 @@ export class PreviewComponent implements OnInit {
 
   selectedPlayer: { team: 'home' | 'away'; name: string } | null = null;
 
-  constructor(private membersService: MembersService) {}
+  constructor(private membersService: MembersService, private router: Router) {}
 
   ngOnInit() {
     this.loadPlayers();
@@ -42,6 +43,16 @@ export class PreviewComponent implements OnInit {
 
   selectPlayer(team: 'home' | 'away', player: any) {
     this.selectedPlayer = { team, name: player.name };
+  }
+
+  getPlayerProfileId(player: any): string | null {
+    return player?.user_id || player?.player_id || player?.id || null;
+  }
+
+  openPlayerProfile(player: any): void {
+    const playerId = this.getPlayerProfileId(player);
+    if (!playerId) return;
+    this.router.navigate(['/player-profile', playerId]);
   }
 
   private normalizePlayers(response: any): any[] {
