@@ -43,6 +43,11 @@ getTournamentById(tournamentId: string) {
     return this.http.get(url);
   }
 
+  getTournamentPointsTable(tournamentId: string): Observable<any> {
+    const url = environment.baseUrl + environment.endpoints.getTournamentPointsTable.replace(':tournament_id', tournamentId);
+    return this.http.get(url);
+  }
+
  editTournament(tournamentId: string, data: any) {
     const url = environment.baseUrl + environment.endpoints.editTournament.replace(':tournament_id', tournamentId);
     return this.http.put(url, data);

@@ -4,93 +4,74 @@
       <div class="points-table-controls">
         <div class="column-control">
           <span class="by-label">Show by</span>
-          <select [(ngModel)]="selectedBy" class="by-select">
+          <select [(ngModel)]="selectedBy" (ngModelChange)="onFiltersChanged()" class="by-select">
             <option *ngFor="let option of byOptions" [value]="option">{{ option }}</option>
           </select>
         </div>
         <div class="column-control">
           <span class="stage-label">Stage</span>
-          <select [(ngModel)]="selectedStage" class="stage-select">
+          <select [(ngModel)]="selectedStage" (ngModelChange)="onFiltersChanged()" class="stage-select">
             <option *ngFor="let stage of stageOptions" [value]="stage">{{ stage }}</option>
           </select>
         </div>
       </div>
     </div>
     <div class="points-table-content">
-      <!-- Example Pool A -->
-      <div class="pool-title">Pool A</div>
-      <div class="table-responsive">
-        <table class="styled-table">
-          <thead>
-            <tr>
-              <th>Pos</th>
-              <th style="text-align:left;">Name</th>
-              <th>P</th>
-              <th>W</th>
-              <th>D</th>
-              <th>L</th>
-              <th>ScF</th>
-              <th>ScA</th>
-              <th>PDiff</th>
-              <th>Pt</th>
-              <th>Res</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td class="team-name" style="text-align:left;"><img class="flag" src="https://flagcdn.com/pk.svg" alt="Pakistan"/>Pakistan</td>
-              <td>4</td><td>4</td><td>0</td><td>0</td><td>25</td><td>4</td><td>21</td><td>12</td>
-              <td><div class="res-badges"><span class="res-badge win">W</span><span class="res-badge win">W</span><span class="res-badge win">W</span><span class="res-badge win">W</span></div></td>
-            </tr>
-            <!-- Add more rows as needed -->
-          </tbody>
-        </table>
-      </div>
-      <!-- Example Pool B -->
-      <div class="pool-title" style="margin-top:2.5rem;">Pool B</div>
-      <div class="table-responsive">
-        <table class="styled-table">
-          <thead>
-            <tr>
-              <th>Pos</th>
-              <th style="text-align:left;">Name</th>
-              <th>P</th>
-              <th>W</th>
-              <th>D</th>
-              <th>L</th>
-              <th>ScF</th>
-              <th>ScA</th>
-              <th>PDiff</th>
-              <th>Pt</th>
-              <th>Res</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td class="team-name" style="text-align:left;"><img class="flag" src="https://flagcdn.com/jp.svg" alt="Japan"/>Japanrtegfn</td>
-              <td>5</td>
-              <td>5</td>
-              <td>0</td>
-              <td>0</td>
-              <td>36</td>
-              <td>5</td>
-              <td>31</td>
-              <td>15</td>
-              <td><div class="res-badges">
-                <span class="res-badge win">W</span>
-                <span class="res-badge win">W</span>
-                <span class="res-badge win">W</span>
-                <span class="res-badge win">W</span>
-                <span class="res-badge win">W</span>
-              </div></td>
-            </tr>
-            <!-- Add more rows as needed -->
-          </tbody>
-        </table>
-      </div>
+      <div *ngIf="loading" class="message">Loading points table...</div>
+      <div *ngIf="!loading && error" class="message error">{{ error }}</div>
+      <div *ngIf="!loading && !error && standingsByPool.length === 0" class="message">No pool data found for this tournament.</div>
+
+      <ng-container *ngFor="let pool of standingsByPool; let poolIndex = index">
+        <div class="pool-title" [style.margin-top]="poolIndex === 0 ? '0' : '2.5rem'">{{ pool.poolName }}</div>
+        <div class="table-responsive">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Pos</th>
+                <th style="text-align:left;">Name</th>
+                <th>P</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>ScF</th>
+                <th>ScA</th>
+                <th>PDiff</th>
+                <th>Pt</th>
+                <th>Res</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of pool.rows">
+                <td>{{ row.position }}</td>
+                <td class="team-name" style="text-align:left;">{{ row.teamName }}</td>
+                <td>{{ row.played }}</td>
+                <td>{{ row.won }}</td>
+                <td>{{ row.draw }}</td>
+                <td>{{ row.lost }}</td>
+                <td>{{ row.scoredFor }}</td>
+                <td>{{ row.scoredAgainst }}</td>
+                <td>{{ row.goalDiff }}</td>
+                <td>{{ row.points }}</td>
+                <td>
+                  <div class="res-badges">
+                    <span
+                      *ngFor="let result of row.results.slice(-5)"
+                      class="res-badge"
+                      [ngClass]="{
+                        win: result === 'W',
+                        draw: result === 'D',
+                        lose: result === 'L'
+                      }"
+                    >
+                      {{ result }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
-<p>points-table works!</p>

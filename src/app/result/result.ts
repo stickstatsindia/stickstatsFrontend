@@ -51,7 +51,9 @@ export class Result implements OnInit, OnDestroy {
     { label: 'Goals Scored', key: 'GoalsScored' },
     { label: 'Field Goals Scored', key: 'FieldGoalsScored' },
     { label: 'Penalty Corners Scored', key: 'PenaltyCornersScored' },
+    { label: 'Penalty Corner Earned', key: 'PenaltyCornersEarned' },
     { label: 'Penalty Strokes Scored', key: 'PenaltyStrokesScored' },
+    { label: 'Penalty Stroke Earned', key: 'PenaltyStrokesEarned' },
     { label: 'Penalty Strokes Missed', key: 'PenaltyStrokesMissed' },
     { label: 'Green Cards', key: 'GreenCards' },
     { label: 'Yellow Cards', key: 'YellowCards' },
@@ -63,7 +65,9 @@ export class Result implements OnInit, OnDestroy {
     GoalsScored: 0,
     FieldGoalsScored: 0,
     PenaltyCornersScored: 0,
+    PenaltyCornersEarned: 0,
     PenaltyStrokesScored: 0,
+    PenaltyStrokesEarned: 0,
     PenaltyStrokesMissed: 0,
     GreenCards: 0,
     YellowCards: 0,
@@ -220,7 +224,9 @@ export class Result implements OnInit, OnDestroy {
         resolvedTarget.PenaltyCornersScored++;
         resolvedTarget.GoalsScored++;
       } else if (evType.includes('penalty corner') && (evType.includes('earned') || evType.includes('won'))) {
-        // penalty corner earned — doesn't increment goals, maybe track separately later
+        resolvedTarget.PenaltyCornersEarned++;
+      } else if (evType.includes('penalty stroke') && (evType.includes('earned') || evType.includes('won'))) {
+        resolvedTarget.PenaltyStrokesEarned++;
       } else if (evType.includes('penalty stroke') && (evType.includes('scored') || evType.includes('goal') || evType.includes('converted') || evType === 'penalty stroke')) {
         resolvedTarget.PenaltyStrokesScored++;
         resolvedTarget.GoalsScored++;

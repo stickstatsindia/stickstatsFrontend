@@ -13,6 +13,7 @@ export const environment = {
     getTournaments: '/api/tournaments',
     addTournament: '/api/addtournaments',
     getTournamentById: '/api/tournaments/:tournament_id',
+    getTournamentPointsTable: '/api/tournament/:tournament_id/points-table',
     addUser:"/api/users",
     getUserByPhone:'/api/users/phone/:phone',
     getUserById: '/api/users/:user_id',

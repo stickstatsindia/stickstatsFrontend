@@ -116,6 +116,11 @@ export class Tournaments implements OnInit, OnDestroy {
     this.router.navigate(['/matches'], { state: { tournamentId } });
   }
 
+  goToPointsTable(tournamentId: string) {
+    this.settingsOpenIndex = null;
+    this.router.navigate(['/point-table'], { state: { tournamentId } });
+  }
+
   goToTeamManagement(tournamentId: string, event: Event) {
     event.preventDefault();
     console.log('Tournament ID:', tournamentId);

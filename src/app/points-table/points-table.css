@@ -53,6 +53,17 @@
   width: 100%;
   margin-top: 0.5rem;
 }
+.message {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  background: #f7f7f7;
+  color: #334155;
+  font-weight: 600;
+}
+.message.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
 .pool-title {
   font-weight: 700;
   font-size: 1.1rem;
@@ -97,9 +108,7 @@
   vertical-align: middle;
 }
 .team-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  min-width: 150px;
 }
 .res-badges {
   display: flex;

@@ -68,6 +68,9 @@ export class PreviewComponent implements OnInit {
   private resolveHeadCoachName(response: any, teamId: string): string {
     const fromResponse = response?.head_coach_name || response?.headCoachName;
     if (fromResponse) return fromResponse;
-    return localStorage.getItem(`team_staff_head_coach_${teamId}`) || 'Not provided';
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(`team_staff_head_coach_${teamId}`) || 'Not provided';
+    }
+    return 'Not provided';
   }
 }
