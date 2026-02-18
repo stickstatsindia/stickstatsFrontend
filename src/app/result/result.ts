@@ -72,6 +72,17 @@ export class Result implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
+  private normalizeEvent(event: any): any {
+    return {
+      ...event,
+      player: event?.player || event?.player_name || 'Unknown Player',
+      type: event?.type || 'Unknown Event',
+      time: event?.time || '',
+      quarter: event?.quarter || '',
+      team: event?.team || ''
+    };
+  }
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.matchId = params.get('matchId')!;
@@ -105,17 +116,11 @@ export class Result implements OnInit, OnDestroy {
 
       // When a new event is added — push it into matchData.events and recalc stats
       this.socket.on("eventAdded", (data) => {
-        if (!data || data.match_id !== this.matchId) return;
+        const socketMatchId = data?.match_id || data?.matchId;
+        if (!data || socketMatchId !== this.matchId) return;
 
         if (this.matchData && data.event) {
-          // Normalize incoming event to the same shape you use in your fetch
-          const incomingEvent = {
-            time: data.event.time,
-            team: data.event.team,
-            type: data.event.type,
-            player: data.event.player,
-            quarter: data.event.quarter
-          };
+          const incomingEvent = this.normalizeEvent(data.event);
 
           // push event
           this.matchData.events = this.matchData.events || [];
@@ -257,7 +262,7 @@ export class Result implements OnInit, OnDestroy {
           tournament: data.tournament_name || 'Default Tournament',
           status: data.status || 'Upcoming',
           score: { home: data.team1_score || 0, away: data.team2_score || 0 },
-          events: data.match_events || [],
+          events: (data.match_events || []).map((ev: any) => this.normalizeEvent(ev)),
           penaltyShootout: data.penaltyShootout,
           eventsHome: data.eventsHome,
           eventsAway: data.eventsAway,

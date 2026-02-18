@@ -12,6 +12,11 @@
   margin-top: 10px;
 }
 
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .add-player-btn {
   background-color: #007bff;
   color: white;
@@ -48,6 +53,70 @@
 
 .add-player-btn:hover {
   background-color: #00a382;
+}
+
+.add-coach-btn {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-coach-btn:hover {
+  background-color: #1558b0;
+}
+
+.coach-summary {
+  margin: 0 30px 16px 0;
+  color: #1f2937;
+  font-size: 15px;
+}
+
+.coach-form {
+  margin: 0 30px 16px 0;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  max-width: 480px;
+  background: #f9fafb;
+}
+
+.coach-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.coach-form input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.coach-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.cancel-btn {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #4b5563;
 }
 
 .members-grid {
@@ -181,5 +250,11 @@
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }

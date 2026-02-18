@@ -176,7 +176,16 @@ export class MatchService {
     return this.http.delete(`${this.baseUrl}/matches/${matchId}`);
   }
 
-  updateMatchStatus(matchId: string, status: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/matches/${matchId}/status`, { status });
+  updateMatchStatus(matchId: string, status: string, matchDate?: string, matchTime?: string): Observable<any> {
+    const body: any = { status };
+    if (matchDate) {
+      body.match_date = matchDate;
+      body.matchDate = matchDate;
+    }
+    if (matchTime) {
+      body.match_time = matchTime;
+      body.matchTime = matchTime;
+    }
+    return this.http.post(`${this.baseUrl}/matches/${matchId}/status`, body);
   }
 }

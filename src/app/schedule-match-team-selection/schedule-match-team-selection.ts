@@ -16,6 +16,16 @@ interface Team {
   shortName: string;
 }
 
+interface TournamentInfo {
+  tournament_id?: string;
+  _id?: string;
+  id?: string;
+  tournament_name?: string;
+  name?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
 interface ScheduleMatchRequest {
   tournament_name: string;
   home_team_name: string;
@@ -39,10 +49,12 @@ interface ScheduleMatchRequest {
 export class ScheduleMatchTeamSelection {
 
    teams: Team[] = [];
-  tournaments: any[] = [];
+  tournaments: TournamentInfo[] = [];
   form!: FormGroup;
   tournamentId: string | null = null;
   resolvedTournamentName: string | null = null;
+  tournamentStartDate: Date | null = null;
+  tournamentEndDate: Date | null = null;
   team1Members: any[] = [];
   team2Members: any[] = [];
   // members are fetched and managed internally, no UI flags required
@@ -120,10 +132,20 @@ export class ScheduleMatchTeamSelection {
       home_team: [null, Validators.required],
       away_team: [null, Validators.required],
       venue: ['', Validators.required],
-      match_date: ['', [Validators.required, this.futureDateValidator()]],
+      match_date: ['', [Validators.required, this.futureDateValidator(), this.tournamentDateRangeValidator()]],
       match_time: ['', Validators.required],
       // team member textareas removed; members are fetched from API
     });
+  }
+
+  private parseDateOnly(dateValue: string | null | undefined): Date | null {
+    if (!dateValue) return null;
+    const dateOnly = dateValue.split('T')[0];
+    if (!dateOnly) return null;
+    const parsed = new Date(`${dateOnly}T00:00:00`);
+    if (isNaN(parsed.getTime())) return null;
+    parsed.setHours(0, 0, 0, 0);
+    return parsed;
   }
 
   // Validator that ensures the selected date is strictly in the future (not today)
@@ -132,11 +154,25 @@ export class ScheduleMatchTeamSelection {
       const val = control.value;
       if (!val) return null;
       // Normalize dates to midnight so time parts don't affect comparison
-      const input = new Date(val);
+      const input = this.parseDateOnly(val);
+      if (!input) return { invalidDate: true };
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      input.setHours(0, 0, 0, 0);
       return input > today ? null : { notFuture: true };
+    };
+  }
+
+  private tournamentDateRangeValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const val = control.value;
+      if (!val || !this.tournamentStartDate || !this.tournamentEndDate) return null;
+
+      const input = this.parseDateOnly(val);
+      if (!input) return { invalidDate: true };
+
+      return input >= this.tournamentStartDate && input <= this.tournamentEndDate
+        ? null
+        : { outsideTournamentDates: true };
     };
   }
 
@@ -168,17 +204,21 @@ export class ScheduleMatchTeamSelection {
 
   fetchTournaments(): void {
     this.tournamentService.getTournaments().subscribe({
-      next: (data: any) => {
+      next: (data: TournamentInfo[]) => {
         this.tournaments = data || [];
         // if a tournamentId was passed, resolve its name early so submit doesn't race with async fetch
         if (this.tournamentId) {
-          const found = this.tournaments.find((t: any) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
+          const found = this.tournaments.find((t: TournamentInfo) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
           if (found) {
             this.resolvedTournamentName = found.tournament_name || found.name || '';
+            this.tournamentStartDate = this.parseDateOnly(found.start_date);
+            this.tournamentEndDate = this.parseDateOnly(found.end_date);
             // populate form control so users see it (and submit will use it)
             if (this.form && this.form.controls['tournament_name']) {
               this.form.controls['tournament_name'].setValue(this.resolvedTournamentName);
             }
+            // re-run match_date validator once tournament dates are available
+            this.form.controls['match_date']?.updateValueAndValidity();
           }
         }
       },
@@ -203,7 +243,7 @@ export class ScheduleMatchTeamSelection {
     // prefer pre-resolved tournament name (set after tournaments load), fall back to form value or lookup
     let tournamentName = this.resolvedTournamentName || vals.tournament_name;
     if (!tournamentName) {
-      const found = this.tournaments.find((t: any) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
+      const found = this.tournaments.find((t: TournamentInfo) => t.tournament_id === this.tournamentId || t._id === this.tournamentId || t.id === this.tournamentId);
       if (found) tournamentName = found.tournament_name || found.name;
     }
 
@@ -220,6 +260,8 @@ export class ScheduleMatchTeamSelection {
     if (dateCtrl.invalid) {
       if (dateCtrl.hasError('required')) {
         alert('Match date is required');
+      } else if (dateCtrl.hasError('outsideTournamentDates')) {
+        alert('Match date must be within the official tournament dates');
       } else if (dateCtrl.hasError('notFuture')) {
         alert('Match date must be in the future');
       } else {

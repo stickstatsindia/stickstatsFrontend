@@ -244,6 +244,39 @@
   padding: 2rem 1rem;
 }
 
+.team-staff {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #dadce0;
+}
+
+.team-staff-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #5f6368;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.4rem;
+}
+
+.team-staff-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.team-staff-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #202124;
+}
+
+.team-staff-value {
+  font-size: 0.8125rem;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
 /* Animations */
 @keyframes fadeSlideIn {
   from {

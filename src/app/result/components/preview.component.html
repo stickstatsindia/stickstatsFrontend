@@ -24,6 +24,14 @@
            class="no-members">
         No players listed
       </div>
+
+      <div class="team-staff">
+        <div class="team-staff-title">Team Staff</div>
+        <div class="team-staff-row">
+          <span class="team-staff-label">Head Coach:</span>
+          <span class="team-staff-value">{{ data.teams.home.staff?.headCoach || 'Not provided' }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Away Team Members -->
@@ -47,6 +55,14 @@
       <div *ngIf="!data.teams.away.players || data.teams.away.players.length === 0" 
            class="no-members">
         No players listed
+      </div>
+
+      <div class="team-staff">
+        <div class="team-staff-title">Team Staff</div>
+        <div class="team-staff-row">
+          <span class="team-staff-label">Head Coach:</span>
+          <span class="team-staff-value">{{ data.teams.away.staff?.headCoach || 'Not provided' }}</span>
+        </div>
       </div>
     </div>
   </div>

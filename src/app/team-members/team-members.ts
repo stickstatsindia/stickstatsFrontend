@@ -5,6 +5,7 @@
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MembersService } from '../service/members/members-service';
 
@@ -21,7 +22,7 @@ interface TeamMember {
 @Component({
   selector: 'app-team-members',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './team-members.html',
   styleUrls: ['./team-members.css']
 })
@@ -31,6 +32,10 @@ export class TeamMembersComponent implements OnInit {
   tournamentId: string | null = null;
   isLoading = false;
   error: string | null = null;
+  showHeadCoachForm = false;
+  headCoachName = '';
+  headCoachInput = '';
+  coachError: string | null = null;
 
   constructor(
     private memberService: MembersService,
@@ -39,17 +44,19 @@ export class TeamMembersComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     const nav = this.router.getCurrentNavigation();
-    const state = nav?.extras.state as { teamId?: string };
-    this.team_id = state?.teamId || null;
+    const state = nav?.extras.state as { teamId?: string; tournamentId?: string };
+    this.team_id = state?.teamId || this.route.snapshot.queryParamMap.get('teamId');
+    this.tournamentId = state?.tournamentId || this.route.snapshot.queryParamMap.get('tournamentId');
   }
 
   ngOnInit() {
     if (this.team_id) {
       this.loadTeamMembers();
+      this.loadHeadCoachName();
       this.cdr.detectChanges();
     } else {
-      // this.error = 'No team ID provided';
-      console.error('No team ID in query params');
+      this.error = 'No team ID provided.';
+      console.error('No team ID provided (state/query params missing).');
     }
   }
 
@@ -78,6 +85,49 @@ export class TeamMembersComponent implements OnInit {
         tournamentId: this.tournamentId
       }
     });
+  }
+
+  onAddHeadCoachName(): void {
+    if (this.headCoachName) {
+      this.coachError = 'Head coach is already selected for this team.';
+      return;
+    }
+    this.coachError = null;
+    this.showHeadCoachForm = true;
+    this.headCoachInput = this.headCoachName || '';
+  }
+
+  onSaveHeadCoachName(): void {
+    if (!this.team_id) return;
+    if (this.headCoachName) {
+      this.coachError = 'Only one head coach is allowed per team.';
+      this.showHeadCoachForm = false;
+      return;
+    }
+    const value = (this.headCoachInput || '').trim();
+    if (!value) {
+      this.coachError = 'Head coach name is required.';
+      return;
+    }
+    localStorage.setItem(this.getCoachStorageKey(this.team_id), value);
+    this.headCoachName = value;
+    this.showHeadCoachForm = false;
+    this.coachError = null;
+  }
+
+  onCancelHeadCoachName(): void {
+    this.showHeadCoachForm = false;
+    this.headCoachInput = this.headCoachName || '';
+    this.coachError = null;
+  }
+
+  private loadHeadCoachName(): void {
+    if (!this.team_id) return;
+    this.headCoachName = localStorage.getItem(this.getCoachStorageKey(this.team_id)) || '';
+  }
+
+  private getCoachStorageKey(teamId: string): string {
+    return `team_staff_head_coach_${teamId}`;
   }
 
   onMemberClick(member: TeamMember) {

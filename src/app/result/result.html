@@ -112,7 +112,8 @@
         <h3 class="events-title">MATCH EVENTS</h3>
         <div class="events-list">
           <div *ngFor="let ev of matchData.events" class="event-item">
-            <span class="event-player">{{ ev.player }}</span>
+            <span class="event-player">{{ ev.player || ev.player_name || 'Unknown Player' }}</span>
+            <span class="event-team">{{ ev.type || 'Unknown Event' }}</span>
             <span class="event-team">{{ ev.team }}</span>
             <span class="event-time">{{ ev.time }}'</span>
             <span class="event-time">{{ ev.quarter }}</span>

@@ -6,6 +6,8 @@ import { environment } from '../config/api.config';
 export interface Tournament {
   tournament_id: string;
   tournament_name: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -82,6 +82,7 @@ export class ScorerComponent {
   penaltyShootoutPlayer: { player_id: string; player_name: string } | null = null;
   penaltyOutcome = '';
 
+  private readonly matchesApiBase = 'http://localhost:3000/api/matches';
 
 
   constructor(private http: HttpClient, private memberService :MatchService,  private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
@@ -125,8 +126,92 @@ export class ScorerComponent {
           if (!this.isPaused && this.totalSeconds > 0) {
             this.startTimer();
           }
+
+          // If match is being played earlier than scheduled or on a different day,
+          // override scheduled values with the current system date/time.
+          this.syncMatchDateTimeIfNeeded(data);
         });
       });
+  }
+
+  private syncMatchDateTimeIfNeeded(matchData: any): void {
+    const scheduledDate = this.normalizeDateOnly(matchData?.match_date);
+    const scheduledTime = this.normalizeTime(matchData?.match_time);
+
+    if (!this.shouldAutoSyncDateTime(scheduledDate, scheduledTime)) return;
+
+    const now = new Date();
+    const payload = {
+      match_date: this.formatDate(now),
+      match_time: this.formatTime(now)
+    };
+
+    this.http.put(`${this.matchesApiBase}/${this.matchId}`, payload).subscribe({
+      next: () => {
+        console.log('Match date/time auto-synced to current system date/time');
+      },
+      error: (err) => {
+        console.warn('Unable to auto-sync match date/time', err);
+      }
+    });
+  }
+
+  private shouldAutoSyncDateTime(scheduledDate: string | null, scheduledTime: string | null): boolean {
+    const now = new Date();
+    const today = this.formatDate(now);
+
+    if (!scheduledDate) return true;
+
+    // Next day / different day play: use current date/time.
+    if (scheduledDate !== today) return true;
+
+    // Pre-match play on same day (starting earlier than scheduled time): use current date/time.
+    if (scheduledTime) {
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const [h, m] = scheduledTime.split(':').map((v: string) => Number(v));
+      if (Number.isFinite(h) && Number.isFinite(m)) {
+        const scheduledMinutes = h * 60 + m;
+        if (nowMinutes < scheduledMinutes) return true;
+      }
+    }
+
+    return false;
+  }
+
+  private normalizeDateOnly(value: any): string | null {
+    if (!value) return null;
+    const raw = String(value);
+    const datePart = raw.includes('T') ? raw.split('T')[0] : raw;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) return datePart;
+
+    const parsed = new Date(raw);
+    if (isNaN(parsed.getTime())) return null;
+    return this.formatDate(parsed);
+  }
+
+  private normalizeTime(value: any): string | null {
+    if (!value) return null;
+    const raw = String(value).trim();
+    if (/^\d{2}:\d{2}$/.test(raw)) return raw;
+
+    const parsed = new Date(`1970-01-01T${raw}`);
+    if (isNaN(parsed.getTime())) return null;
+    return `${this.pad2(parsed.getHours())}:${this.pad2(parsed.getMinutes())}`;
+  }
+
+  private formatDate(date: Date): string {
+    const y = date.getFullYear();
+    const m = this.pad2(date.getMonth() + 1);
+    const d = this.pad2(date.getDate());
+    return `${y}-${m}-${d}`;
+  }
+
+  private formatTime(date: Date): string {
+    return `${this.pad2(date.getHours())}:${this.pad2(date.getMinutes())}`;
+  }
+
+  private pad2(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
   }
 
   // Getter to return players for currently selected team (main event)

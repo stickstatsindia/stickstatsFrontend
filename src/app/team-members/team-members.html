@@ -2,7 +2,34 @@
 
 <div class="members-header">
   <h1>Members of Team</h1>
-  <button class="add-player-btn" (click)="onAddPlayer()">+ Add Player</button>
+  <div class="header-actions">
+    <button class="add-player-btn" (click)="onAddPlayer()">+ Add Player</button>
+    <button class="add-coach-btn" (click)="onAddHeadCoachName()" [disabled]="!!headCoachName">
+      {{ headCoachName ? 'Head Coach Added' : '+ Add Head Coach Name' }}
+    </button>
+  </div>
+</div>
+
+<div class="coach-summary" *ngIf="headCoachName">
+  <strong>Head Coach:</strong> {{ headCoachName }}
+</div>
+
+<div class="error-message" *ngIf="coachError">
+  {{ coachError }}
+</div>
+
+<div class="coach-form" *ngIf="showHeadCoachForm">
+  <label for="headCoachName">Head Coach Name</label>
+  <input
+    id="headCoachName"
+    type="text"
+    [(ngModel)]="headCoachInput"
+    placeholder="Enter head coach name"
+  />
+  <div class="coach-form-actions">
+    <button class="add-coach-btn" (click)="onSaveHeadCoachName()">Save</button>
+    <button class="cancel-btn" (click)="onCancelHeadCoachName()">Cancel</button>
+  </div>
 </div>
 
 <!-- 🔄 Loading indicator -->
