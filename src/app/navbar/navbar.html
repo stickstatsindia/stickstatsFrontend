@@ -1,21 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-4">
-  <a class="navbar-brand" routerLink="/"><img src="assets/favicon.ico" alt="icon" /></a>
+  <a class="navbar-brand" routerLink="/" (click)="closeMenu()"><img src="assets/favicon.ico" alt="icon" /></a>
 
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" (click)="toggleMenu()"
+    aria-controls="navbarNav" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarNav">
+  <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen">
     <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/" routerLinkActive="active">Home</a>
+        <a class="nav-link" routerLink="/" routerLinkActive="active" (click)="closeMenu()">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/about" routerLinkActive="active">About</a>
+        <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact us</a>
+        <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact us</a>
       </li>
 
       <!-- Show Login when not logged in -->
@@ -33,17 +33,17 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="profileDropdown">
           <li>
-            <a class="dropdown-item" routerLink="/player-profile" routerLinkActive="active">
+            <a class="dropdown-item" routerLink="/player-profile" routerLinkActive="active" (click)="closeMenu()">
               My Stats
             </a>
           </li>
           <li>
-            <a class="dropdown-item" routerLink="/live-dashboard" routerLinkActive="active">
+            <a class="dropdown-item" routerLink="/live-dashboard" routerLinkActive="active" (click)="closeMenu()">
               Matches Dashboard
             </a>
           </li>
           <li>
-            <a class="dropdown-item" routerLink="/tournament-dashboard" routerLinkActive="active">
+            <a class="dropdown-item" routerLink="/tournament-dashboard" routerLinkActive="active" (click)="closeMenu()">
               Organizer Dashboard
             </a>
           </li>
