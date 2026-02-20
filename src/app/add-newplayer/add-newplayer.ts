@@ -111,7 +111,10 @@ export class AddNewplayerComponent {
           return;
         }
 
-        const teamData = { ...this.playerForm.value, teamId: this.team_id };
+        const teamData = {
+          ...this.playerForm.value,
+          teamId: this.team_id
+        };
         this.memeberService.addMember(teamData).subscribe({
           next: (response: any) => {
             console.log('Player added successfully:', response);

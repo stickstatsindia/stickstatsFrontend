@@ -67,7 +67,7 @@ export class TeamMembersComponent implements OnInit {
     this.memberService.getMembers(this.team_id).subscribe({
       next: (members: TeamMember[]) => {
         this.teamMembers = members;
-        this.isLoading = false; // ✅ FIXED
+        this.isLoading = false; // âœ… FIXED
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -78,7 +78,7 @@ export class TeamMembersComponent implements OnInit {
   }
 
   onAddPlayer() {
-    // ✅ FIXED: use team_id not teamId
+    // âœ… FIXED: use team_id not teamId
     this.router.navigate(['/addnew-player'], {
       state: {
         teamId: this.team_id,

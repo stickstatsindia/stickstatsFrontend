@@ -217,6 +217,31 @@
   white-space: nowrap;
 }
 
+.member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.member-name-row .member-name {
+  min-width: 0;
+}
+
+.member-jersey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 .member-link {
   color: #1a73e8;
   cursor: pointer;

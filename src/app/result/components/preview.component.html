@@ -14,13 +14,16 @@
             class="member-item">
           <span class="member-number">{{ i + 1 }}</span>
           <div class="member-info">
-            <span
-              class="member-name"
-              [class.member-link]="getPlayerProfileId(player)"
-              (click)="openPlayerProfile(player)"
-            >
-              {{ player.name || player.player_name || 'Unknown Player' }}
-            </span>
+            <div class="member-name-row">
+              <span
+                class="member-name"
+                [class.member-link]="getPlayerProfileId(player)"
+                (click)="openPlayerProfile(player)"
+              >
+                {{ player.name || player.player_name || 'Unknown Player' }}
+              </span>
+              <span *ngIf="player.jersey_number" class="member-jersey">#{{ player.jersey_number }}</span>
+            </div>
             <!-- <span class="member-age">Age: {{ player.age }}</span> -->
           </div>
         </li>
@@ -52,13 +55,16 @@
             class="member-item">
           <span class="member-number">{{ i + 1 }}</span>
           <div class="member-info">
-            <span
-              class="member-name"
-              [class.member-link]="getPlayerProfileId(player)"
-              (click)="openPlayerProfile(player)"
-            >
-              {{ player.name || player.player_name || 'Unknown Player' }}
-            </span>
+            <div class="member-name-row">
+              <span
+                class="member-name"
+                [class.member-link]="getPlayerProfileId(player)"
+                (click)="openPlayerProfile(player)"
+              >
+                {{ player.name || player.player_name || 'Unknown Player' }}
+              </span>
+              <span *ngIf="player.jersey_number" class="member-jersey">#{{ player.jersey_number }}</span>
+            </div>
             <!-- <span class="member-age">Age: {{ player.age }}</span> -->
           </div>
         </li>
