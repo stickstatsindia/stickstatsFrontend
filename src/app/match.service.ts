@@ -89,6 +89,8 @@ export class MatchService {
     });
   }
 
+
+ 
   // Convert backend -> frontend (snake_case → camelCase)
   private toCamelCase(match: any): Match {
     return {
@@ -170,6 +172,12 @@ export class MatchService {
       .put<any>(`${this.baseUrl}/matches/${matchId}`, this.toSnakeCase(match))
       .pipe(map(m => this.toCamelCase(m)));
   }
+
+  
+updateMatchTime(matchId: any): Observable<any> {
+  return this.http.put<any>(`${this.baseUrl}/matches/${matchId}/update-time`, {});
+}
+
 
   // Delete a match
   deleteMatch(matchId: string): Observable<any> {

@@ -78,6 +78,9 @@ export class Matches implements OnInit {
     }
   }
 
+
+
+
   private loadMatchesByTournamentId() {
     if (!this.tournamentId) {
       this.loading = false;
@@ -146,31 +149,43 @@ export class Matches implements OnInit {
     alert(`Settings for match: ${this.matches[index].team1} vs ${this.matches[index].team2}`);
   }
 
-  startScoring(match: Match) {
+startScoring(match: Match) {
   if (!match.matchId) {
     alert('Match ID not found!');
     return;
   }
 
-  // Update match status to 'In Progress'
+  // 1️⃣ Update match status (existing behavior)
   this.matchService.updateMatchStatus(match.matchId, 'Live').subscribe({
     next: () => {
-      console.log('Match status updated to Live');
-      // Update local match status
       match.status = 'Live';
       this.cdr.detectChanges();
-      // Navigate to scorer
-      this.router.navigate(
-        ['/scorer/' + match.matchId],
-        {
-          state: {
-            matchId: match.matchId,
-            team1: match.team1,
-            team2: match.team2,
-            tournamentId: this.tournamentId
-          }
+
+      // 2️⃣ Update match date & time (new API)
+      this.matchService.updateMatchTime(match.matchId).subscribe({
+        next: (updated: any) => {
+          match.matchDate = updated.match_date;
+          match.matchTime = updated.match_time;
+          this.cdr.detectChanges();
+
+          // Navigate to scorer after everything updated
+          this.router.navigate(
+            ['/scorer/' + match.matchId],
+            {
+              state: {
+                matchId: match.matchId,
+                team1: match.team1,
+                team2: match.team2,
+                tournamentId: this.tournamentId
+              }
+            }
+          );
+        },
+        error: (err: any) => {
+          console.error('Error updating match date/time:', err);
+          alert('Failed to update match date/time');
         }
-      );
+      });
     },
     error: (err: any) => {
       console.error('Error updating match status:', err);
@@ -178,6 +193,7 @@ export class Matches implements OnInit {
     }
   });
 }
+
 
 resumeScoring(match: Match) {
   if (!match.matchId) {
