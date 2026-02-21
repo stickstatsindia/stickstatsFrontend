@@ -82,14 +82,29 @@
           </div>
         </div>
 
+      <div class="col-md-6">
+        <label>PIN</label>
+        <input type="text" class="form-control" name="zip" [(ngModel)]="user.zip" (ngModelChange)="onZipChange($event)" required #zip="ngModel" pattern="^\d{6}$" maxlength="6" />
+          <div *ngIf="zip.invalid && (zip.dirty || zip.touched)" class="text-danger small mt-1">
+          <div *ngIf="zip.errors?.['required']">PIN is required.</div>
+          <div *ngIf="zip.errors?.['pattern']">PIN must of 6 digits only.</div>
+         </div>
+      </div>
+
         <div class="col-md-6">
           <label>Location</label>
-          <input class="form-control" name="address" [(ngModel)]="user.address" required #address="ngModel" />
+          <input class="form-control" name="address" [(ngModel)]="user.address" required #address="ngModel" readonly />
           <div *ngIf="address.invalid && (address.dirty || address.touched)" class="text-danger small mt-1">
             Location is required.
           </div>
+          <div *ngIf="isFetchingLocation" class="text-muted small mt-1">
+            Fetching location from PIN...
+          </div>
           <div *ngIf="locationValidationStatus === 'invalid'" class="text-danger small mt-1">
-            Location must be within India.
+            PIN lookup failed. Check PIN or try again.
+          </div>
+          <div *ngIf="locationValidationStatus === 'valid'" class="text-success small mt-1">
+            Location fetched successfully.
           </div>
         </div>
 
@@ -156,15 +171,6 @@
             <div *ngIf="jersey_number.errors?.['min'] || jersey_number.errors?.['max']">Jersey number must be between 1 and 999.</div>
           </div>
         </div>
-
-      <div class="col-md-6">
-        <label>PIN</label>
-        <input type="text" class="form-control" name="zip" [(ngModel)]="user.zip" required #zip="ngModel" pattern="^\d{6}$" />
-          <div *ngIf="zip.invalid && (zip.dirty || zip.touched)" class="text-danger small mt-1">
-          <div *ngIf="zip.errors?.['required']">PIN is required.</div>
-          <div *ngIf="zip.errors?.['pattern']">PIN must of 6 digits only.</div>
-         </div>
-      </div>
 
       </div>
       <button type="submit" class="btn btn-outline-primary col-md-6 mt-4 " [disabled]="profileForm.invalid">Save Profile</button>
