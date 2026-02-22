@@ -3,13 +3,13 @@
     <h1>🏑 Matches Dashboard</h1>
 
     <div class="navbar">
-      <button (click)="selectedTab = 'Live'" [class.active]="selectedTab === 'Live'">Live</button>
-      <button (click)="selectedTab = 'Upcoming'" [class.active]="selectedTab === 'Upcoming'">Upcoming</button>
-      <button (click)="selectedTab = 'Finished'" [class.active]="selectedTab === 'Finished'">Finished</button>
+      <button (click)="selectTab('Live')" [class.active]="selectedTab === 'Live'">Live</button>
+      <button (click)="selectTab('Upcoming')" [class.active]="selectedTab === 'Upcoming'">Upcoming</button>
+      <button (click)="selectTab('Finished')" [class.active]="selectedTab === 'Finished'">Finished</button>
     </div>
 
     <div class="match-list">
-      <ng-container *ngFor="let match of filteredMatches()">
+      <ng-container *ngFor="let match of visibleMatches">
         <div class="match-card" [routerLink]="['/result', match.matchId]">
           <h3>{{ match.team1Name }} vs {{ match.team2Name }}</h3>
           <p *ngIf="selectedTab !== 'Upcoming'">

@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class LiveDashboardComponent implements OnInit, OnDestroy {
   matches: Match[] = [];
+  visibleMatches: Match[] = [];
   selectedTab: 'Live' | 'Upcoming' | 'Finished' = 'Live';
 
   private subscriptions = new Subscription();
@@ -25,6 +26,8 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
       this.matchService.getAllMatches().subscribe(
         matches => {
           this.matches = matches;
+          this.refreshVisibleMatches();
+          this.cdr.detectChanges();
           console.log('Matches loaded:', this.matches);
         },
         error => {
@@ -69,6 +72,7 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
           ...this.matches.slice(idx + 1)
         ];
 
+        this.refreshVisibleMatches();
         // If you still use Default strategy, this guarantees UI refresh
         this.cdr.detectChanges();
       })
@@ -81,12 +85,22 @@ export class LiveDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  filteredMatches(): Match[] {
-    return this.matches.filter(match => match.status === this.selectedTab);
-  }
-
   selectTab(tab: 'Live' | 'Upcoming' | 'Finished'): void {
     this.selectedTab = tab;
+    this.refreshVisibleMatches();
+  }
+
+  private refreshVisibleMatches(): void {
+    this.visibleMatches = this.matches.filter(
+      (match) => this.normalizeStatus(match?.status) === this.selectedTab
+    );
+  }
+
+  private normalizeStatus(status: any): 'Live' | 'Upcoming' | 'Finished' {
+    const normalized = String(status || '').trim().toLowerCase();
+    if (normalized.includes('live') || normalized.includes('progress')) return 'Live';
+    if (normalized.includes('finish') || normalized.includes('complete')) return 'Finished';
+    return 'Upcoming';
   }
 }
 
