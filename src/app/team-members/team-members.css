@@ -55,6 +55,11 @@
   background-color: #00a382;
 }
 
+.add-player-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
 .add-coach-btn {
   background-color: #1a73e8;
   color: white;
@@ -223,6 +228,15 @@
   margin: 20px 0;
 }
 
+.lock-message {
+  margin: 0 0 16px 20px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff4e5;
+  color: #92400e;
+  font-size: 14px;
+}
+
 .member-name {
   color: white;
   font-weight: 500;
@@ -232,6 +246,24 @@
   padding: 0 10px;
   word-wrap: break-word;
   line-height: 1.3;
+}
+
+.remove-player-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ef4444;
+  color: #fff;
+  cursor: pointer;
+}
+
+.remove-player-btn:hover {
+  background: #dc2626;
 }
 
 /* Responsive adjustments */
