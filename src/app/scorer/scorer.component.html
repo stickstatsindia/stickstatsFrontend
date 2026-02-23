@@ -46,7 +46,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
           <mat-select [(ngModel)]="currentQuarter" [disabled]="timerStarted">
-            <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
+            <mat-option *ngFor="let q of quarters" [value]="q" [disabled]="completedQuarters.has(q)">
+              {{ q }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -86,7 +88,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
           <mat-select [(ngModel)]="currentQuarter" (ngModelChange)="changeQuarter($event)" [disabled]="timerStarted">
-            <mat-option *ngFor="let q of quarters" [value]="q">{{ q }}</mat-option>
+            <mat-option *ngFor="let q of quarters" [value]="q" [disabled]="completedQuarters.has(q)">
+              {{ q }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -150,7 +154,7 @@
           <mat-label>Outcome</mat-label>
           <mat-select [(ngModel)]="penaltyOutcome">
             <mat-option [value]="goal">{{ goal }}</mat-option>
-            <mat-option [value]="saved">{{ saved }}</mat-option>
+            <mat-option [value]="missed">{{ missed }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

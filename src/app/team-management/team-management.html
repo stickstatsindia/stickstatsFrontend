@@ -1,107 +1,142 @@
-<div class="team-card">
+<div class="team-page">
+  <div class="team-card">
 
-  <!-- Header -->
-  <div class="team-main-row">
-    <div class="team-logo-section">
-      <img [src]="team.logoUrl" alt="Tournament Logo" />
-    </div>
-
-    <div class="team-info-section">
-      <h2 class="team-name">{{ team.name }}</h2>
-      <p><strong>Location:</strong> {{ team.location }}</p>
-      <p><strong>Start Date:</strong> {{ team.startDate }}</p>
-      <p><strong>End Date:</strong> {{ team.endDate }}</p>
-    </div>
-
-    <div class="team-stats-row">
-      <div class="stat-box">
-        <div class="stat-label">Matches</div>
-        <div class="stat-value">{{ team.totalMatches }}</div>
+    <!-- Header -->
+    <div class="team-main-row">
+      <div class="team-logo-section" style="display: none;">
+        <img [src]="team.logoUrl" alt="Tournament Logo" />
       </div>
 
-      <div class="stat-box">
-        <div class="stat-label">Goals</div>
-        <div class="stat-value">{{ team.goals }}</div>
+      <div class="team-info-section">
+        <h2 class="team-name">{{ team.name }}</h2>
+        <p><strong>Location:</strong> {{ team.location }}</p>
+        <p><strong>Start Date:</strong> {{ team.startDate }}</p>
+        <p><strong>End Date:</strong> {{ team.endDate }}</p>
+        <p><strong>Format:</strong> {{ team.format }}</p>
+        <p><strong>Category:</strong> {{ team.category }}</p>
+      </div>
+
+      <div class="team-stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Matches</div>
+          <div class="stat-value">{{ team.totalMatches }}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Goals</div>
+          <div class="stat-value">{{ team.goals }}</div>
+        </div>
       </div>
     </div>
+
+    <!-- Tabs -->
+    <div class="team-navbar">
+      <div class="team-tabs">
+        <div
+          *ngFor="let item of menu"
+          class="team-tab"
+          [class.active]="item === selectedTab"
+          (click)="onTabSelect(item)">
+          {{ item }}
+        </div>
+      </div>
+    </div>
+
+    <!-- MATCHES TAB -->
+    <div *ngIf="selectedTab === 'MATCHES'" class="tab-content">
+      <div *ngIf="loadingMatches" class="loading">Loading matches...</div>
+      <ng-container *ngIf="!loadingMatches">
+        <div *ngIf="matches.length === 0" class="empty">No matches found.</div>
+        <div *ngFor="let match of matches" class="match-card">
+          <div class="match-status"
+            [class.live]="match.status === 'Live'"
+            [class.finished]="match.status === 'Finished'"
+            [class.upcoming]="match.status === 'Upcoming'">
+            {{ match.status }}
+            <span *ngIf="match.status === 'Live'"> · {{ match.current_quarter }}</span>
+          </div>
+          <div class="match-teams">
+            <span class="match-team-name">{{ match.team1_name }}</span>
+            <span class="match-score" *ngIf="match.status !== 'Upcoming'">
+              {{ match.team1_score }} - {{ match.team2_score }}
+            </span>
+            <span class="match-score" *ngIf="match.status === 'Upcoming'">vs</span>
+            <span class="match-team-name">{{ match.team2_name }}</span>
+          </div>
+          <div class="match-meta">
+            <span>📅 {{ match.match_date }}</span>
+            <span>🕐 {{ match.match_time }}</span>
+            <span>📍 {{ match.venue }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- STATS TAB -->
+    <div *ngIf="selectedTab === 'STATS'" class="stats-bar">
+      <div *ngIf="loadingStats" class="loading">Loading stats...</div>
+      <ng-container *ngIf="!loadingStats">
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Total Matches</span>
+          <span class="stat-bar-value">{{ stats.totalMatches }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Field Goals</span>
+          <span class="stat-bar-value">{{ stats.fieldGoals }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">PC Earned</span>
+          <span class="stat-bar-value">{{ stats.pcEarned }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">PC Scored</span>
+          <span class="stat-bar-value">{{ stats.pcScored }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">PS Earned</span>
+          <span class="stat-bar-value">{{ stats.psEarned }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">PS Scored</span>
+          <span class="stat-bar-value">{{ stats.psScored }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Penalty Shootout</span>
+          <span class="stat-bar-value">{{ stats.penaltyShootout }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Red Cards</span>
+          <span class="stat-bar-value">{{ stats.redCards }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Yellow Cards</span>
+          <span class="stat-bar-value">{{ stats.yellowCards }}</span>
+        </div>
+        <div class="stat-bar-item">
+          <span class="stat-bar-label">Green Cards</span>
+          <span class="stat-bar-value">{{ stats.greenCards }}</span>
+        </div>
+        <div class="stat-bar-item highlight">
+          <span class="stat-bar-label">Total Goal Score</span>
+          <span class="stat-bar-value">{{ stats.totalGoalScore }}</span>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- TEAMS TAB -->
+    <div *ngIf="selectedTab === 'TEAMS'" class="tab-content">
+      <div *ngIf="loadingTeams" class="loading">Loading teams...</div>
+      <ng-container *ngIf="!loadingTeams">
+        <div *ngIf="teams.length === 0" class="empty">No teams found.</div>
+        <div *ngFor="let t of teams" class="team-row">
+          <img [src]="t.logo_url || 'https://via.placeholder.com/50'" alt="logo" class="team-logo-sm" />
+          <div class="team-row-info">
+            <span class="team-row-name">{{ t.team_name }}</span>
+            <span class="team-row-location">{{ t.location }}</span>
+          </div>
+          <span *ngIf="t.pool" class="pool-badge">{{ t.pool.name }}</span>
+        </div>
+      </ng-container>
+    </div>
+
   </div>
-
-  <!-- Tabs -->
-  <div class="team-navbar">
-    <div class="team-tabs">
-      <div
-        *ngFor="let item of menu"
-        class="team-tab"
-        [class.active]="item === selectedTab"
-        (click)="onTabSelect(item)">
-        {{ item }}
-      </div>
-    </div>
-  </div>
-
-  <!-- STATS TAB -->
-  <div *ngIf="selectedTab === 'STATS'" class="stats-bar">
-
-    <div *ngIf="loadingStats" class="loading">
-      Loading stats...
-    </div>
-
-    <ng-container *ngIf="!loadingStats">
-      <div class="stat-bar-item">
-        <span>Total Matches</span>
-        <span>{{ stats.totalMatches }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>Field Goals</span>
-        <span>{{ stats.fieldGoals }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>PC Earned</span>
-        <span>{{ stats.pcEarned }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>PC Scored</span>
-        <span>{{ stats.pcScored }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>PS Earned</span>
-        <span>{{ stats.psEarned }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>PS Scored</span>
-        <span>{{ stats.psScored }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>Penalty Shootout</span>
-        <span>{{ stats.penaltyShootout }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>Red Cards</span>
-        <span>{{ stats.redCards }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>Yellow Cards</span>
-        <span>{{ stats.yellowCards }}</span>
-      </div>
-
-      <div class="stat-bar-item">
-        <span>Green Cards</span>
-        <span>{{ stats.greenCards }}</span>
-      </div>
-
-      <div class="stat-bar-item highlight">
-        <span>Total Goal Score</span>
-        <span>{{ stats.totalGoalScore }}</span>
-      </div>
-    </ng-container>
-  </div>
-
 </div>

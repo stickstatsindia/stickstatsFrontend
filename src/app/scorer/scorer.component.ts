@@ -42,6 +42,9 @@ export class ScorerComponent {
   private autoSaveIntervalId: any = null;
   private socket!: Socket;
 
+  // Add this property
+  completedQuarters: Set<string> = new Set();
+
   minutes = 0;
   seconds = 0;
   displayMinutes = '00';
@@ -60,7 +63,7 @@ export class ScorerComponent {
   team2Name = 'Team B';
 
   goal = 'Goal';
-  saved = 'Saved'
+  missed = 'Missed';
  
   totalScore = {
     team1: 0,
@@ -300,9 +303,8 @@ export class ScorerComponent {
       team: this.penaltyShootoutTeam,
       player_id: this.penaltyShootoutPlayer.player_id,
       player_name: this.penaltyShootoutPlayer.player_name,
-      type: 'Penalty Shootout',
-      quarter: this.currentQuarter,
-      outcome: this.penaltyOutcome
+      type: 'Penalty Shootout' + " " + (this.penaltyOutcome),
+      quarter: this.currentQuarter
     };
     
     this.matchEvents.push(event);
@@ -318,7 +320,7 @@ export class ScorerComponent {
     this.socket.emit("eventAdded", { matchId: this.matchId, event });
 
     // If penalty was scored, update score
-    if (this.penaltyOutcome === 'Scored') {
+    if (this.penaltyOutcome === 'goal') {
       if (this.penaltyShootoutTeam === this.team1Name) this.totalScore.team1++;
       else if (this.penaltyShootoutTeam === this.team2Name) this.totalScore.team2++;
 
@@ -527,6 +529,9 @@ export class ScorerComponent {
       clearInterval(this.autoSaveIntervalId);
       this.autoSaveIntervalId = null;
     }
+
+    // ✅ Mark current quarter as completed
+    this.completedQuarters.add(this.currentQuarter);
 
     this.isPaused = false;
     this.timerStarted = false; // ✅ Allow quarter dropdown again
