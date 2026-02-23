@@ -46,7 +46,7 @@
       <div *ngIf="loadingMatches" class="loading">Loading matches...</div>
       <ng-container *ngIf="!loadingMatches">
         <div *ngIf="matches.length === 0" class="empty">No matches found.</div>
-        <div *ngFor="let match of matches" class="match-card">
+        <div *ngFor="let match of matches" class="match-card" role="button" tabindex="0" (click)="openMatchResult(match)" (keydown.enter)="openMatchResult(match)" (keydown.space)="openMatchResult(match); $event.preventDefault()">
           <div class="match-status"
             [class.live]="match.status === 'Live'"
             [class.finished]="match.status === 'Finished'"

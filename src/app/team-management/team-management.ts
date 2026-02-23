@@ -236,4 +236,9 @@ export class TeamManagementComponent implements OnInit {
         }
       });
   }
+  openMatchResult(match: MatchDisplay): void {
+    const matchId = match?.match_id?.toString().trim();
+    if (!matchId) return;
+    this.router.navigate(['/result', matchId]);
+  }
 }
