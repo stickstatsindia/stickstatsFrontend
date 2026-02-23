@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -49,6 +49,28 @@ interface TournamentStats {
   totalGoalScore: number;
 }
 
+// Add these interfaces at the top
+interface MatchDisplay {
+  match_id: string;
+  match_date: string;
+  match_time: string;
+  venue: string;
+  status: string;
+  team1_name: string;
+  team2_name: string;
+  team1_score: number;
+  team2_score: number;
+  current_quarter: string;
+}
+
+interface TeamInfo {
+  team_id: string;
+  team_name: string;
+  location: string;
+  logo_url: string;
+  pool?: { name: string; type: string };
+}
+
 @Component({
   selector: 'app-team-management',
   standalone: true,
@@ -59,6 +81,12 @@ interface TournamentStats {
 export class TeamManagementComponent implements OnInit {
   tournamentId!: string;
   tournamentData!: Tournament;
+
+  // Add these properties inside the class
+  matches: MatchDisplay[] = [];
+  teams: TeamInfo[] = [];
+  loadingMatches = false;
+  loadingTeams = false;
 
   team: TeamDisplay = {
     name: '',
@@ -101,7 +129,8 @@ export class TeamManagementComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private tournamentService: TournamentService,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -134,6 +163,8 @@ export class TeamManagementComponent implements OnInit {
           totalMatches: 0,
           goals: 0
         };
+        this.fetchTournamentMatches();
+        this.fetchTournamentStats();
       },
       error: () => {
         this.router.navigate(['/tournaments']);
@@ -141,11 +172,45 @@ export class TeamManagementComponent implements OnInit {
     });
   }
 
+  // Update your onTabSelect method
   onTabSelect(tab: string): void {
     this.selectedTab = tab;
-    if (tab === 'STATS') {
-      this.fetchTournamentStats();
-    }
+    if (tab === 'STATS') this.fetchTournamentStats();
+    if (tab === 'MATCHES') this.fetchTournamentMatches();
+    if (tab === 'TEAMS') this.fetchTournamentTeams();
+  }
+
+  // Add these methods
+  fetchTournamentMatches(): void {
+    this.loadingMatches = true;
+    this.http.get<MatchDisplay[]>(`http://localhost:3000/api/tournament/${this.tournamentId}/matches1`)
+      .subscribe({
+        next: (matches) => {
+          this.matches = matches;
+          this.loadingMatches = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Failed to load matches', err);
+          this.loadingMatches = false;
+        }
+      });
+  }
+
+  fetchTournamentTeams(): void {
+    this.loadingTeams = true;
+    this.http.get<TeamInfo[]>(`http://localhost:3000/api/tournament/${this.tournamentId}/teams`)
+      .subscribe({
+        next: (teams) => {
+          this.teams = teams;
+          this.loadingTeams = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Failed to load teams', err);
+          this.loadingTeams = false;
+        }
+      });
   }
 
   fetchTournamentStats(): void {
@@ -162,10 +227,12 @@ export class TeamManagementComponent implements OnInit {
           this.team.goals = stats.totalGoalScore;
 
           this.loadingStats = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Failed to load tournament stats', err);
           this.loadingStats = false;
+          this.cdr.detectChanges();
         }
       });
   }

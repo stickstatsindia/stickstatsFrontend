@@ -97,10 +97,10 @@
   background: var(--primary);
 }
 
-.stat-box:hover .stat-label,
+/* .stat-box:hover .stat-label,
 .stat-box:hover .stat-value {
   color: #ffffff;
-}
+} */
 
 .stat-label {
   font-size: 0.7rem;

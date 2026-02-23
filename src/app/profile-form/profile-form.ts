@@ -39,33 +39,39 @@ export class ProfileForm {
   constructor(private http: HttpClient, private profileService: Profile) {}
 
   submitProfile() {
-  
-    this.isUserRegistered=true;
-    this.profileService.addUser(this.user).subscribe(response => {
-      
-      
-      
-      console.log('User added successfully:', response);
+    this.isUserRegistered = true;
 
+    const user_id = localStorage.getItem('user_id');
+    const phone_number = localStorage.getItem('phone_number');
 
+    // Attach phone number from localStorage (already verified via OTP)
+    const payload = {
+      ...this.user,
+      phone_number: phone_number || this.user.phone_number
+    };
 
-      alert('Profile saved successfully!');
-
-
-
-    }, error => {
-      console.error('Error adding user:', error);
-      // Handle based on backend response
-      if (error.status === 400) {
-        alert(error.error.error || 'Validation failed. Please check your inputs.');
-      } else if (error.status === 409) {
-        alert(error.error.error || 'Duplicate entry detected.');
-      } else if (error.status === 500) {
-        alert('Server error: Could not create user. Please try again later.');
-      } else {
-        alert('Unexpected error occurred. Please try again.');
-      }
-    });
+    // Use PUT to update the minimal user created during OTP
+    this.http.put(`http://localhost:3000/api/users/${user_id}`, payload)
+      .subscribe({
+        next: (response) => {
+          console.log('Profile updated successfully:', response);
+          alert('Profile saved successfully!');
+          // Redirect to dashboard after profile completion
+          // this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          console.error('Error updating profile:', error);
+          if (error.status === 400) {
+            alert(error.error.error || 'Validation failed.');
+          } else if (error.status === 409) {
+            alert(error.error.error || 'Duplicate entry detected.');
+          } else if (error.status === 500) {
+            alert('Server error. Please try again later.');
+          } else {
+            alert('Unexpected error occurred.');
+          }
+        }
+      });
   }
 
   showProfile(){
