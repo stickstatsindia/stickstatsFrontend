@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Profile } from '../service/profile/profile';
-import { Navbar } from '../navbar/navbar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +18,10 @@ export class ProfileForm {
   isProfileSaved = false;
   isUserRegistered=false;
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
+  isFetchingLocation = false;
+  private lastLookupZip = '';
+  private lookupSub: Subscription | null = null;
+  private lookupToken = 0;
 
   user = {
     full_name: '',
@@ -39,6 +43,10 @@ export class ProfileForm {
   constructor(private http: HttpClient, private profileService: Profile) {}
 
   submitProfile() {
+    if (this.locationValidationStatus !== 'valid') {
+      alert('Please enter a valid 6-digit PIN to auto-fetch location.');
+      return;
+    }
     this.isUserRegistered = true;
 
     const user_id = localStorage.getItem('user_id');
@@ -122,6 +130,102 @@ export class ProfileForm {
 
   onLogin(): void {
     this.isLoggedIn = true;
+  }
+
+  onZipChange(zip: string): void {
+    this.user.zip = (zip || '').replace(/\D/g, '').slice(0, 6);
+
+    if (this.user.zip.length < 6) {
+      this.locationValidationStatus = 'pending';
+      this.lastLookupZip = '';
+      this.user.address = '';
+      return;
+    }
+
+    if (this.user.zip === this.lastLookupZip) {
+      return;
+    }
+
+    this.fetchLocationFromPin(this.user.zip);
+  }
+
+  private fetchLocationFromPin(zip: string): void {
+    this.lookupSub?.unsubscribe();
+    const token = ++this.lookupToken;
+
+    this.isFetchingLocation = true;
+    this.locationValidationStatus = 'pending';
+    this.lookupSub = this.http.get<any[]>(`https://api.postalpincode.in/pincode/${zip}`).subscribe({
+      next: (response) => {
+        const address = this.extractAddressFromPostalApi(response);
+        if (token !== this.lookupToken) return;
+
+        this.isFetchingLocation = false;
+        this.lastLookupZip = zip;
+
+        if (!address) {
+          this.locationValidationStatus = 'invalid';
+          this.user.address = '';
+          return;
+        }
+
+        this.user.address = address;
+        this.locationValidationStatus = 'valid';
+      },
+      error: () => {
+        if (token !== this.lookupToken) return;
+
+        this.isFetchingLocation = false;
+        this.locationValidationStatus = 'invalid';
+        this.user.address = '';
+      }
+    });
+  }
+
+  private extractAddressFromPostalApi(response: any[]): string {
+    const first = Array.isArray(response) ? response[0] : null;
+    const offices = first?.PostOffice;
+
+    if (!first || first.Status !== 'Success' || !Array.isArray(offices) || !offices.length) {
+      return '';
+    }
+
+    const district = this.getMostFrequentValue(
+      offices.map((o: any) => (o?.District || '').toString().trim())
+    );
+    const state = this.getMostFrequentValue(
+      offices.map((o: any) => (o?.State || '').toString().trim())
+    );
+
+    return [district, state].filter(Boolean).join(', ');
+  }
+
+  private getMostFrequentValue(values: string[]): string {
+    const cleaned = values.filter(Boolean);
+    if (!cleaned.length) return '';
+
+    const counts = new Map<string, number>();
+    const original = new Map<string, string>();
+
+    for (const value of cleaned) {
+      const key = value.toLowerCase();
+      counts.set(key, (counts.get(key) || 0) + 1);
+      if (!original.has(key)) {
+        original.set(key, value);
+      }
+    }
+
+    let topKey = '';
+    let topCount = 0;
+
+    for (const [key, count] of counts.entries()) {
+      if (count > topCount) {
+        topKey = key;
+        topCount = count;
+      }
+    }
+
+    return original.get(topKey) || '';
   }
 
 }

@@ -79,6 +79,11 @@ export class ScheduleMatchTeamSelection {
     const awayCtrl = this.form.controls['away_team'];
 
     homeCtrl.valueChanges.subscribe((team: any) => {
+      const awayTeam = awayCtrl.value;
+      if (team && awayTeam && team.id === awayTeam.id) {
+        awayCtrl.setValue(null);
+      }
+
       if (team && team.id) {
         this.loadTeam1Members(team.id);
       } else {
@@ -87,6 +92,11 @@ export class ScheduleMatchTeamSelection {
     });
 
     awayCtrl.valueChanges.subscribe((team: any) => {
+      const homeTeam = homeCtrl.value;
+      if (team && homeTeam && team.id === homeTeam.id) {
+        homeCtrl.setValue(null);
+      }
+
       if (team && team.id) {
         this.loadTeam2Members(team.id);
       } else {
@@ -135,7 +145,29 @@ export class ScheduleMatchTeamSelection {
       match_date: ['', [Validators.required, this.futureDateValidator(), this.tournamentDateRangeValidator()]],
       match_time: ['', Validators.required],
       // team member textareas removed; members are fetched from API
-    });
+    }, { validators: this.differentTeamsValidator() });
+  }
+
+  get availableHomeTeams(): Team[] {
+    const awayTeam = this.form?.controls['away_team']?.value;
+    if (!awayTeam?.id) return this.teams;
+    return this.teams.filter((team) => team.id !== awayTeam.id);
+  }
+
+  get availableAwayTeams(): Team[] {
+    const homeTeam = this.form?.controls['home_team']?.value;
+    if (!homeTeam?.id) return this.teams;
+    return this.teams.filter((team) => team.id !== homeTeam.id);
+  }
+
+  private differentTeamsValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const home = control.get('home_team')?.value;
+      const away = control.get('away_team')?.value;
+
+      if (!home || !away) return null;
+      return home.id === away.id ? { sameTeams: true } : null;
+    };
   }
 
   private parseDateOnly(dateValue: string | null | undefined): Date | null {

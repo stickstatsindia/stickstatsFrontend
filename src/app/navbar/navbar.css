@@ -75,3 +75,13 @@
 .dropdown-divider {
   border-color: rgba(255, 255, 255, 0.2);
 }
+
+@media (max-width: 991.98px) {
+  .navbar .navbar-brand {
+    margin-right: auto;
+  }
+
+  .navbar .navbar-toggler {
+    margin-left: auto;
+  }
+}

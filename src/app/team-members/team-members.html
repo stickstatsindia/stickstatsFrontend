@@ -10,6 +10,10 @@
   </div>
 </div>
 
+<div class="lock-message" *ngIf="teamHasStartedMatch">
+  Remove player is locked because this team has already started a match. Adding players is still allowed.
+</div>
+
 <div class="coach-summary" *ngIf="headCoachName">
   <strong>Head Coach:</strong> {{ headCoachName }}
 </div>
@@ -46,6 +50,13 @@
 <div class="members-grid" *ngIf="!isLoading && !error">
   <!-- Show members if available -->
   <div class="member-card" *ngFor="let member of teamMembers" (click)="onMemberClick(member)" style="cursor: pointer;">
+    <button
+      class="remove-player-btn"
+      *ngIf="canRemovePlayers"
+      (click)="onRemoveMember($event, member)"
+      aria-label="Remove player">
+      Remove
+    </button>
     <div class="member-avatar" [attr.data-initials]="getInitials(member.name)">
       <div class="initials">{{ getInitials(member.name) }}</div>
       <div class="role-badge">{{ member.role }}</div>

@@ -9,16 +9,21 @@
         <div class="team">
           <label for="teamA">Select Team A:</label>
           <select formControlName="home_team" id="teamA" required>
-            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+            <option [ngValue]="null">Select Team A</option>
+            <option *ngFor="let team of availableHomeTeams" [ngValue]="team">{{ team.name }}</option>
           </select>
         </div>
         <div class="vs">VS</div>
         <div class="team">
           <label for="teamB">Select Team B:</label>
           <select formControlName="away_team" id="teamB" required>
-            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }}</option>
+            <option [ngValue]="null">Select Team B</option>
+            <option *ngFor="let team of availableAwayTeams" [ngValue]="team">{{ team.name }}</option>
           </select>
         </div>
+      </div>
+      <div *ngIf="form.hasError('sameTeams') && (form.controls['home_team'].touched || form.controls['away_team'].touched)">
+        <small class="error">Team A and Team B cannot be the same.</small>
       </div>
 
       <div>
