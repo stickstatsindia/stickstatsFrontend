@@ -75,7 +75,7 @@
 
         <div class="col-md-6">
           <label>Mobile</label>
-          <input class="form-control" type="tel" name="phone_number" [(ngModel)]="user.phone_number" required #phone_number="ngModel" pattern="^[6-9]\d{9}$" />
+          <input class="form-control" type="tel" name="phone_number" [(ngModel)]="user.phone_number" required #phone_number="ngModel" readonly pattern="^[6-9]\d{9}$" />
           <div *ngIf="phone_number.invalid && (phone_number.dirty || phone_number.touched)" class="text-danger small mt-1">
             <div *ngIf="phone_number.errors?.['required']">Mobile number is required.</div>
             <div *ngIf="phone_number.errors?.['pattern']">Please enter a valid 10-digit phone_number number.</div>

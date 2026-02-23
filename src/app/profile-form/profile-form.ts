@@ -1,11 +1,12 @@
 
 
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Profile } from '../service/profile/profile';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +15,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './profile-form.html',
   styleUrls: ['./profile-form.css']
 })
-export class ProfileForm {
+export class ProfileForm implements OnInit {
   isProfileSaved = false;
   isUserRegistered=false;
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
@@ -40,13 +41,56 @@ export class ProfileForm {
     profileImage: ''
   };
 
-  constructor(private http: HttpClient, private profileService: Profile) {}
+  constructor(private http: HttpClient, private profileService: Profile, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {}
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {  // 👈 Only run in browser
+      this.loadExistingProfile();
+    }
+  }
+
+  loadExistingProfile() {
+    const user_id = localStorage.getItem('user_id');
+    const phone_number = localStorage.getItem('phone_number');
+
+    // Always pre-fill phone from localStorage
+    if (phone_number) {
+      this.user.phone_number = phone_number;
+    }
+
+    if (!user_id) return;
+
+    this.http.get<any>(`http://localhost:3000/api/users/${user_id}`)
+      .subscribe({
+        next: (data) => {
+          // Pre-fill only fields that have real values
+          this.user.full_name = data.full_name !== 'New User' ? data.full_name || '' : '';
+          this.user.phone_number = data.phone_number || phone_number || '';
+          this.user.email = data.email || '';
+          this.user.address = data.address || '';
+          this.user.date_of_birth = data.date_of_birth || '';
+          this.user.gender = data.gender || '';
+          this.user.position = data.position || '';
+          this.user.jersey_number = data.jersey_number || '';
+          this.user.zip = data.zip || '';
+          this.user.profileImage = data.profile_pic || '';
+        },
+        error: (err) => {
+          console.error('Error loading profile:', err);
+          // Not a breaking error, just continue with empty form
+        }
+      });
+  }
 
   submitProfile() {
+
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     if (this.locationValidationStatus !== 'valid') {
       alert('Please enter a valid 6-digit PIN to auto-fetch location.');
       return;
     }
+
     this.isUserRegistered = true;
 
     const user_id = localStorage.getItem('user_id');
@@ -65,7 +109,7 @@ export class ProfileForm {
           console.log('Profile updated successfully:', response);
           alert('Profile saved successfully!');
           // Redirect to dashboard after profile completion
-          // this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Error updating profile:', error);
