@@ -32,6 +32,16 @@
   color: #202124;
 }
 
+.match-header .title .tournament-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.match-header .title .tournament-link:hover {
+  color: #1a73e8;
+  text-decoration: underline;
+}
+
 @media (min-width: 768px) {
   .match-header .title {
     font-size: 2rem;

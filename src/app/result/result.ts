@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { io, Socket } from "socket.io-client";
 
@@ -18,6 +18,7 @@ interface MatchData {
   date: string;
   venue: string;
   tournament: string;
+  tournamentId?: string;
   teams: {
     home: { name: string; id: string; logo: string; players: any[]; stats: any };
     away: { name: string; id: string; logo: string; players: any[]; stats: any };
@@ -35,7 +36,7 @@ interface MatchData {
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule, PreviewComponent, BoxScoreComponent, TimelineComponent, AnalysisComponent, LeadersComponent, PenaltyShootoutComponent],
+  imports: [CommonModule, RouterLink, PreviewComponent, BoxScoreComponent, TimelineComponent, AnalysisComponent, LeadersComponent, PenaltyShootoutComponent],
   templateUrl: './result.html',
   styleUrls: ['./result.css']
 })
@@ -266,6 +267,7 @@ export class Result implements OnInit, OnDestroy {
           date: data.match_date || '',
           venue: data.venue || '',
           tournament: data.tournament_name || 'Default Tournament',
+          tournamentId: data.tournament_id || data.tournamentId || data.id || '',
           status: data.status || 'Upcoming',
           score: { home: data.team1_score || 0, away: data.team2_score || 0 },
           events: (data.match_events || []).map((ev: any) => this.normalizeEvent(ev)),

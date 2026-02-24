@@ -1,7 +1,14 @@
 <div *ngIf="matchData" class="match-center-container">
   <!-- Header Section -->
   <div class="match-header">
-    <h2 class="title">{{ matchData.tournament }}</h2>
+    <h2 class="title">
+      <a *ngIf="matchData.tournamentId; else tournamentText"
+         class="tournament-link"
+         [routerLink]="['/tournament-details', matchData.tournamentId]">
+        {{ matchData.tournament }}
+      </a>
+      <ng-template #tournamentText>{{ matchData.tournament }}</ng-template>
+    </h2>
     <div class="meta-info">
       <span class="date">{{ matchData.date }}</span>
       <span class="divider">•</span>
