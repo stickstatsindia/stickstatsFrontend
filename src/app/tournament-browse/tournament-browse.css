@@ -220,11 +220,13 @@
   flex-direction: column;
   height: 100%;
   border: 1px solid #e2e8f0;
+  cursor: pointer;
 }
 
 .tournament-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  border-color: #667eea;
 }
 
 /* Card Header */

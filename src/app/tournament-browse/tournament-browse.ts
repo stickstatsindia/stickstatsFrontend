@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../service/tournament/tournament';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Tournament {
   _id: string;
@@ -35,7 +36,8 @@ export class TournamentBrowse implements OnInit, OnDestroy {
 
   constructor(
     private tournamentService: TournamentService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -88,6 +90,15 @@ export class TournamentBrowse implements OnInit, OnDestroy {
     this.filteredTournaments = [];
     this.hasSearched = false;
     this.cdr.detectChanges();
+  }
+
+  /**
+   * Navigate to tournament details page
+   */
+  viewTournamentDetails(tournament: Tournament): void {
+    this.router.navigate(['/tournament-details', tournament.tournament_id], {
+      state: { tournamentId: tournament.tournament_id }
+    });
   }
 
   /**

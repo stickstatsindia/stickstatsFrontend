@@ -61,6 +61,7 @@
     <div 
       *ngFor="let tournament of filteredTournaments" 
       class="tournament-card"
+      (click)="viewTournamentDetails(tournament)"
     >
       <!-- Card Header -->
       <div class="card-header">
