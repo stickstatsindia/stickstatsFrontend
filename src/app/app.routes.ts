@@ -26,6 +26,7 @@ import { TeamMembersComponent } from './team-members/team-members';
 
 import { AuthenticationComponent as Auth } from './authentication/authentication.component';
 import { Awards } from './awards/awards';
+import { TournamentBrowse } from './tournament-browse/tournament-browse';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -56,6 +57,7 @@ export const routes: Routes = [
   { path: 'player/awards', component: Awards },
   {path: 'team-members', component: TeamMembersComponent},
   { path: 'edit-tournament/:tournament_id', component: AddTournamentComponent},
+  {path:'search-tournaments', component: TournamentBrowse},
   //Add new path before this
   { path: '**', redirectTo: '' }
 ];

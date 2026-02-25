@@ -145,12 +145,16 @@ patchFormData(data: any, startDate: string, endDate: string): void {
     const start = new Date(formGroup.get('start_date')?.value);
     const end = new Date(formGroup.get('end_date')?.value);
     const today = new Date();
-
+   
     today.setHours(0, 0, 0, 0);
+    
+    // Tomorrow is the earliest allowed start date
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (!start || !end) return null;
 
-    if (start < today) {
+    if (start < tomorrow) {
       return { startPast: true };
     }
     if (end <= start) {

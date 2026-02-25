@@ -57,4 +57,13 @@ getTournamentById(tournamentId: string) {
     const url = environment.baseUrl + environment.endpoints.editTournament.replace(':tournament_id', tournamentId);
     return this.http.delete(url);
   }
+
+  /**
+   * Search tournaments by name (query parameter)
+   * Backend endpoint: GET /api/tournaments/search?name=query
+   */
+  searchTournamentsByName(searchQuery: string): Observable<any[]> {
+    const url = `${environment.baseUrl}/api/tournaments/search?name=${encodeURIComponent(searchQuery)}`;
+    return this.http.get<any[]>(url);
+  }
 }
