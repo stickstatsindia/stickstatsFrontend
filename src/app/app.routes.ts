@@ -27,11 +27,12 @@ import { TeamMembersComponent } from './team-members/team-members';
 import { AuthenticationComponent as Auth } from './authentication/authentication.component';
 import { Awards } from './awards/awards';
 import { TournamentBrowse } from './tournament-browse/tournament-browse';
+import { AuthGuard } from './service/auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'profile-form', component: AuthenticationComponent },
-  { path: 'auth', component: Auth },
+  { path: 'auth', component: Auth, canActivate: [AuthGuard] },
   { path: 'about', component: About },
   { path: 'player-profile/:user_id', component: PlayerProfileComponent },
   { path: 'contact', component: Contact },

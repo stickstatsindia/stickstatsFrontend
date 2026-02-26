@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -9,10 +11,24 @@ import { Router } from '@angular/router';
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
   tabs = ['All Games', 'Basketball', 'Football', 'Volleyball'];
   activeTab = 'All Games';
-  constructor(private router: Router) {}
+  isLoggedIn: boolean = false;
+  private authSub?: Subscription;
+
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.authService.isAuthenticated();
+    this.authSub = this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
+      this.isLoggedIn = isLoggedIn;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub?.unsubscribe();
+  }
 
   faqItems = [
     { question: 'How do I create a tournament on STICKSTATS?', expanded: false },
@@ -46,33 +62,10 @@ export class Home {
   toggleFaq(index: number) {
     this.faqItems[index].expanded = !this.faqItems[index].expanded;
   }
-    goToRegister() {
-    this.router.navigate(['/profile-form']);
+
+  goToRegister() {
+    this.router.navigate(['/auth']);
   }
-
 }
-
-
-// import { Component } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { About } from "../about/about";
-// import { Contact } from "../contact/contact";
-// import { Router } from '@angular/router';
-
-// @Component({
-//   selector: 'app-home',
-//   imports: [About, Contact],
-//   templateUrl: './home.html',
-//   styleUrl: './home.css'
-// })
-// export class Home {
-
-//   constructor(private router: Router) {}
-
-//   goToRegister() {
-//     this.router.navigate(['/profile-form']);
-//   }
-
-// }
 
 
