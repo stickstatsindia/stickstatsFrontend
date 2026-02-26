@@ -91,6 +91,10 @@ export class ScorerComponent {
     return this.penaltyShootoutEnabled || this.matchFinished;
   }
 
+  get currentQuarterCompleted(): boolean {
+    return this.completedQuarters.has(this.currentQuarter);
+  }
+
 
   constructor(private http: HttpClient, private memberService :MatchService,  private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
 
@@ -492,7 +496,7 @@ export class ScorerComponent {
 
   // Called when user clicks “Set Time”
   setTime(): void {
-    if (this.penaltyShootoutEnabled || this.matchFinished) {
+    if (this.penaltyShootoutEnabled || this.matchFinished || this.currentQuarterCompleted) {
       return;
     }
 
@@ -503,7 +507,7 @@ export class ScorerComponent {
 
   // Start countdown
   startTimer(): void {
-    if (this.penaltyShootoutEnabled || this.matchFinished) {
+    if (this.penaltyShootoutEnabled || this.matchFinished || this.currentQuarterCompleted) {
       return;
     }
 
@@ -535,7 +539,7 @@ export class ScorerComponent {
 
   // Pause
   pauseTimer(): void {
-    if (this.penaltyShootoutEnabled || this.matchFinished) {
+    if (this.penaltyShootoutEnabled || this.matchFinished || this.currentQuarterCompleted) {
       return;
     }
 
@@ -551,7 +555,7 @@ export class ScorerComponent {
 
   // Resume
   resumeTimer(): void {
-    if (this.penaltyShootoutEnabled || this.matchFinished) {
+    if (this.penaltyShootoutEnabled || this.matchFinished || this.currentQuarterCompleted) {
       return;
     }
 
@@ -592,7 +596,7 @@ export class ScorerComponent {
   }
 
   addEvent(type: string) {
-    if (this.penaltyShootoutEnabled) {
+    if (this.penaltyShootoutEnabled || this.currentQuarterCompleted) {
       return;
     }
 

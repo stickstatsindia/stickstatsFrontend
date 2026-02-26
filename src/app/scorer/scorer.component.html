@@ -33,13 +33,13 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Minutes</mat-label>
-          <input matInput type="number" [(ngModel)]="minutes" min="0" [disabled]="regularControlsDisabled">
+          <input matInput type="number" [(ngModel)]="minutes" min="0" [disabled]="regularControlsDisabled || currentQuarterCompleted">
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Seconds</mat-label>
-          <input matInput type="number" [(ngModel)]="seconds" min="0" [disabled]="regularControlsDisabled">
+          <input matInput type="number" [(ngModel)]="seconds" min="0" [disabled]="regularControlsDisabled || currentQuarterCompleted">
         </mat-form-field>
       </div>
       <div class="col">
@@ -54,11 +54,11 @@
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-raised-button color="primary" (click)="setTime()" [disabled]="timerStarted || isPaused || regularControlsDisabled">Set Time</button>
-      <button mat-raised-button color="accent" (click)="startTimer()" [disabled]="timerStarted || isPaused || regularControlsDisabled">Start</button>
-      <button mat-raised-button (click)="pauseTimer()" [disabled]="!timerStarted || isPaused || regularControlsDisabled">Pause</button>
-      <button mat-raised-button (click)="resumeTimer()" [disabled]="!isPaused || regularControlsDisabled">Resume</button>
-      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="(!isPaused && !timerStarted) || regularControlsDisabled">Stop</button>
+      <button mat-raised-button color="primary" (click)="setTime()" [disabled]="timerStarted || isPaused || regularControlsDisabled || currentQuarterCompleted">Set Time</button>
+      <button mat-raised-button color="accent" (click)="startTimer()" [disabled]="timerStarted || isPaused || regularControlsDisabled || currentQuarterCompleted">Start</button>
+      <button mat-raised-button (click)="pauseTimer()" [disabled]="!timerStarted || isPaused || regularControlsDisabled || currentQuarterCompleted">Pause</button>
+      <button mat-raised-button (click)="resumeTimer()" [disabled]="!isPaused || regularControlsDisabled || currentQuarterCompleted">Resume</button>
+      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="(!isPaused && !timerStarted) || regularControlsDisabled || currentQuarterCompleted">Stop</button>
     </div>
 
   </mat-card>
@@ -96,14 +96,14 @@
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-stroked-button color="primary" (click)="addEvent('Goal')" [disabled]="regularControlsDisabled">Goal</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')" [disabled]="regularControlsDisabled">PC Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')" [disabled]="regularControlsDisabled">PC Scored</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')" [disabled]="regularControlsDisabled">PS Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')" [disabled]="regularControlsDisabled">PS Scored</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')" [disabled]="regularControlsDisabled">Green Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="regularControlsDisabled">Yellow Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="regularControlsDisabled">Red Card</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Goal')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Goal</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')" [disabled]="regularControlsDisabled || currentQuarterCompleted">PC Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')" [disabled]="regularControlsDisabled || currentQuarterCompleted">PC Scored</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')" [disabled]="regularControlsDisabled || currentQuarterCompleted">PS Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')" [disabled]="regularControlsDisabled || currentQuarterCompleted">PS Scored</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Green Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Yellow Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Red Card</button>
     </div>
   </mat-card>
 
