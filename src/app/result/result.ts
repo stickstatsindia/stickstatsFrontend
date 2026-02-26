@@ -85,6 +85,32 @@ export class Result implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
+  get outcomeText(): string {
+    if (!this.matchData) return '';
+
+    const homeName = this.matchData.teams?.home?.name || 'Home';
+    const awayName = this.matchData.teams?.away?.name || 'Away';
+    const homeRegular = Array.isArray(this.matchData.quarterScores?.home)
+      ? this.matchData.quarterScores!.home.reduce((a, b) => a + (Number(b) || 0), 0)
+      : Number(this.matchData.score?.home ?? 0) || 0;
+    const awayRegular = Array.isArray(this.matchData.quarterScores?.away)
+      ? this.matchData.quarterScores!.away.reduce((a, b) => a + (Number(b) || 0), 0)
+      : Number(this.matchData.score?.away ?? 0) || 0;
+
+    const ps = this.readPenaltyScores(this.matchData.penaltyShootout);
+    if (ps) {
+      const homeFinal = homeRegular + ps.home;
+      const awayFinal = awayRegular + ps.away;
+      if (homeFinal > awayFinal) return `${homeName} won`;
+      if (homeFinal < awayFinal) return `${awayName} won`;
+      return 'Match Draw';
+    }
+
+    if (homeRegular > awayRegular) return `${homeName} won`;
+    if (homeRegular < awayRegular) return `${awayName} won`;
+    return 'Match Draw';
+  }
+
   private normalizeEvent(event: any): any {
     return {
       ...event,
@@ -525,6 +551,20 @@ export class Result implements OnInit, OnDestroy {
       norm(a?.type) === norm(b?.type) &&
       norm(a?.player) === norm(b?.player)
     );
+  }
+
+  private readPenaltyScores(penaltyShootout: any): { home: number; away: number } | null {
+    if (!penaltyShootout) return null;
+
+    const homeAttempts = Array.isArray(penaltyShootout?.home) ? penaltyShootout.home : [];
+    const awayAttempts = Array.isArray(penaltyShootout?.away) ? penaltyShootout.away : [];
+    const home = Number(penaltyShootout?.homeScore ?? penaltyShootout?.home_score);
+    const away = Number(penaltyShootout?.awayScore ?? penaltyShootout?.away_score);
+
+    const homeScore = Number.isFinite(home) ? home : homeAttempts.filter((s: any) => !!s?.scored).length;
+    const awayScore = Number.isFinite(away) ? away : awayAttempts.filter((s: any) => !!s?.scored).length;
+
+    return { home: homeScore, away: awayScore };
   }
 
   /**

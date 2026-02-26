@@ -104,10 +104,10 @@ export class Matches implements OnInit, OnDestroy {
 
     // 🔥 SCORE UPDATE
     this.socket.on('scoreUpdated', (data: any) => {
-      this.updateMatch(data.match_id, m => {
+      this.updateMatch(data.match_id || data.matchId, m => {
         m.home_score = data.team1_score ?? m.home_score;
         m.away_score = data.team2_score ?? m.away_score;
-        m.status = data.status ?? m.status;
+        m.status = this.normalizeStatus(data.status ?? m.status);
       });
     });
 
@@ -121,22 +121,22 @@ export class Matches implements OnInit, OnDestroy {
         }
         if (data.team1_score !== undefined) m.home_score = data.team1_score;
         if (data.team2_score !== undefined) m.away_score = data.team2_score;
-        if (data.status !== undefined) m.status = data.status;
+        if (data.status !== undefined) m.status = this.normalizeStatus(data.status);
       });
     });
 
     // 🔥 TIMER
     this.socket.on('timerUpdated', (data: any) => {
-      this.updateMatch(data.match_id, m => {
+      this.updateMatch(data.match_id || data.matchId, m => {
         m.remaining_time = data.remaining_time ?? m.remaining_time;
-        m.status = data.status ?? m.status;
+        m.status = this.normalizeStatus(data.status ?? m.status);
       });
     });
 
     // 🔥 STATUS
     this.socket.on('matchStatusChanged', (data: any) => {
-      this.updateMatch(data.match_id, m => {
-        m.status = data.status;
+      this.updateMatch(data.match_id || data.matchId, m => {
+        m.status = this.normalizeStatus(data.status);
       });
     });
 
@@ -183,7 +183,7 @@ export class Matches implements OnInit, OnDestroy {
       city: m.city || '',
       matchDate: m.match_date || '',
       matchTime: m.match_time || '',
-      status: m.status || 'Scheduled',
+      status: this.normalizeStatus(m.status || m.match_status || 'Scheduled'),
       home_score: m.home_score ?? 0,
       away_score: m.away_score ?? 0,
       remaining_time: m.remaining_time || '',
@@ -233,6 +233,34 @@ export class Matches implements OnInit, OnDestroy {
       match.home_score = homeScore;
       match.away_score = awayScore;
      }
+  }
+
+  private normalizeStatus(status: any): 'Live' | 'Upcoming' | 'Finished' {
+    const normalized = String(status || '').trim().toLowerCase();
+
+    if (
+      normalized.includes('live') ||
+      normalized.includes('progress') ||
+      normalized.includes('running') ||
+      normalized.includes('ongoing') ||
+      normalized.includes('penalty') ||
+      normalized.includes('shootout') ||
+      normalized.includes('tie')
+    ) {
+      return 'Live';
+    }
+
+    if (
+      normalized.includes('finish') ||
+      normalized.includes('complete') ||
+      normalized.includes('ended') ||
+      normalized.includes('full time') ||
+      normalized === 'ft'
+    ) {
+      return 'Finished';
+    }
+
+    return 'Upcoming';
   }
 
   scheduleMatch() {

@@ -202,7 +202,10 @@ export class LiveDashboardComponent implements OnInit, OnDestroy, OnChanges {
       normalized.includes('live') ||
       normalized.includes('progress') ||
       normalized.includes('running') ||
-      normalized.includes('ongoing')
+      normalized.includes('ongoing') ||
+      normalized.includes('penalty') ||
+      normalized.includes('shootout') ||
+      normalized.includes('tie')
     ) {
       return 'Live';
     }

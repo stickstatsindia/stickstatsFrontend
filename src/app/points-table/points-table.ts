@@ -269,13 +269,15 @@ export class PointsTable implements OnInit, OnChanges {
       awayStanding.scoredFor += awayScore;
       awayStanding.scoredAgainst += homeScore;
 
-      if (homeScore > awayScore) {
+      const matchOutcome = this.resolveMatchOutcome(match, homeName, awayName, homeScore, awayScore);
+
+      if (matchOutcome === 'home') {
         homeStanding.won += 1;
         homeStanding.points += 2;
         awayStanding.lost += 1;
         homeStanding.results.push('W');
         awayStanding.results.push('L');
-      } else if (homeScore < awayScore) {
+      } else if (matchOutcome === 'away') {
         awayStanding.won += 1;
         awayStanding.points += 2;
         homeStanding.lost += 1;
@@ -396,5 +398,109 @@ export class PointsTable implements OnInit, OnChanges {
     if (this.selectedStage === 'Semifinal') return stage.includes('semi');
     if (this.selectedStage === 'Final') return stage.includes('final') && !stage.includes('semi') && !stage.includes('quarter');
     return true;
+  }
+
+  private resolveMatchOutcome(
+    match: any,
+    homeName: string,
+    awayName: string,
+    homeScore: number,
+    awayScore: number
+  ): 'home' | 'away' | 'draw' {
+    const shootout = this.readPenaltyShootoutScore(match, homeName, awayName);
+    const homeFinal = homeScore + (shootout?.home ?? 0);
+    const awayFinal = awayScore + (shootout?.away ?? 0);
+
+    if (homeFinal > awayFinal) return 'home';
+    if (homeFinal < awayFinal) return 'away';
+    return 'draw';
+  }
+
+  private readPenaltyShootoutScore(
+    match: any,
+    homeName: string,
+    awayName: string
+  ): { home: number; away: number } | null {
+    const payload = match?.penaltyShootout ?? match?.penalty_shootout;
+    if (payload) {
+      const homeAttempts = Array.isArray(payload?.home) ? payload.home : [];
+      const awayAttempts = Array.isArray(payload?.away) ? payload.away : [];
+      const homeScore = this.toNumber(
+        payload?.homeScore ??
+          payload?.home_score ??
+          payload?.team1_score ??
+          payload?.team1Score ??
+          homeAttempts.filter((s: any) => !!s?.scored).length
+      );
+      const awayScore = this.toNumber(
+        payload?.awayScore ??
+          payload?.away_score ??
+          payload?.team2_score ??
+          payload?.team2Score ??
+          awayAttempts.filter((s: any) => !!s?.scored).length
+      );
+      if (homeScore !== null && awayScore !== null) {
+        return { home: homeScore, away: awayScore };
+      }
+    }
+
+    const homeFlat = this.toNumber(
+      match?.ps_home ??
+        match?.psHome ??
+        match?.home_ps_score ??
+        match?.homePenaltyScore ??
+        match?.team1_ps_score ??
+        match?.team1PenaltyScore
+    );
+    const awayFlat = this.toNumber(
+      match?.ps_away ??
+        match?.psAway ??
+        match?.away_ps_score ??
+        match?.awayPenaltyScore ??
+        match?.team2_ps_score ??
+        match?.team2PenaltyScore
+    );
+    if (homeFlat !== null && awayFlat !== null) {
+      return { home: homeFlat, away: awayFlat };
+    }
+
+    const events = Array.isArray(match?.match_events)
+      ? match.match_events
+      : Array.isArray(match?.matchEvents)
+      ? match.matchEvents
+      : Array.isArray(match?.events)
+      ? match.events
+      : [];
+    if (!events.length) return null;
+
+    let home = 0;
+    let away = 0;
+    let hasShootoutEvent = false;
+    const normalizedHome = this.normalizeKey(homeName);
+    const normalizedAway = this.normalizeKey(awayName);
+
+    for (const ev of events) {
+      const type = String(ev?.type || '').trim().toLowerCase();
+      if (!type.includes('penalty shootout')) continue;
+      hasShootoutEvent = true;
+
+      const scored = type.includes('goal') || type.includes('scored');
+      if (!scored) continue;
+
+      const team = this.normalizeKey(ev?.team);
+      if (!team) continue;
+
+      if (team === 'home' || team === 'team1' || team === 'team 1' || team === normalizedHome) {
+        home += 1;
+      } else if (team === 'away' || team === 'team2' || team === 'team 2' || team === normalizedAway) {
+        away += 1;
+      } else if (normalizedHome && team.includes(normalizedHome)) {
+        home += 1;
+      } else if (normalizedAway && team.includes(normalizedAway)) {
+        away += 1;
+      }
+    }
+
+    return hasShootoutEvent ? { home, away } : null;
   }
 }
