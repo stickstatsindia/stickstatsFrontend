@@ -15,7 +15,7 @@
           <!-- <button class="btn btn-success btn-lg rounded-pill me-3">
             Explore Matches
           </button> -->
-          <button (click)="goToRegister()" class="btn btn-outline-light btn-lg rounded-pill">Register Now</button>
+          <button *ngIf="!isLoggedIn" (click)="goToRegister()" class="btn btn-outline-light btn-lg rounded-pill">Register Now</button>
           <!-- <button class="btn btn-outline-light btn-lg rounded-pill" onclick="goToRegister()">
             Create Tournament
           </button> -->

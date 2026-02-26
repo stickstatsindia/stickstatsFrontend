@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
   selector: 'app-phone-auth',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class AuthenticationComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router, @Inject(DOCUMENT) private document: Document,  @Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(private http: HttpClient, private router: Router, @Inject(DOCUMENT) private document: Document, @Inject(PLATFORM_ID) private platformId: Object, private authService: AuthService) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -35,14 +36,13 @@ export class AuthenticationComponent implements OnInit {
             console.log('Response from backend:', res);         // 👈 Check this
             console.log('isNewUser value:', res.isNewUser);
 
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('user_id', res.user_id);
-            localStorage.setItem('phone_number', res.phone_number);
+            // Use auth service to store token and notify subscribers
+            this.authService.login(res.token, res.user_id, res.phone_number);
 
             if (res.isNewUser) {
               this.router.navigate(['/profile-form']); // → ProfileForm
             } else {
-              this.router.navigate(['/dashboard']);
+              this.router.navigate(['/search-tournaments']); // → SearchTournaments
             }
           },
           error: () => alert('Authentication failed')
