@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TournamentService } from '../service/tournament/tournament';
 import { filter, Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { AuthService } from '../service/auth/auth.service';
 
 interface Tournament {
   _id: string;
@@ -28,16 +29,33 @@ interface Tournament {
 })
 export class Tournaments implements OnInit, OnDestroy {
   tournaments: Tournament[] = [];
+  allTournaments: Tournament[] = [];
   settingsOpenIndex: number | null = null;
   private routerSub!: Subscription;
+  mineOnly = false;
+  private currentPhone = '';
+  private currentUserId = '';
 
   constructor(
     private tournamentService: TournamentService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
+    this.currentPhone = this.normalize(
+      typeof window !== 'undefined' && window.localStorage ? localStorage.getItem('phone_number') : ''
+    );
+    this.currentUserId = this.normalize(this.authService.getUserId());
+
+    this.route.queryParamMap.subscribe((params) => {
+      this.mineOnly = params.get('mine') === '1';
+      this.applyTournamentFilter();
+      this.cdr.detectChanges();
+    });
+
     // load initially
     this.loadTournaments();
 
@@ -62,13 +80,43 @@ export class Tournaments implements OnInit, OnDestroy {
   loadTournaments() {
     this.tournamentService.getTournaments().subscribe({
       next: (data: any) => {
-        this.tournaments = data as Tournament[];
+        this.allTournaments = Array.isArray(data) ? (data as Tournament[]) : [];
+        this.applyTournamentFilter();
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Failed to load tournaments:', err);
       },
     });
+  }
+
+  private applyTournamentFilter(): void {
+    if (!this.mineOnly) {
+      this.tournaments = [...this.allTournaments];
+      return;
+    }
+    this.tournaments = this.allTournaments.filter((t: any) => this.isMyTournament(t));
+  }
+
+  private isMyTournament(tournament: any): boolean {
+    const organizerPhone = this.normalize(
+      tournament?.organiserContact ??
+      tournament?.organizer_contact ??
+      tournament?.organiser_contact ??
+      tournament?.contact_number ??
+      tournament?.phone_number
+    );
+    const organizerId = this.normalize(
+      tournament?.organizer_id ?? tournament?.organiser_id ?? tournament?.owner_id ?? tournament?.user_id
+    );
+
+    const phoneMatch = !!this.currentPhone && !!organizerPhone && organizerPhone === this.currentPhone;
+    const idMatch = !!this.currentUserId && !!organizerId && organizerId === this.currentUserId;
+    return phoneMatch || idMatch;
+  }
+
+  private normalize(value: any): string {
+    return String(value ?? '').trim().toLowerCase();
   }
 
   addTournament() {

@@ -14,7 +14,7 @@ export class TournamentDashboardComponent {
   constructor(private router: Router) {}
 
   goToMyTournaments() {
-    this.router.navigate(['/tournaments']); // Define this route pending
+    this.router.navigate(['/tournaments'], { queryParams: { mine: '1' } });
   }
 
   addNewTournament() {
