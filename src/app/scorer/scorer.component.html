@@ -33,19 +33,19 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Minutes</mat-label>
-          <input matInput type="number" [(ngModel)]="minutes" min="0">
+          <input matInput type="number" [(ngModel)]="minutes" min="0" [disabled]="regularControlsDisabled">
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Seconds</mat-label>
-          <input matInput type="number" [(ngModel)]="seconds" min="0">
+          <input matInput type="number" [(ngModel)]="seconds" min="0" [disabled]="regularControlsDisabled">
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
-          <mat-select [(ngModel)]="currentQuarter" [disabled]="timerStarted">
+          <mat-select [(ngModel)]="currentQuarter" [disabled]="timerStarted || regularControlsDisabled">
             <mat-option *ngFor="let q of quarters" [value]="q" [disabled]="completedQuarters.has(q)">
               {{ q }}
             </mat-option>
@@ -54,11 +54,11 @@
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-raised-button color="primary" (click)="setTime()" [disabled]="timerStarted || isPaused">Set Time</button>
-      <button mat-raised-button color="accent" (click)="startTimer()" [disabled]="timerStarted || isPaused">Start</button>
-      <button mat-raised-button (click)="pauseTimer()" [disabled]="!timerStarted || isPaused">Pause</button>
-      <button mat-raised-button (click)="resumeTimer()" [disabled]="!isPaused">Resume</button>
-      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="!isPaused && !timerStarted">Stop</button>
+      <button mat-raised-button color="primary" (click)="setTime()" [disabled]="timerStarted || isPaused || regularControlsDisabled">Set Time</button>
+      <button mat-raised-button color="accent" (click)="startTimer()" [disabled]="timerStarted || isPaused || regularControlsDisabled">Start</button>
+      <button mat-raised-button (click)="pauseTimer()" [disabled]="!timerStarted || isPaused || regularControlsDisabled">Pause</button>
+      <button mat-raised-button (click)="resumeTimer()" [disabled]="!isPaused || regularControlsDisabled">Resume</button>
+      <button mat-raised-button color="warn" (click)="stopTimer()" [disabled]="(!isPaused && !timerStarted) || regularControlsDisabled">Stop</button>
     </div>
 
   </mat-card>
@@ -70,7 +70,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Team</mat-label>
-          <mat-select [(ngModel)]="selectedTeam" (ngModelChange)="onTeamSelect($event)">
+          <mat-select [(ngModel)]="selectedTeam" (ngModelChange)="onTeamSelect($event)" [disabled]="regularControlsDisabled">
             <mat-option [value]="team1Name">{{ team1Name }}</mat-option>
             <mat-option [value]="team2Name">{{ team2Name }}</mat-option>
           </mat-select>
@@ -79,7 +79,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Player</mat-label>
-          <mat-select [(ngModel)]="selectedPlayer">
+          <mat-select [(ngModel)]="selectedPlayer" [disabled]="regularControlsDisabled">
             <mat-option *ngFor="let player of filteredPlayers" [value]="player">{{ player.player_name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -87,7 +87,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Quarter</mat-label>
-          <mat-select [(ngModel)]="currentQuarter" (ngModelChange)="changeQuarter($event)" [disabled]="timerStarted">
+          <mat-select [(ngModel)]="currentQuarter" (ngModelChange)="changeQuarter($event)" [disabled]="timerStarted || regularControlsDisabled">
             <mat-option *ngFor="let q of quarters" [value]="q" [disabled]="completedQuarters.has(q)">
               {{ q }}
             </mat-option>
@@ -96,14 +96,14 @@
       </div>
     </div>
     <div class="mt-2 d-flex flex-wrap gap-2">
-      <button mat-stroked-button color="primary" (click)="addEvent('Goal')" [disabled]="matchFinished">Goal</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')" [disabled]="matchFinished">PC Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')" [disabled]="matchFinished">PC Scored</button>
-      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')" [disabled]="matchFinished">PS Earned</button>
-      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')" [disabled]="matchFinished">PS Scored</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')" [disabled]="matchFinished">Green Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="matchFinished">Yellow Card</button>
-      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="matchFinished">Red Card</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Goal')" [disabled]="regularControlsDisabled">Goal</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Corner Earned')" [disabled]="regularControlsDisabled">PC Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Corner Scored')" [disabled]="regularControlsDisabled">PC Scored</button>
+      <button mat-stroked-button color="accent" (click)="addEvent('Penalty Stroke Earned')" [disabled]="regularControlsDisabled">PS Earned</button>
+      <button mat-stroked-button color="primary" (click)="addEvent('Penalty Stroke Scored')" [disabled]="regularControlsDisabled">PS Scored</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Green Card')" [disabled]="regularControlsDisabled">Green Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="regularControlsDisabled">Yellow Card</button>
+      <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="regularControlsDisabled">Red Card</button>
     </div>
   </mat-card>
 

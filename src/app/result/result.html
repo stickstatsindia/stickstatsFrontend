@@ -34,8 +34,8 @@
             <div *ngIf="matchData.teams.home.captain" class="detail-item">
               <span class="detail-label">Captain:</span> {{ matchData.teams.home.captain }}
             </div> -->
-            <div *ngIf="matchData.teams.home.stats" class="detail-item">
-              <span class="detail-label">PC:</span> {{ matchData.teams.home.stats.PCS || 0 }}
+            <div *ngIf="matchData.penaltyShootout" class="detail-item">
+              <span class="detail-label">PS:</span> {{ matchData.penaltyShootout.homeScore || 0 }}
             </div>
           </div>
         </div>
@@ -61,8 +61,8 @@
             <div *ngIf="matchData.teams.away.captain" class="detail-item">
               <span class="detail-label">Captain:</span> {{ matchData.teams.away.captain }}
             </div> -->
-            <div *ngIf="matchData.teams.away.stats" class="detail-item">
-              <span class="detail-label">PC:</span> {{ matchData.teams.away.stats.PCS || 0 }}
+            <div *ngIf="matchData.penaltyShootout" class="detail-item">
+              <span class="detail-label">PS:</span> {{ matchData.penaltyShootout.awayScore || 0 }}
             </div>
           </div>
         </div>

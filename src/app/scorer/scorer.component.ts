@@ -87,6 +87,10 @@ export class ScorerComponent {
 
   private readonly matchesApiBase = 'http://localhost:3000/api/matches';
 
+  get regularControlsDisabled(): boolean {
+    return this.penaltyShootoutEnabled || this.matchFinished;
+  }
+
 
   constructor(private http: HttpClient, private memberService :MatchService,  private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
 
@@ -342,6 +346,10 @@ export class ScorerComponent {
 
   // 🔧 ADD THIS: Method to broadcast quarter changes
   changeQuarter(newQuarter: string) {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     this.currentQuarter = newQuarter;
     
     // Save to database
@@ -382,6 +390,24 @@ export class ScorerComponent {
 
   // ✅ NEW: Enable penalty shootout when match is tied
   enablePenaltyShootout(): void {
+    if (this.matchFinished || this.penaltyShootoutEnabled) {
+      return;
+    }
+
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+
+    if (this.autoSaveIntervalId) {
+      clearInterval(this.autoSaveIntervalId);
+      this.autoSaveIntervalId = null;
+    }
+
+    this.timerStarted = false;
+    this.isPaused = false;
+    this.saveTimerState();
+
     this.matchTied = true;
     this.penaltyShootoutEnabled = true;
     this.updateMatchStatus('Penalty Shootout');
@@ -466,6 +492,10 @@ export class ScorerComponent {
 
   // Called when user clicks “Set Time”
   setTime(): void {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     this.normalizeInputs();
     this.totalSeconds = this.minutes * 60 + this.seconds;
     this.renderDisplay();
@@ -473,6 +503,10 @@ export class ScorerComponent {
 
   // Start countdown
   startTimer(): void {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     // prevent multiple intervals
     if (this.intervalId) return;
 
@@ -501,6 +535,10 @@ export class ScorerComponent {
 
   // Pause
   pauseTimer(): void {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     if (!this.intervalId) return;
     clearInterval(this.intervalId);
     this.intervalId = null;
@@ -513,6 +551,10 @@ export class ScorerComponent {
 
   // Resume
   resumeTimer(): void {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     if (!this.isPaused) return;
     this.isPaused = false;
     this.timerStarted = true; // ✅ Re-enable the running state
@@ -521,6 +563,10 @@ export class ScorerComponent {
 
   // Stop + reset
   stopTimer(): void {
+    if (this.penaltyShootoutEnabled || this.matchFinished) {
+      return;
+    }
+
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -546,6 +592,10 @@ export class ScorerComponent {
   }
 
   addEvent(type: string) {
+    if (this.penaltyShootoutEnabled) {
+      return;
+    }
+
     if (!this.selectedPlayer) return;
     
     // ✅ Prevent recording events if match is finished

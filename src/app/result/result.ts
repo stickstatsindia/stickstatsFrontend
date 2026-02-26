@@ -49,6 +49,10 @@ export class Result implements OnInit, OnDestroy {
   matchId!: string;
   private socket!: Socket;
   private apiUrl = 'http://localhost:3000/api/matches'; // Base URL for our API
+  private isMainScoreLocked = false;
+  private lockedMainScore: { home: number; away: number } | null = null;
+  private isQuarterScoreLocked = false;
+  private lockedQuarterScores: { home: number[]; away: number[] } | null = null;
 
   tabs = ['Preview', 'Box Score', 'Timeline', 'Analysis', 'Leaders'];
   selectedTab = 0;
@@ -96,6 +100,10 @@ export class Result implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.matchId = params.get('matchId')!;
       this.selectedTab = 0;
+      this.isMainScoreLocked = false;
+      this.lockedMainScore = null;
+      this.isQuarterScoreLocked = false;
+      this.lockedQuarterScores = null;
       console.log('🎯 Match ID from URL:', this.matchId);
 
       // Fetch the initial match data from the API
@@ -110,11 +118,10 @@ export class Result implements OnInit, OnDestroy {
       this.socket.on("scoreUpdated", (data) => {
         const socketMatchId = data?.match_id || data?.matchId;
         if (data && socketMatchId === this.matchId && this.matchData) {
-          this.matchData.score.home = data.team1_score ?? this.matchData.score.home;
-          this.matchData.score.away = data.team2_score ?? this.matchData.score.away;
           this.matchData.status = data.status || this.matchData.status;
           this.syncQuarterScoresFromPayload(this.matchData, data);
           this.syncPenaltyShootoutFromPayload(this.matchData, data);
+          this.syncTotalScoreFromPayload(this.matchData, data);
           this.cdr.detectChanges();
         }
       });
@@ -158,11 +165,10 @@ export class Result implements OnInit, OnDestroy {
           // Recalculate stats for both teams after adding the event
           this.calculateBoxScoreStats(this.matchData);
 
-          // If the backend also sends updated scores in the event payload, update them:
-          if (data.team1_score !== undefined) this.matchData.score.home = data.team1_score;
-          if (data.team2_score !== undefined) this.matchData.score.away = data.team2_score;
+          // Sync total score from backend payload if present, else fallback from events/quarters
           this.syncQuarterScoresFromPayload(this.matchData, data);
           this.syncPenaltyShootoutFromPayload(this.matchData, data);
+          this.syncTotalScoreFromPayload(this.matchData, data);
 
           // Reflect changes in UI
           this.cdr.detectChanges();
@@ -193,6 +199,7 @@ export class Result implements OnInit, OnDestroy {
           this.calculateBoxScoreStats(this.matchData);
           this.syncQuarterScoresFromPayload(this.matchData, newState);
           this.syncPenaltyShootoutFromPayload(this.matchData, newState);
+          this.syncTotalScoreFromPayload(this.matchData, newState);
           this.cdr.detectChanges();
         }
       });
@@ -284,6 +291,14 @@ export class Result implements OnInit, OnDestroy {
   private syncQuarterScoresFromPayload(target: MatchData, payload: any): void {
     if (!target) return;
     target.quarterScores = target.quarterScores || { home: [0, 0, 0, 0], away: [0, 0, 0, 0] };
+
+    if (this.isQuarterScoreLocked && this.lockedQuarterScores) {
+      target.quarterScores = {
+        home: [...this.lockedQuarterScores.home],
+        away: [...this.lockedQuarterScores.away]
+      };
+      return;
+    }
 
     const fromArrays = this.readQuarterArrays(payload);
     if (fromArrays) {
@@ -399,6 +414,23 @@ export class Result implements OnInit, OnDestroy {
 
     if (!psEvents.length && !isPenaltyPhase) return;
 
+    if (!this.isMainScoreLocked) {
+      this.lockedMainScore = {
+        home: Number(target?.score?.home ?? 0) || 0,
+        away: Number(target?.score?.away ?? 0) || 0
+      };
+      this.isMainScoreLocked = true;
+    }
+
+    if (!this.isQuarterScoreLocked) {
+      const source = target.quarterScores || { home: [0, 0, 0, 0], away: [0, 0, 0, 0] };
+      this.lockedQuarterScores = {
+        home: [...source.home],
+        away: [...source.away]
+      };
+      this.isQuarterScoreLocked = true;
+    }
+
     const home: any[] = [];
     const away: any[] = [];
 
@@ -421,6 +453,36 @@ export class Result implements OnInit, OnDestroy {
       homeScore: home.filter((s: any) => !!s?.scored).length,
       awayScore: away.filter((s: any) => !!s?.scored).length
     };
+  }
+
+  private syncTotalScoreFromPayload(target: MatchData, payload: any): void {
+    if (!target) return;
+    target.score = target.score || { home: 0, away: 0 };
+
+    if (this.isMainScoreLocked && this.lockedMainScore) {
+      target.score.home = this.lockedMainScore.home;
+      target.score.away = this.lockedMainScore.away;
+      return;
+    }
+
+    const homeRaw = payload?.team1_score ?? payload?.team1Score ?? payload?.home_score ?? payload?.homeScore;
+    const awayRaw = payload?.team2_score ?? payload?.team2Score ?? payload?.away_score ?? payload?.awayScore;
+    const homeNum = Number(homeRaw);
+    const awayNum = Number(awayRaw);
+
+    if (Number.isFinite(homeNum) && Number.isFinite(awayNum)) {
+      target.score.home = homeNum;
+      target.score.away = awayNum;
+      return;
+    }
+
+    const quarterHome = Array.isArray(target.quarterScores?.home) ? target.quarterScores!.home.reduce((a, b) => a + (Number(b) || 0), 0) : 0;
+    const quarterAway = Array.isArray(target.quarterScores?.away) ? target.quarterScores!.away.reduce((a, b) => a + (Number(b) || 0), 0) : 0;
+    const psHome = Number(target.penaltyShootout?.homeScore ?? 0) || 0;
+    const psAway = Number(target.penaltyShootout?.awayScore ?? 0) || 0;
+
+    target.score.home = quarterHome + psHome;
+    target.score.away = quarterAway + psAway;
   }
 
   private getQuarterIndex(quarter: any): number | null {
@@ -483,7 +545,10 @@ export class Result implements OnInit, OnDestroy {
           tournament: data.tournament_name || 'Default Tournament',
           tournamentId: data.tournament_id || data.tournamentId || data.id || '',
           status: data.status || 'Upcoming',
-          score: { home: data.team1_score || 0, away: data.team2_score || 0 },
+          score: {
+            home: Number(data.team1_score ?? data.team1Score ?? data.home_score ?? data.homeScore ?? 0) || 0,
+            away: Number(data.team2_score ?? data.team2Score ?? data.away_score ?? data.awayScore ?? 0) || 0
+          },
           events: (data.match_events || []).map((ev: any) => this.normalizeEvent(ev)),
           penaltyShootout: data.penaltyShootout,
           eventsHome: data.eventsHome,
@@ -513,6 +578,7 @@ export class Result implements OnInit, OnDestroy {
         this.selectedTab = 0;
         this.syncQuarterScoresFromPayload(this.matchData, data);
         this.syncPenaltyShootoutFromPayload(this.matchData, data);
+        this.syncTotalScoreFromPayload(this.matchData, data);
 
         // Compute stats based on initial events
         this.calculateBoxScoreStats(this.matchData);
@@ -540,4 +606,7 @@ export class Result implements OnInit, OnDestroy {
     }
   }
 }
+
+
+
 
