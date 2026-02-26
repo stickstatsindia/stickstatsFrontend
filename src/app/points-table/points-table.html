@@ -1,23 +1,7 @@
-<div class="points-table-outer">
+<div class="points-table-outer" [class.embedded]="embedded">
   <div class="points-table-container">
-    <div class="points-table-header">
-      <div class="points-table-controls">
-        <div class="column-control">
-          <span class="by-label">Show by</span>
-          <select [(ngModel)]="selectedBy" (ngModelChange)="onFiltersChanged()" class="by-select">
-            <option *ngFor="let option of byOptions" [value]="option">{{ option }}</option>
-          </select>
-        </div>
-        <div class="column-control">
-          <span class="stage-label">Stage</span>
-          <select [(ngModel)]="selectedStage" (ngModelChange)="onFiltersChanged()" class="stage-select">
-            <option *ngFor="let stage of stageOptions" [value]="stage">{{ stage }}</option>
-          </select>
-        </div>
-      </div>
-    </div>
     <div class="points-table-content">
-      <div *ngIf="loading" class="message">Loading points table...</div>
+      <div *ngIf="loading && !embedded" class="message">Loading points table...</div>
       <div *ngIf="!loading && error" class="message error">{{ error }}</div>
       <div *ngIf="!loading && !error && standingsByPool.length === 0" class="message">No pool data found for this tournament.</div>
 

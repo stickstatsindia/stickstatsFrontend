@@ -34,6 +34,7 @@ export class TeamMembersComponent implements OnInit {
   headCoachName = '';
   headCoachInput = '';
   coachError: string | null = null;
+  readOnly = false;
 
   constructor(
     private memberService: MembersService,
@@ -43,16 +44,19 @@ export class TeamMembersComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     const nav = this.router.getCurrentNavigation();
-    const state = nav?.extras.state as { teamId?: string; tournamentId?: string };
+    const state = nav?.extras.state as { teamId?: string; tournamentId?: string; readOnly?: boolean };
     this.team_id = state?.teamId || this.route.snapshot.queryParamMap.get('teamId');
     this.tournamentId = state?.tournamentId || this.route.snapshot.queryParamMap.get('tournamentId');
+    this.readOnly = !!state?.readOnly || this.route.snapshot.queryParamMap.get('view') === 'list';
   }
 
   ngOnInit() {
     if (this.team_id) {
       this.loadTeamMembers();
-      this.loadTeamIdentityAndMatchLock();
-      this.loadHeadCoachName();
+      if (!this.readOnly) {
+        this.loadTeamIdentityAndMatchLock();
+        this.loadHeadCoachName();
+      }
       this.cdr.detectChanges();
     } else {
       this.error = 'No team ID provided.';

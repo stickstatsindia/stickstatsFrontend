@@ -127,8 +127,14 @@
       <div *ngIf="loadingTeams" class="loading">Loading teams...</div>
       <ng-container *ngIf="!loadingTeams">
         <div *ngIf="teams.length === 0" class="empty">No teams found.</div>
-        <div *ngFor="let t of teams" class="team-row">
-          <img [src]="t.logo_url || 'https://via.placeholder.com/50'" alt="logo" class="team-logo-sm" />
+        <div
+          *ngFor="let t of teams"
+          class="team-row"
+          role="button"
+          tabindex="0"
+          (click)="openTeamMembers(t)"
+          (keydown.enter)="openTeamMembers(t)"
+          (keydown.space)="openTeamMembers(t); $event.preventDefault()">
           <div class="team-row-info">
             <span class="team-row-name">{{ t.team_name }}</span>
             <span class="team-row-location">{{ t.location }}</span>
@@ -136,6 +142,20 @@
           <span *ngIf="t.pool" class="pool-badge">{{ t.pool.name }}</span>
         </div>
       </ng-container>
+    </div>
+
+    <!-- POINTS TABLE TAB (preloaded) -->
+    <div class="tab-content" [class.hidden]="selectedTab !== 'POINTS TABLE'">
+      <app-points-table [tournamentIdInput]="tournamentId" [embedded]="true"></app-points-table>
+    </div>
+
+    <!-- MATCH SCHEDULE TAB -->
+    <div *ngIf="selectedTab === 'MATCH SCHEDULE'" class="tab-content">
+      <app-live-dashboard
+        [embedded]="true"
+        [tournamentIdInput]="tournamentId"
+        [dashboardTitleInput]="team.name">
+      </app-live-dashboard>
     </div>
 
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,10 +44,12 @@ interface PoolStandings {
   templateUrl: './points-table.html',
   styleUrls: ['./points-table.css']
 })
-export class PointsTable implements OnInit {
+export class PointsTable implements OnInit, OnChanges {
+  @Input() tournamentIdInput = '';
+  @Input() embedded = false;
   byOptions = ['Points', 'Wins', 'Goals'];
   selectedBy = this.byOptions[0];
-  stageOptions = ['Group', 'Quarterfinal', 'Semifinal', 'Final', 'All'];
+  stageOptions = ['All', 'Group', 'Quarterfinal', 'Semifinal', 'Final'];
   selectedStage = this.stageOptions[0];
   tournamentId = '';
   loading = false;
@@ -69,17 +71,33 @@ export class PointsTable implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.tournamentId) {
-      this.tournamentId =
-        this.route.snapshot.queryParamMap.get('tournamentId') ||
-        this.route.snapshot.queryParamMap.get('tournament_id') ||
-        '';
-    }
+    this.resolveTournamentId();
     if (!this.tournamentId) {
       this.error = 'No tournament selected.';
       return;
     }
     this.loadPointsTableFromBackend();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['tournamentIdInput']) return;
+    const nextId = (this.tournamentIdInput || '').toString().trim();
+    if (!nextId || nextId === this.tournamentId) return;
+    this.tournamentId = nextId;
+    this.error = null;
+    this.loadPointsTableFromBackend();
+  }
+
+  private resolveTournamentId(): void {
+    if (this.tournamentIdInput) {
+      this.tournamentId = this.tournamentIdInput;
+      return;
+    }
+    if (this.tournamentId) return;
+    this.tournamentId =
+      this.route.snapshot.queryParamMap.get('tournamentId') ||
+      this.route.snapshot.queryParamMap.get('tournament_id') ||
+      '';
   }
 
   onFiltersChanged(): void {
@@ -134,7 +152,7 @@ export class PointsTable implements OnInit {
             scoredFor: Number(t?.scored_for) || 0,
             scoredAgainst: Number(t?.scored_against) || 0,
             goalDiff: Number(t?.goal_diff) || 0,
-            points: Number(t?.points) || 0,
+            points: (Number(t?.won) || 0) * 2 + (Number(t?.draw) || 0),
             results: Array.isArray(t?.results) ? t.results.map((r: any) => String(r)) : []
           })) as TeamStanding[];
 
@@ -253,13 +271,13 @@ export class PointsTable implements OnInit {
 
       if (homeScore > awayScore) {
         homeStanding.won += 1;
-        homeStanding.points += 3;
+        homeStanding.points += 2;
         awayStanding.lost += 1;
         homeStanding.results.push('W');
         awayStanding.results.push('L');
       } else if (homeScore < awayScore) {
         awayStanding.won += 1;
-        awayStanding.points += 3;
+        awayStanding.points += 2;
         homeStanding.lost += 1;
         homeStanding.results.push('L');
         awayStanding.results.push('W');

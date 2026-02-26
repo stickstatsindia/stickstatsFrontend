@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TournamentService } from '../service/tournament/tournament';
+import { PointsTable } from '../points-table/points-table';
+import { LiveDashboardComponent } from '../liveDashboard/live-dashboard/live-dashboard';
 
 interface Tournament {
   _id: string;
@@ -74,7 +76,7 @@ interface TeamInfo {
 @Component({
   selector: 'app-team-management',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule, HttpClientModule, PointsTable, LiveDashboardComponent],
   templateUrl: './team-management.html',
   styleUrls: ['./team-management.css']
 })
@@ -120,7 +122,7 @@ export class TeamManagementComponent implements OnInit {
     totalGoalScore: 0
   };
 
-  menu = ['MATCHES', 'STATS', 'TEAMS'];
+  menu = ['MATCHES', 'STATS', 'TEAMS', 'POINTS TABLE', 'MATCH SCHEDULE'];
   selectedTab = 'MATCHES';
 
   loadingStats = false;
@@ -240,5 +242,22 @@ export class TeamManagementComponent implements OnInit {
     const matchId = match?.match_id?.toString().trim();
     if (!matchId) return;
     this.router.navigate(['/result', matchId]);
+  }
+
+  openTeamMembers(team: TeamInfo): void {
+    const teamId = team?.team_id?.toString().trim();
+    if (!teamId) return;
+    this.router.navigate(['/team-members'], {
+      queryParams: {
+        teamId,
+        tournamentId: this.tournamentId,
+        view: 'list'
+      },
+      state: {
+        teamId,
+        tournamentId: this.tournamentId,
+        readOnly: true
+      }
+    });
   }
 }

@@ -49,4 +49,10 @@ export class ScheduleService {
     const endpoint = `${environment.baseUrl}/api/tournamentId/${tournamentId}/matches`;
     return this.http.get<any[]>(endpoint);
   }
+
+  // Fallback endpoint used by tournament details matches tab
+  getMatchesByTournamentLegacy(tournamentId: string): Observable<any[]> {
+    const endpoint = `${environment.baseUrl}/api/tournament/${tournamentId}/matches1`;
+    return this.http.get<any[]>(endpoint);
+  }
 }

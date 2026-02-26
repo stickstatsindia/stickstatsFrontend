@@ -8,6 +8,16 @@
   justify-content: center;
 }
 
+.dashboard-container.embedded {
+  background: transparent;
+  min-height: auto;
+  padding: 0;
+}
+
+.dashboard-container.embedded .live-dashboard-container h1 {
+  color: #2C3E50;
+}
+
 /* Inner Dashboard */
 .live-dashboard-container {
   width: 100%;
@@ -58,6 +68,17 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
+}
+
+.empty-state {
+  margin-top: 20px;
+  text-align: center;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.dashboard-container.embedded .empty-state {
+  color: #2C3E50;
 }
 
 /* Match Card */

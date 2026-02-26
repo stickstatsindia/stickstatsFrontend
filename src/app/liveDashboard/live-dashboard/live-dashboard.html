@@ -1,6 +1,6 @@
-<div class="dashboard-container">
+<div class="dashboard-container" [class.embedded]="embedded">
   <div class="live-dashboard-container">
-    <h1>🏑 Matches Dashboard</h1>
+    <h1>{{ dashboardTitle }}</h1>
 
     <div class="navbar">
       <button (click)="selectTab('Live')" [class.active]="selectedTab === 'Live'">Live</button>
@@ -15,30 +15,14 @@
           <p *ngIf="selectedTab !== 'Upcoming'">
             Score: {{ match.team1Score }} - {{ match.team2Score }}
           </p>
-          <!-- <p *ngIf="selectedTab === 'Live' && timers[match.match_id]">
-            ⏱ Timer: 
-            {{ format(timers[match.match_id].minutes) }}:{{ format(timers[match.match_id].seconds) }}
-          </p> -->
-
           <p>Time: {{ match.matchTime }} | Venue: {{ match.venue }}</p>
           <p>Status: <strong [ngClass]="match.status.toLowerCase()">{{ match.status }}</strong></p>
         </div>
       </ng-container>
     </div>
-  </div>
 
-  <!-- 🔽 Modal Popup -->
-<!-- Match Info Modal -->
-<!-- <div class="modal-backdrop" *ngIf="selectedMatch" (click)="closeModal()">
-  <div class="modal" (click)="$event.stopPropagation()">
-    <h2>{{ selectedMatch.home_team_name }} vs {{ selectedMatch.away_team_name }}</h2>
-    <p><strong>Date:</strong> {{ selectedMatch.match_date }}</p>
-    <p><strong>Time:</strong> {{ selectedMatch.match_time }}</p>
-    <p><strong>Venue:</strong> {{ selectedMatch.venue }}</p>
-    <p><strong>Score:</strong> {{ selectedMatch.home_score }} - {{ selectedMatch.away_score }}</p>
-    <p><strong>Status:</strong> {{ selectedMatch.status }}</p>
-    <button (click)="closeModal()">Close</button>
+    <p class="empty-state" *ngIf="visibleMatches.length === 0">
+      No {{ selectedTab.toLowerCase() }} matches found.
+    </p>
   </div>
-</div> -->
-
 </div>

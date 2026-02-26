@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MembersService } from '../../service/members/members-service';
@@ -13,9 +13,10 @@ import { catchError, map } from 'rxjs/operators';
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, OnChanges {
 
   @Input() data: any;
+  private lastLoadedKey = '';
 
   selectedPlayer: { team: 'home' | 'away'; name: string } | null = null;
 
@@ -26,12 +27,28 @@ export class PreviewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadPlayers();
+    this.tryLoadPlayers();
   }
 
-  loadPlayers() {
-    const homeId = this.data.teams.home.id;
-    const awayId = this.data.teams.away.id;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['data']) return;
+    this.tryLoadPlayers();
+  }
+
+  private tryLoadPlayers(): void {
+    const homeId = this.resolveTeamId(this.data?.teams?.home);
+    const awayId = this.resolveTeamId(this.data?.teams?.away);
+    if (!homeId || !awayId) return;
+
+    const nextKey = `${homeId}::${awayId}`;
+    if (nextKey === this.lastLoadedKey) return;
+    this.lastLoadedKey = nextKey;
+
+    this.loadPlayers(homeId, awayId);
+  }
+
+  loadPlayers(homeId: string, awayId: string) {
+    if (!this.data?.teams?.home || !this.data?.teams?.away) return;
 
     this.membersService.getMembers(homeId).subscribe(res => {
       const players = this.normalizePlayers(res);
@@ -41,6 +58,9 @@ export class PreviewComponent implements OnInit {
       this.data.teams.home.staff = {
         headCoach: this.resolveHeadCoachName(res, homeId)
       };
+    }, () => {
+      this.data.teams.home.players = [];
+      this.data.teams.home.staff = { headCoach: this.resolveHeadCoachName(null, homeId) };
     });
 
     this.membersService.getMembers(awayId).subscribe(res => {
@@ -51,6 +71,9 @@ export class PreviewComponent implements OnInit {
       this.data.teams.away.staff = {
         headCoach: this.resolveHeadCoachName(res, awayId)
       };
+    }, () => {
+      this.data.teams.away.players = [];
+      this.data.teams.away.staff = { headCoach: this.resolveHeadCoachName(null, awayId) };
     });
   }
 
@@ -140,5 +163,9 @@ export class PreviewComponent implements OnInit {
       return localStorage.getItem(`team_staff_head_coach_${teamId}`) || 'Not provided';
     }
     return 'Not provided';
+  }
+
+  private resolveTeamId(team: any): string {
+    return String(team?.id || team?.team_id || team?._id || '').trim();
   }
 }

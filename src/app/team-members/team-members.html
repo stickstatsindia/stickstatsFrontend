@@ -1,6 +1,6 @@
 
 
-<div class="members-header">
+<div class="members-header" *ngIf="!readOnly">
   <h1>Members of Team</h1>
   <div class="header-actions">
     <button class="add-player-btn" (click)="onAddPlayer()">+ Add Player</button>
@@ -10,19 +10,19 @@
   </div>
 </div>
 
-<div class="lock-message" *ngIf="teamHasStartedMatch">
+<div class="lock-message" *ngIf="!readOnly && teamHasStartedMatch">
   Remove player is locked because this team has already started a match. Adding players is still allowed.
 </div>
 
-<div class="coach-summary" *ngIf="headCoachName">
+<div class="coach-summary" *ngIf="!readOnly && headCoachName">
   <strong>Head Coach:</strong> {{ headCoachName }}
 </div>
 
-<div class="error-message" *ngIf="coachError">
+<div class="error-message" *ngIf="!readOnly && coachError">
   {{ coachError }}
 </div>
 
-<div class="coach-form" *ngIf="showHeadCoachForm">
+<div class="coach-form" *ngIf="!readOnly && showHeadCoachForm">
   <label for="headCoachName">Head Coach Name</label>
   <input
     id="headCoachName"
@@ -52,7 +52,7 @@
   <div class="member-card" *ngFor="let member of teamMembers" (click)="onMemberClick(member)" style="cursor: pointer;">
     <button
       class="remove-player-btn"
-      *ngIf="canRemovePlayers"
+      *ngIf="!readOnly && canRemovePlayers"
       (click)="onRemoveMember($event, member)"
       aria-label="Remove player">
       Remove
@@ -69,6 +69,6 @@
 
 <!-- ℹ️ No members message (only if API success but no members) -->
 <div class="no-members" *ngIf="!isLoading && !error && teamMembers.length === 0">
-  <p>No team members found. Add players to your team.</p>
-  <button class="add-player-btn" (click)="onAddPlayer()">ADD PLAYER</button>
+  <p>{{ readOnly ? 'No team members found.' : 'No team members found. Add players to your team.' }}</p>
+  <button *ngIf="!readOnly" class="add-player-btn" (click)="onAddPlayer()">ADD PLAYER</button>
 </div>

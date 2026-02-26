@@ -212,6 +212,10 @@
   margin-top: 32px;
 }
 
+.tab-content.hidden {
+  display: none;
+}
+
 /* =========================
    Match Cards
 ========================= */
@@ -290,6 +294,7 @@
   padding: 12px 8px;
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.2s ease;
+  cursor: pointer;
 }
 
 .team-row:hover {
@@ -332,6 +337,12 @@
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.team-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 10px;
 }
 
 /* =========================

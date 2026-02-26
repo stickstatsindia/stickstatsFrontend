@@ -91,6 +91,7 @@ export class Result implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.matchId = params.get('matchId')!;
+      this.selectedTab = 0;
       console.log('🎯 Match ID from URL:', this.matchId);
 
       // Fetch the initial match data from the API
@@ -295,6 +296,7 @@ export class Result implements OnInit, OnDestroy {
         };
 
         this.matchData = mappedData;
+        this.selectedTab = 0;
 
         // Compute stats based on initial events
         this.calculateBoxScoreStats(this.matchData);
@@ -322,3 +324,4 @@ export class Result implements OnInit, OnDestroy {
     }
   }
 }
+

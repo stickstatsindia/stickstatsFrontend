@@ -3,6 +3,20 @@
   background: #f5f6fa;
   padding: 40px 0;
 }
+
+.points-table-outer.embedded {
+  min-height: auto;
+  background: transparent;
+  padding: 0;
+}
+
+.points-table-outer.embedded .points-table-container {
+  width: 100%;
+  max-width: none;
+  padding: 1rem;
+  box-shadow: none;
+  border: 1px solid #eef2f7;
+}
 .points-table-container {
   width: 98vw;
   max-width: 1200px;
