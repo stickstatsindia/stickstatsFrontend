@@ -56,7 +56,10 @@ interface PlayerStats {
 })
 export class PlayerProfileComponent implements OnInit {
 
-  user!: PlayerUser;
+  user: PlayerUser = {
+    user_id: '',
+    full_name: ''
+  };
 
   profile = {
     name: '',

@@ -60,4 +60,14 @@ export class Navbar implements OnInit, OnDestroy {
     this.closeMenu();
     this.router.navigate(['/']);
   }
+
+  onMyStats(): void {
+    const userId = this.authService.getUserId();
+    this.closeMenu();
+    if (userId) {
+      this.router.navigate(['/player-profile', userId]);
+      return;
+    }
+    this.router.navigate(['/profile-form']);
+  }
 }

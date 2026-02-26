@@ -103,10 +103,10 @@
     <app-awards></app-awards>
     </div>
     <div *ngIf="selectedTab === 'MATCHES'">
-    <app-player-matches [userId]="user.user_id"></app-player-matches>
+    <app-player-matches [userId]="user.user_id || ''"></app-player-matches>
     </div>
      <div *ngIf="selectedTab === 'TEAMS'">
-    <app-player-teams [userId]="user.user_id"></app-player-teams>
+    <app-player-teams [userId]="user.user_id || ''"></app-player-teams>
     </div>
   </div>
 </div>
