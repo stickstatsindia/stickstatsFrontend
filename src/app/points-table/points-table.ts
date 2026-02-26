@@ -140,32 +140,18 @@ export class PointsTable implements OnInit, OnChanges {
           this.loadPointsTable();
           return;
         }
-
-        this.standingsByPool = pools.map((pool: any) => {
-          const rows = (Array.isArray(pool?.teams) ? pool.teams : []).map((t: any, idx: number) => ({
-            position: Number(t?.position) || idx + 1,
-            teamName: (t?.team_name || t?.teamName || '').toString(),
-            played: Number(t?.played) || 0,
-            won: Number(t?.won) || 0,
-            draw: Number(t?.draw) || 0,
-            lost: Number(t?.lost) || 0,
-            scoredFor: Number(t?.scored_for) || 0,
-            scoredAgainst: Number(t?.scored_against) || 0,
-            goalDiff: Number(t?.goal_diff) || 0,
-            points: (Number(t?.won) || 0) * 2 + (Number(t?.draw) || 0),
-            results: Array.isArray(t?.results) ? t.results.map((r: any) => String(r)) : []
-          })) as TeamStanding[];
-
-          rows.sort((a, b) => this.sortRows(a, b));
-          rows.forEach((row: TeamStanding, idx: number) => (row.position = idx + 1));
-
-          return {
-            poolName: (pool?.pool_name || pool?.name || 'Pool').toString(),
-            rows
-          };
-        });
-
-        this.loading = false;
+        // Use backend pools for team grouping, but always recompute standings
+        // from match data so PS-aware logic stays correct.
+        this.pools = pools.map((pool: any) => ({
+          name: (pool?.pool_name || pool?.name || 'Pool').toString(),
+          teams: Array.isArray(pool?.teams)
+            ? pool.teams.map((team: any) => ({
+                team_id: (team?.team_id || team?._id || '').toString(),
+                team_name: (team?.team_name || team?.teamName || team?.name || '').toString()
+              }))
+            : []
+        }));
+        this.loadMatchesForTournament();
       },
       error: () => {
         this.loadPointsTable();
@@ -250,11 +236,15 @@ export class PointsTable implements OnInit, OnChanges {
         continue;
       }
 
-      const homeScore = this.toNumber(match?.home_score ?? match?.team1_score ?? match?.homeScore ?? match?.team1Score);
-      const awayScore = this.toNumber(match?.away_score ?? match?.team2_score ?? match?.awayScore ?? match?.team2Score);
-      if (homeScore === null || awayScore === null) {
+      const baseHomeScore = this.toNumber(match?.home_score ?? match?.team1_score ?? match?.homeScore ?? match?.team1Score);
+      const baseAwayScore = this.toNumber(match?.away_score ?? match?.team2_score ?? match?.awayScore ?? match?.team2Score);
+      if (baseHomeScore === null || baseAwayScore === null) {
         continue;
       }
+
+      const finalScore = this.resolveFinalMatchScore(match, homeName, awayName, baseHomeScore, baseAwayScore);
+      const homeScore = finalScore.home;
+      const awayScore = finalScore.away;
 
       const poolStandings = standingsMap.get(homePool);
       if (!poolStandings) continue;
@@ -269,7 +259,7 @@ export class PointsTable implements OnInit, OnChanges {
       awayStanding.scoredFor += awayScore;
       awayStanding.scoredAgainst += homeScore;
 
-      const matchOutcome = this.resolveMatchOutcome(match, homeName, awayName, homeScore, awayScore);
+      const matchOutcome = this.resolveMatchOutcome(homeScore, awayScore);
 
       if (matchOutcome === 'home') {
         homeStanding.won += 1;
@@ -379,7 +369,22 @@ export class PointsTable implements OnInit, OnChanges {
     if (status.includes('upcoming') || status.includes('scheduled') || status.includes('pending') || status.includes('cancel')) {
       return false;
     }
-    if (status.includes('live') || status.includes('progress')) {
+    if (
+      status.includes('finish') ||
+      status.includes('complete') ||
+      status.includes('ended') ||
+      status.includes('full time') ||
+      status === 'ft'
+    ) {
+      return true;
+    }
+    if (
+      status.includes('live') ||
+      status.includes('progress') ||
+      status.includes('penalty') ||
+      status.includes('shootout') ||
+      status.includes('tie')
+    ) {
       return false;
     }
     const homeScore = this.toNumber(match?.home_score ?? match?.team1_score ?? match?.homeScore ?? match?.team1Score);
@@ -400,20 +405,86 @@ export class PointsTable implements OnInit, OnChanges {
     return true;
   }
 
-  private resolveMatchOutcome(
+  private resolveMatchOutcome(homeScore: number, awayScore: number): 'home' | 'away' | 'draw' {
+    if (homeScore > awayScore) return 'home';
+    if (homeScore < awayScore) return 'away';
+    return 'draw';
+  }
+
+  private resolveFinalMatchScore(
     match: any,
     homeName: string,
     awayName: string,
-    homeScore: number,
-    awayScore: number
-  ): 'home' | 'away' | 'draw' {
+    baseHomeScore: number,
+    baseAwayScore: number
+  ): { home: number; away: number } {
+    const quarterTotals = this.readQuarterTotals(match);
     const shootout = this.readPenaltyShootoutScore(match, homeName, awayName);
-    const homeFinal = homeScore + (shootout?.home ?? 0);
-    const awayFinal = awayScore + (shootout?.away ?? 0);
 
-    if (homeFinal > awayFinal) return 'home';
-    if (homeFinal < awayFinal) return 'away';
-    return 'draw';
+    if (quarterTotals && shootout) {
+      return {
+        home: quarterTotals.home + shootout.home,
+        away: quarterTotals.away + shootout.away
+      };
+    }
+
+    if (quarterTotals) {
+      return {
+        home: quarterTotals.home,
+        away: quarterTotals.away
+      };
+    }
+
+    if (shootout) {
+      // Fallback when quarter totals are unavailable.
+      return {
+        home: baseHomeScore + shootout.home,
+        away: baseAwayScore + shootout.away
+      };
+    }
+
+    return {
+      home: baseHomeScore,
+      away: baseAwayScore
+    };
+  }
+
+  private readQuarterTotals(match: any): { home: number; away: number } | null {
+    const quarterObj = match?.quarter_scores || match?.quarterScores;
+    const homeArr =
+      quarterObj?.home ||
+      match?.team1_quarter_scores ||
+      match?.team1QuarterScores;
+    const awayArr =
+      quarterObj?.away ||
+      match?.team2_quarter_scores ||
+      match?.team2QuarterScores;
+
+    if (Array.isArray(homeArr) && Array.isArray(awayArr)) {
+      const home = [0, 1, 2, 3].reduce((sum, i) => sum + (Number(homeArr[i] ?? 0) || 0), 0);
+      const away = [0, 1, 2, 3].reduce((sum, i) => sum + (Number(awayArr[i] ?? 0) || 0), 0);
+      return { home, away };
+    }
+
+    const homeFlat = [
+      this.toNumber(match?.team1_q1 ?? match?.team1Q1 ?? match?.q1_home ?? match?.q1Home),
+      this.toNumber(match?.team1_q2 ?? match?.team1Q2 ?? match?.q2_home ?? match?.q2Home),
+      this.toNumber(match?.team1_q3 ?? match?.team1Q3 ?? match?.q3_home ?? match?.q3Home),
+      this.toNumber(match?.team1_q4 ?? match?.team1Q4 ?? match?.q4_home ?? match?.q4Home)
+    ];
+    const awayFlat = [
+      this.toNumber(match?.team2_q1 ?? match?.team2Q1 ?? match?.q1_away ?? match?.q1Away),
+      this.toNumber(match?.team2_q2 ?? match?.team2Q2 ?? match?.q2_away ?? match?.q2Away),
+      this.toNumber(match?.team2_q3 ?? match?.team2Q3 ?? match?.q3_away ?? match?.q3Away),
+      this.toNumber(match?.team2_q4 ?? match?.team2Q4 ?? match?.q4_away ?? match?.q4Away)
+    ];
+
+    const hasAny = [...homeFlat, ...awayFlat].some((v) => v !== null);
+    if (!hasAny) return null;
+
+    const home = homeFlat.reduce((sum: number, v: number | null) => sum + (v ?? 0), 0);
+    const away = awayFlat.reduce((sum: number, v: number | null) => sum + (v ?? 0), 0);
+    return { home, away };
   }
 
   private readPenaltyShootoutScore(

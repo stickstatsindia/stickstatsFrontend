@@ -87,6 +87,14 @@ export class Result implements OnInit, OnDestroy {
 
   get outcomeText(): string {
     if (!this.matchData) return '';
+    const status = String(this.matchData.status || '').trim().toLowerCase();
+    const isFinished =
+      status.includes('finish') ||
+      status.includes('complete') ||
+      status.includes('ended') ||
+      status.includes('full time') ||
+      status === 'ft';
+    if (!isFinished) return '';
 
     const homeName = this.matchData.teams?.home?.name || 'Home';
     const awayName = this.matchData.teams?.away?.name || 'Away';
