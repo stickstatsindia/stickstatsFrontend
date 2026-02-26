@@ -31,6 +31,10 @@ interface MatchData {
   eventsAway?: any[];
   home_team_name?: string;
   away_team_name?: string;
+  quarterScores?: {
+    home: number[];
+    away: number[];
+  };
 }
 
 @Component({
@@ -108,6 +112,7 @@ export class Result implements OnInit, OnDestroy {
           this.matchData.score.home = data.team1_score ?? this.matchData.score.home;
           this.matchData.score.away = data.team2_score ?? this.matchData.score.away;
           this.matchData.status = data.status || this.matchData.status;
+          this.syncQuarterScoresFromPayload(this.matchData, data);
           this.cdr.detectChanges();
         }
       });
@@ -127,6 +132,8 @@ export class Result implements OnInit, OnDestroy {
 
         if (this.matchData && data.event) {
           const incomingEvent = this.normalizeEvent(data.event);
+          const isDuplicate = (this.matchData.events || []).some((ev: any) => this.isSameEvent(ev, incomingEvent));
+          if (isDuplicate) return;
 
           // push event
           this.matchData.events = this.matchData.events || [];
@@ -138,6 +145,7 @@ export class Result implements OnInit, OnDestroy {
           // If the backend also sends updated scores in the event payload, update them:
           if (data.team1_score !== undefined) this.matchData.score.home = data.team1_score;
           if (data.team2_score !== undefined) this.matchData.score.away = data.team2_score;
+          this.syncQuarterScoresFromPayload(this.matchData, data);
 
           // Reflect changes in UI
           this.cdr.detectChanges();
@@ -164,6 +172,7 @@ export class Result implements OnInit, OnDestroy {
           };
           this.matchData = newState as MatchData;
           this.calculateBoxScoreStats(this.matchData);
+          this.syncQuarterScoresFromPayload(this.matchData, newState);
           this.cdr.detectChanges();
         }
       });
@@ -252,6 +261,141 @@ export class Result implements OnInit, OnDestroy {
     return data;
   }
 
+  private syncQuarterScoresFromPayload(target: MatchData, payload: any): void {
+    if (!target) return;
+    target.quarterScores = target.quarterScores || { home: [0, 0, 0, 0], away: [0, 0, 0, 0] };
+
+    const fromArrays = this.readQuarterArrays(payload);
+    if (fromArrays) {
+      target.quarterScores = fromArrays;
+      return;
+    }
+
+    const fromFlatKeys = this.readQuarterFlatKeys(payload);
+    if (fromFlatKeys) {
+      target.quarterScores = fromFlatKeys;
+      return;
+    }
+
+    const fromEvents = this.readQuarterScoresFromEvents(target);
+    if (fromEvents) {
+      target.quarterScores = fromEvents;
+      return;
+    }
+
+    // Fallback for live socket event payloads (same flow as total score updates)
+    if (payload?.event && this.isScoringEvent(payload.event)) {
+      const quarterIndex = this.getQuarterIndex(payload.event.quarter);
+      const teamType = this.getEventTeamType(payload.event.team, target);
+      if (quarterIndex !== null && teamType) {
+        target.quarterScores[teamType][quarterIndex] += 1;
+      }
+    }
+  }
+
+  private readQuarterArrays(payload: any): { home: number[]; away: number[] } | null {
+    const homeRaw =
+      payload?.quarter_scores?.home ||
+      payload?.quarterScores?.home ||
+      payload?.team1_quarter_scores ||
+      payload?.team1QuarterScores;
+    const awayRaw =
+      payload?.quarter_scores?.away ||
+      payload?.quarterScores?.away ||
+      payload?.team2_quarter_scores ||
+      payload?.team2QuarterScores;
+
+    if (!Array.isArray(homeRaw) || !Array.isArray(awayRaw)) return null;
+    return {
+      home: [0, 1, 2, 3].map(i => Number(homeRaw[i] ?? 0) || 0),
+      away: [0, 1, 2, 3].map(i => Number(awayRaw[i] ?? 0) || 0)
+    };
+  }
+
+  private readQuarterFlatKeys(payload: any): { home: number[]; away: number[] } | null {
+    const home = [
+      Number(payload?.team1_q1 ?? payload?.team1Q1 ?? payload?.q1_home ?? payload?.q1Home),
+      Number(payload?.team1_q2 ?? payload?.team1Q2 ?? payload?.q2_home ?? payload?.q2Home),
+      Number(payload?.team1_q3 ?? payload?.team1Q3 ?? payload?.q3_home ?? payload?.q3Home),
+      Number(payload?.team1_q4 ?? payload?.team1Q4 ?? payload?.q4_home ?? payload?.q4Home)
+    ];
+    const away = [
+      Number(payload?.team2_q1 ?? payload?.team2Q1 ?? payload?.q1_away ?? payload?.q1Away),
+      Number(payload?.team2_q2 ?? payload?.team2Q2 ?? payload?.q2_away ?? payload?.q2Away),
+      Number(payload?.team2_q3 ?? payload?.team2Q3 ?? payload?.q3_away ?? payload?.q3Away),
+      Number(payload?.team2_q4 ?? payload?.team2Q4 ?? payload?.q4_away ?? payload?.q4Away)
+    ];
+
+    const hasAny = [...home, ...away].some(v => Number.isFinite(v));
+    if (!hasAny) return null;
+
+    return {
+      home: home.map(v => (Number.isFinite(v) ? v : 0)),
+      away: away.map(v => (Number.isFinite(v) ? v : 0))
+    };
+  }
+
+  private readQuarterScoresFromEvents(data: MatchData): { home: number[]; away: number[] } | null {
+    const events = Array.isArray(data?.events) ? data.events : [];
+    if (!events.length) return null;
+
+    const home = [0, 0, 0, 0];
+    const away = [0, 0, 0, 0];
+
+    for (const ev of events) {
+      if (!this.isScoringEvent(ev)) continue;
+      const qIdx = this.getQuarterIndex(ev?.quarter);
+      const team = this.getEventTeamType(ev?.team, data);
+      if (qIdx === null || !team) continue;
+      if (team === 'home') home[qIdx] += 1;
+      if (team === 'away') away[qIdx] += 1;
+    }
+
+    return { home, away };
+  }
+
+  private getQuarterIndex(quarter: any): number | null {
+    const q = String(quarter || '').trim().toLowerCase();
+    if (!q) return null;
+    if (q === 'q1' || q === '1' || q.includes('1st')) return 0;
+    if (q === 'q2' || q === '2' || q.includes('2nd')) return 1;
+    if (q === 'q3' || q === '3' || q.includes('3rd')) return 2;
+    if (q === 'q4' || q === '4' || q.includes('4th')) return 3;
+    return null;
+  }
+
+  private isScoringEvent(event: any): boolean {
+    const t = String(event?.type || '').trim().toLowerCase();
+    if (!t) return false;
+    if (t === 'goal' || t === 'field goal' || t === 'fg') return true;
+    if (t.includes('penalty corner') && (t.includes('scored') || t.includes('goal') || t.includes('converted'))) return true;
+    if (t.includes('penalty stroke') && (t.includes('scored') || t.includes('goal') || t.includes('converted') || t === 'penalty stroke')) return true;
+    return false;
+  }
+
+  private getEventTeamType(team: any, data: MatchData): 'home' | 'away' | null {
+    const e = String(team || '').trim().toLowerCase();
+    const home = String(data?.teams?.home?.name || '').trim().toLowerCase();
+    const away = String(data?.teams?.away?.name || '').trim().toLowerCase();
+    if (!e) return null;
+    if (e === 'home' || e === 'team1' || e === 'team 1' || e === home) return 'home';
+    if (e === 'away' || e === 'team2' || e === 'team 2' || e === away) return 'away';
+    if (home && e.includes(home)) return 'home';
+    if (away && e.includes(away)) return 'away';
+    return null;
+  }
+
+  private isSameEvent(a: any, b: any): boolean {
+    const norm = (v: any) => String(v ?? '').trim().toLowerCase();
+    return (
+      norm(a?.time) === norm(b?.time) &&
+      norm(a?.quarter) === norm(b?.quarter) &&
+      norm(a?.team) === norm(b?.team) &&
+      norm(a?.type) === norm(b?.type) &&
+      norm(a?.player) === norm(b?.player)
+    );
+  }
+
   /**
    * Fetches the initial match data from the backend API.
    */
@@ -292,11 +436,13 @@ export class Result implements OnInit, OnDestroy {
             }
           },
           home_team_name: data.team1_name,
-          away_team_name: data.team2_name
+          away_team_name: data.team2_name,
+          quarterScores: { home: [0, 0, 0, 0], away: [0, 0, 0, 0] }
         };
 
         this.matchData = mappedData;
         this.selectedTab = 0;
+        this.syncQuarterScoresFromPayload(this.matchData, data);
 
         // Compute stats based on initial events
         this.calculateBoxScoreStats(this.matchData);

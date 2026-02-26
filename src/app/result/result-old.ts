@@ -31,6 +31,10 @@ interface MatchData {
   eventsAway?: any[];
   home_team_name?: string;
   away_team_name?: string;
+  quarterScores?: {
+    home: number[];
+    away: number[];
+  };
 }
 
 @Component({
