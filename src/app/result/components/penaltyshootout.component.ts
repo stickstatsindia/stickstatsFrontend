@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,15 +8,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './penaltyshootout.component.html',
   styleUrls: ['./penaltyshootout.component.css']
 })
-export class PenaltyShootoutComponent implements OnChanges {
+export class PenaltyShootoutComponent {
   @Input() data: any;
-  homeShootoutScore = 0;
-  awayShootoutScore = 0;
+  
+  get homeShootoutScore(): number {
+    const shots = this.data?.penaltyShootout?.home;
+    if (!Array.isArray(shots)) return 0;
+    return shots.filter((s: any) => !!s?.scored).length;
+  }
 
-  ngOnChanges() {
-    if (this.data && this.data.penaltyShootout) {
-      this.homeShootoutScore = this.data.penaltyShootout.home.filter((s: any) => s.scored).length;
-      this.awayShootoutScore = this.data.penaltyShootout.away.filter((s: any) => s.scored).length;
-    }
+  get awayShootoutScore(): number {
+    const shots = this.data?.penaltyShootout?.away;
+    if (!Array.isArray(shots)) return 0;
+    return shots.filter((s: any) => !!s?.scored).length;
   }
 }

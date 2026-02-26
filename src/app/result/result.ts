@@ -108,11 +108,13 @@ export class Result implements OnInit, OnDestroy {
 
       // Single listener for score updates
       this.socket.on("scoreUpdated", (data) => {
-        if (data && data.match_id === this.matchId && this.matchData) {
+        const socketMatchId = data?.match_id || data?.matchId;
+        if (data && socketMatchId === this.matchId && this.matchData) {
           this.matchData.score.home = data.team1_score ?? this.matchData.score.home;
           this.matchData.score.away = data.team2_score ?? this.matchData.score.away;
           this.matchData.status = data.status || this.matchData.status;
           this.syncQuarterScoresFromPayload(this.matchData, data);
+          this.syncPenaltyShootoutFromPayload(this.matchData, data);
           this.cdr.detectChanges();
         }
       });
@@ -130,8 +132,22 @@ export class Result implements OnInit, OnDestroy {
         const socketMatchId = data?.match_id || data?.matchId;
         if (!data || socketMatchId !== this.matchId) return;
 
-        if (this.matchData && data.event) {
-          const incomingEvent = this.normalizeEvent(data.event);
+        if (this.matchData) {
+          const rawEvent =
+            data?.event ||
+            data?.match_event ||
+            data?.matchEvent ||
+            (Array.isArray(data?.match_events) ? data.match_events[data.match_events.length - 1] : null) ||
+            (Array.isArray(data?.matchEvents) ? data.matchEvents[data.matchEvents.length - 1] : null);
+
+          if (!rawEvent) {
+            this.syncQuarterScoresFromPayload(this.matchData, data);
+            this.syncPenaltyShootoutFromPayload(this.matchData, data);
+            this.cdr.detectChanges();
+            return;
+          }
+
+          const incomingEvent = this.normalizeEvent(rawEvent);
           const isDuplicate = (this.matchData.events || []).some((ev: any) => this.isSameEvent(ev, incomingEvent));
           if (isDuplicate) return;
 
@@ -146,6 +162,7 @@ export class Result implements OnInit, OnDestroy {
           if (data.team1_score !== undefined) this.matchData.score.home = data.team1_score;
           if (data.team2_score !== undefined) this.matchData.score.away = data.team2_score;
           this.syncQuarterScoresFromPayload(this.matchData, data);
+          this.syncPenaltyShootoutFromPayload(this.matchData, data);
 
           // Reflect changes in UI
           this.cdr.detectChanges();
@@ -154,8 +171,10 @@ export class Result implements OnInit, OnDestroy {
 
       // Optional: listeners for other events (quarterChanged, matchStatusChanged, matchStateUpdated)
       this.socket.on("matchStatusChanged", (data) => {
-        if (data && data.match_id === this.matchId && this.matchData) {
+        const socketMatchId = data?.match_id || data?.matchId;
+        if (data && socketMatchId === this.matchId && this.matchData) {
           this.matchData.status = data.status;
+          this.syncPenaltyShootoutFromPayload(this.matchData, data);
           this.cdr.detectChanges();
         }
       });
@@ -173,6 +192,7 @@ export class Result implements OnInit, OnDestroy {
           this.matchData = newState as MatchData;
           this.calculateBoxScoreStats(this.matchData);
           this.syncQuarterScoresFromPayload(this.matchData, newState);
+          this.syncPenaltyShootoutFromPayload(this.matchData, newState);
           this.cdr.detectChanges();
         }
       });
@@ -354,6 +374,55 @@ export class Result implements OnInit, OnDestroy {
     return { home, away };
   }
 
+  private syncPenaltyShootoutFromPayload(target: MatchData, payload: any): void {
+    if (!target) return;
+
+    const payloadShootout = payload?.penaltyShootout || payload?.penalty_shootout;
+    if (payloadShootout) {
+      const homeAttempts = Array.isArray(payloadShootout?.home) ? payloadShootout.home : [];
+      const awayAttempts = Array.isArray(payloadShootout?.away) ? payloadShootout.away : [];
+      target.penaltyShootout = {
+        home: homeAttempts,
+        away: awayAttempts,
+        homeScore: Number(payloadShootout?.homeScore) || homeAttempts.filter((s: any) => !!s?.scored).length,
+        awayScore: Number(payloadShootout?.awayScore) || awayAttempts.filter((s: any) => !!s?.scored).length
+      };
+      return;
+    }
+
+    const status = String(target.status || payload?.status || '').toLowerCase();
+    const isPenaltyPhase = status.includes('penalty');
+    const events = Array.isArray(target.events) ? target.events : [];
+    const psEvents = events.filter((ev: any) =>
+      String(ev?.type || '').toLowerCase().includes('penalty shootout')
+    );
+
+    if (!psEvents.length && !isPenaltyPhase) return;
+
+    const home: any[] = [];
+    const away: any[] = [];
+
+    for (const ev of psEvents) {
+      const teamType = this.getEventTeamType(ev?.team, target);
+      if (!teamType) continue;
+      const typeText = String(ev?.type || '').toLowerCase();
+      const scored = typeText.includes('goal') || typeText.includes('scored');
+      const shot = {
+        player: ev?.player || ev?.player_name || 'Unknown',
+        scored
+      };
+      if (teamType === 'home') home.push(shot);
+      else away.push(shot);
+    }
+
+    target.penaltyShootout = {
+      home,
+      away,
+      homeScore: home.filter((s: any) => !!s?.scored).length,
+      awayScore: away.filter((s: any) => !!s?.scored).length
+    };
+  }
+
   private getQuarterIndex(quarter: any): number | null {
     const q = String(quarter || '').trim().toLowerCase();
     if (!q) return null;
@@ -443,6 +512,7 @@ export class Result implements OnInit, OnDestroy {
         this.matchData = mappedData;
         this.selectedTab = 0;
         this.syncQuarterScoresFromPayload(this.matchData, data);
+        this.syncPenaltyShootoutFromPayload(this.matchData, data);
 
         // Compute stats based on initial events
         this.calculateBoxScoreStats(this.matchData);

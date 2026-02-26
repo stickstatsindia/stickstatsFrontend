@@ -384,6 +384,7 @@ export class ScorerComponent {
   enablePenaltyShootout(): void {
     this.matchTied = true;
     this.penaltyShootoutEnabled = true;
+    this.updateMatchStatus('Penalty Shootout');
     console.log('⚠️ Match is tied. Penalty shootout enabled!');
   }
 
@@ -594,3 +595,4 @@ export class ScorerComponent {
     }
   }
 }
+
