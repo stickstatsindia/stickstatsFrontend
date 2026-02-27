@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { io, Socket } from "socket.io-client";
+import { environment } from '../config/api.config';
 
 // Import child components
 import { PreviewComponent } from './components/preview.component';
@@ -48,7 +49,7 @@ export class Result implements OnInit, OnDestroy {
   matchData: MatchData | null = null;
   matchId!: string;
   private socket!: Socket;
-  private apiUrl = 'http://localhost:3000/api/matches'; // Base URL for our API
+  private apiUrl = `${environment.baseUrl}/api/matches`; // Base URL for our API
   private isMainScoreLocked = false;
   private lockedMainScore: { home: number; away: number } | null = null;
   private isQuarterScoreLocked = false;
@@ -144,7 +145,7 @@ export class Result implements OnInit, OnDestroy {
       this.fetchMatchData(this.matchId);
 
       // Initialize Socket.IO connection
-      this.socket = io("http://localhost:3000");
+      this.socket = io(environment.socketUrl);
       this.socket.emit("joinMatch", this.matchId);
       console.log('🔌 Joined match room:', this.matchId);
 

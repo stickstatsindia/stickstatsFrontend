@@ -17,6 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { io, Socket } from "socket.io-client";
 import { MembersService } from '../service/members/members-service';
 import { MatchService } from '../match.service';
+import { environment } from '../config/api.config';
 
  
 @Component({
@@ -85,7 +86,7 @@ export class ScorerComponent {
   penaltyShootoutPlayer: { player_id: string; player_name: string } | null = null;
   penaltyOutcome = '';
 
-  private readonly matchesApiBase = 'http://localhost:3000/api/matches';
+  private readonly matchesApiBase = `${environment.baseUrl}/api/matches`;
 
   get regularControlsDisabled(): boolean {
     return this.penaltyShootoutEnabled || this.matchFinished;
@@ -99,12 +100,12 @@ export class ScorerComponent {
   constructor(private http: HttpClient, private memberService :MatchService,  private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io(environment.socketUrl);
 
     this.route.paramMap.subscribe(params => {
       this.matchId = params.get('matchId')!; // ✅ dynamic matchId
       this.socket.emit("joinMatch", this.matchId);
-      this.http.get<any>(`http://localhost:3000/api/matchlive/${this.matchId}`)
+      this.http.get<any>(`${environment.baseUrl}/api/matchlive/${this.matchId}`)
         .subscribe(data => {
           this.team1Name = data.team1_name;
           this.team2Name = data.team2_name;
@@ -336,7 +337,7 @@ export class ScorerComponent {
     this.matchEvents.push(event);
 
     // Save to database
-    this.http.post(`http://localhost:3000/api/matches/${this.matchId}/events`, event)
+    this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/events`, event)
       .subscribe({
         next: (updatedMatch) => console.log('✅ Penalty saved:', updatedMatch),
         error: (err) => console.error('❌ Error saving penalty:', err)
@@ -350,7 +351,7 @@ export class ScorerComponent {
       if (this.penaltyShootoutTeam === this.team1Name) this.totalScore.team1++;
       else if (this.penaltyShootoutTeam === this.team2Name) this.totalScore.team2++;
 
-      this.http.post(`http://localhost:3000/api/matches/${this.matchId}/score`, { 
+      this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/score`, { 
         teamName: this.penaltyShootoutTeam 
       }).subscribe({
         next: (updatedMatch) => console.log('Score saved:', updatedMatch),
@@ -375,7 +376,7 @@ export class ScorerComponent {
     this.currentQuarter = newQuarter;
     
     // Save to database
-    this.http.post(`http://localhost:3000/api/matches/${this.matchId}/quarter`, { 
+    this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/quarter`, { 
       currentQuarter: newQuarter 
     }).subscribe({
       next: () => console.log('Quarter updated'),
@@ -391,7 +392,7 @@ export class ScorerComponent {
 
   // 🔧 ADD THIS: Method to broadcast match status changes
   updateMatchStatus(status: string) {
-    this.http.post(`http://localhost:3000/api/matches/${this.matchId}/status`, { 
+    this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/status`, { 
       status: status 
     }).subscribe({
       next: () => {
@@ -467,7 +468,7 @@ export class ScorerComponent {
 
 
   private saveTimerState() {
-    this.http.post(`http://localhost:3000/api/matches/${this.matchId}/timer`, {
+    this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/timer`, {
       totalSeconds: this.totalSeconds,
       isPaused: this.isPaused
     }).subscribe({
@@ -641,7 +642,7 @@ export class ScorerComponent {
  
     this.matchEvents.push(event);
 
-    this.http.post(`http://localhost:3000/api/matches/${this.matchId}/events`, event)
+    this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/events`, event)
     .subscribe({
       next: (updatedMatch) => console.log('✅ Event saved in DB:', updatedMatch),
       error: (err) => console.error('❌ Error saving event:', err)
@@ -653,7 +654,7 @@ export class ScorerComponent {
         if (team === this.team1Name) this.totalScore.team1++;
         else if (team === this.team2Name) this.totalScore.team2++;
 
-      this.http.post(`http://localhost:3000/api/matches/${this.matchId}/score`, { teamName: team })
+      this.http.post(`${environment.baseUrl}/api/matches/${this.matchId}/score`, { teamName: team })
         .subscribe({
           next: (updatedMatch) => console.log('Score saved:', updatedMatch),
           error: (err) => console.error('Error saving score:', err)

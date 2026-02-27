@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../config/api.config';
 
 @Component({
   selector: 'app-player-matches',
@@ -19,7 +20,7 @@ export class PlayerMatches implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<any[]>(`http://localhost:3000/api/player/${this.userId}/matches`)
+      .get<any[]>(`${environment.baseUrl}/api/player/${this.userId}/matches`)
       .subscribe({
         next: data => {
           this.matches = data;

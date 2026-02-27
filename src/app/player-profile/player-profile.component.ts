@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../config/api.config';
 
 import { TournamentService } from '../service/tournament/tournament';
 import { Awards } from '../awards/awards';
@@ -120,7 +121,7 @@ export class PlayerProfileComponent implements OnInit {
   }
 
   getPlayerStats(userId: string) {
-    return this.http.get<any>(`http://localhost:3000/api/player-stats/${userId}`);
+    return this.http.get<any>(`${environment.baseUrl}/api/player-stats/${userId}`);
   }
 
   fetchUserProfile(userId: string): void {
@@ -205,7 +206,7 @@ export class PlayerProfileComponent implements OnInit {
   }
 
   private loadPenaltyShootoutMissedFromMatches(userId: string): void {
-    this.http.get<any[]>(`http://localhost:3000/api/matches`).subscribe({
+    this.http.get<any[]>(`${environment.baseUrl}/api/matches`).subscribe({
       next: (matches) => {
         const list = Array.isArray(matches) ? matches : [];
         let missed = 0;

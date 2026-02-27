@@ -7,6 +7,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Profile } from '../service/profile/profile';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../config/api.config';
 
 @Component({
   selector: 'app-profile',
@@ -60,7 +61,7 @@ export class ProfileForm implements OnInit {
 
     if (!user_id) return;
 
-    this.http.get<any>(`http://localhost:3000/api/users/${user_id}`)
+    this.http.get<any>(`${environment.baseUrl}/api/users/${user_id}`)
       .subscribe({
         next: (data) => {
           // Pre-fill only fields that have real values
@@ -103,7 +104,7 @@ export class ProfileForm implements OnInit {
     };
 
     // Use PUT to update the minimal user created during OTP
-    this.http.put(`http://localhost:3000/api/users/${user_id}`, payload)
+    this.http.put(`${environment.baseUrl}/api/users/${user_id}`, payload)
       .subscribe({
         next: (response) => {
           console.log('Profile updated successfully:', response);

@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TournamentService } from '../service/tournament/tournament';
 import { PointsTable } from '../points-table/points-table';
 import { LiveDashboardComponent } from '../liveDashboard/live-dashboard/live-dashboard';
+import { environment } from '../config/api.config';
 
 interface Tournament {
   _id: string;
@@ -185,7 +186,7 @@ export class TeamManagementComponent implements OnInit {
   // Add these methods
   fetchTournamentMatches(): void {
     this.loadingMatches = true;
-    this.http.get<MatchDisplay[]>(`http://localhost:3000/api/tournament/${this.tournamentId}/matches1`)
+    this.http.get<MatchDisplay[]>(`${environment.baseUrl}/api/tournament/${this.tournamentId}/matches1`)
       .subscribe({
         next: (matches) => {
           this.matches = matches;
@@ -201,7 +202,7 @@ export class TeamManagementComponent implements OnInit {
 
   fetchTournamentTeams(): void {
     this.loadingTeams = true;
-    this.http.get<TeamInfo[]>(`http://localhost:3000/api/tournament/${this.tournamentId}/teams`)
+    this.http.get<TeamInfo[]>(`${environment.baseUrl}/api/tournament/${this.tournamentId}/teams`)
       .subscribe({
         next: (teams) => {
           this.teams = teams;
@@ -219,7 +220,7 @@ export class TeamManagementComponent implements OnInit {
     this.loadingStats = true;
 
     this.http
-      .get<TournamentStats>(`http://localhost:3000/api/tournament/${this.tournamentId}/stats`)
+      .get<TournamentStats>(`${environment.baseUrl}/api/tournament/${this.tournamentId}/stats`)
       .subscribe({
         next: (stats) => {
           console.log('Tournament stats received:', stats);

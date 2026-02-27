@@ -6,6 +6,7 @@ import { MatchService } from '../match.service';
 import { ScheduleService } from '../service/schedule.service';
 import { TournamentService } from '../service/tournament/tournament';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../config/api.config';
 
 interface Match {
   matchId?: string;
@@ -93,7 +94,7 @@ export class Matches implements OnInit, OnDestroy {
   private initializeSocket() {
     if (this.socket) return;
 
-    this.socket = io('http://localhost:3000', {
+    this.socket = io(environment.socketUrl, {
       transports: ['websocket']
     });
 

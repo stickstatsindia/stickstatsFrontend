@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
 import { io, Socket } from 'socket.io-client';
+import { environment } from './config/api.config';
 
 // Frontend-friendly interface (camelCase)
 export interface Match {
@@ -35,12 +36,12 @@ export interface Match {
   providedIn: 'root'
 })
 export class MatchService {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  private readonly baseUrl = `${environment.baseUrl}/api`;
   private socket!: Socket;   // ✅ socket.io client
 
   constructor(private http: HttpClient) {
     // connect once when service is created
-    this.socket = io('http://localhost:3000');
+    this.socket = io(environment.socketUrl);
 
     // listen for updates from backend
     this.socket.on('matchUpdated', (data: any) => {

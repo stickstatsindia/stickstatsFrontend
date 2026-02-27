@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../config/api.config';
 
 @Component({
   selector: 'app-player-teams',
@@ -41,7 +42,7 @@ export class PlayerTeams {
     this.teams = [];
 
     this.http
-      .get<any[]>(`http://localhost:3000/api/player/${this._userId}/teams`)
+      .get<any[]>(`${environment.baseUrl}/api/player/${this._userId}/teams`)
       .subscribe({
         next: (data) => {
           this.teams = data || [];

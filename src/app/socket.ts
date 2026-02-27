@@ -2,13 +2,14 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { environment } from './config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:3000'); // change to your backend URL
+    this.socket = io(environment.socketUrl);
   }
 
   emit(eventName: string, data: any) {

@@ -5,6 +5,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth/auth.service';
+import { environment } from '../config/api.config';
 
 @Component({
   selector: 'app-phone-auth',
@@ -30,7 +31,7 @@ export class AuthenticationComponent implements OnInit {
     (window as any).phoneEmailListener = (userObj: any) => {
       const { user_json_url } = userObj;
 
-      this.http.post<any>('http://localhost:3000/auth/phone-email', { user_json_url })
+      this.http.post<any>(`${environment.baseUrl}/auth/phone-email`, { user_json_url })
         .subscribe({
           next: (res) => {
             console.log('Response from backend:', res);         // 👈 Check this

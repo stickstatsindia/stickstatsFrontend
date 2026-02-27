@@ -1,10 +1,13 @@
 // src/app/config/api.config.ts
-
-import { get } from "http";
+const runtimeBaseUrl =
+  (typeof window !== 'undefined' && (window as any).__APP_CONFIG__?.baseUrl) ||
+  'http://localhost:3000';
+const normalizedBaseUrl = runtimeBaseUrl.replace(/\/+$/, '');
 
 export const environment = {
   port: '3000',
-  baseUrl: 'http://localhost:3000',
+  baseUrl: normalizedBaseUrl,
+  socketUrl: normalizedBaseUrl,
   endpoints: {
     getTeams: '/api/teams',
     addTeam: '/api/tournament/:tournament_id/team',
