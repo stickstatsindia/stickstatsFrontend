@@ -45,6 +45,7 @@ export const routes: Routes = [
   { path: 'addnew-team', component:AddTeamComponent },
   { path: 'rounds-details', component:RoundsDetailsComponent },
   { path: 'point-table', component:PointsTable },
+  { path: 'point-table/:tournament_id', component:PointsTable },
   { path: 'add-group' , component:AddGroupComponent},
   { path: 'group-list' , component: GroupListComponent},
   { path: 'group-manager', component: GroupListComponent },

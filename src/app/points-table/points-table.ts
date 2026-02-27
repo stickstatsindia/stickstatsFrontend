@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PoolService } from '../service/pool/pool';
 import { ScheduleService } from '../service/schedule.service';
 import { TournamentService } from '../service/tournament/tournament';
-import { timeout } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, finalize, timeout } from 'rxjs/operators';
 
 interface PoolTeam {
   team_id?: string;
@@ -58,7 +59,6 @@ export class PointsTable implements OnInit, OnChanges {
   standingsByPool: PoolStandings[] = [];
   private pools: PoolData[] = [];
   private allMatches: any[] = [];
-  private initialized = false;
   private loadGuardTimer: any = null;
 
   constructor(
@@ -74,37 +74,17 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((params) => {
-      const nextId =
-        (params.get('tournamentId') || params.get('tournament_id') || '').toString().trim();
-      if (!nextId) {
-        if (!this.initialized) {
-          this.resolveTournamentId();
-          if (this.tournamentId) {
-            this.error = null;
-            this.loadPointsTableFromBackend();
-          } else {
-            this.error = 'No tournament selected.';
-          }
-          this.initialized = true;
-        }
-        return;
-      }
-
-      const shouldReload =
-        nextId !== this.tournamentId ||
-        (!this.loading && this.standingsByPool.length === 0 && !this.error);
-      this.tournamentId = nextId;
-      this.initialized = true;
-      if (!shouldReload) return;
-      this.error = null;
-      this.loadPointsTableFromBackend();
-    });
+    this.resolveTournamentId();
+    if (!this.tournamentId) {
+      this.error = 'No tournament selected.';
+      return;
+    }
+    this.loadPointsTableFromBackend();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['tournamentIdInput']) return;
-    const nextId = (this.tournamentIdInput || '').toString().trim();
+    const nextId = this.normalizeTournamentId(this.tournamentIdInput);
     if (!nextId) return;
     if (nextId === this.tournamentId && (this.loading || this.standingsByPool.length > 0)) return;
     this.tournamentId = nextId;
@@ -113,17 +93,43 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   private resolveTournamentId(): void {
-    if (this.tournamentIdInput) {
-      this.tournamentId = this.tournamentIdInput;
+    const inputId = this.normalizeTournamentId(this.tournamentIdInput);
+    if (inputId) {
+      this.tournamentId = inputId;
       return;
     }
-    if (this.tournamentId) return;
+    const current = this.normalizeTournamentId(this.tournamentId);
+    if (current) {
+      this.tournamentId = current;
+      return;
+    }
     const historyState = (typeof history !== 'undefined' ? history.state : null) as { tournamentId?: string } | null;
+    const fromState = this.normalizeTournamentId(historyState?.tournamentId);
+    const fromQuery =
+      this.normalizeTournamentId(this.route.snapshot.queryParamMap.get('tournamentId')) ||
+      this.normalizeTournamentId(this.route.snapshot.queryParamMap.get('tournament_id'));
+    const fromParam =
+      this.normalizeTournamentId(this.route.snapshot.paramMap.get('tournament_id')) ||
+      this.normalizeTournamentId(this.route.snapshot.paramMap.get('id'));
+    const fromStorage =
+      typeof window !== 'undefined' && window.localStorage
+        ? this.normalizeTournamentId(localStorage.getItem('last_tournament_id'))
+        : '';
+
     this.tournamentId =
-      (historyState?.tournamentId || '').toString().trim() ||
-      this.route.snapshot.queryParamMap.get('tournamentId') ||
-      this.route.snapshot.queryParamMap.get('tournament_id') ||
+      fromParam ||
+      fromQuery ||
+      fromState ||
+      fromStorage ||
       '';
+  }
+
+  private normalizeTournamentId(value: any): string {
+    const id = String(value ?? '').trim();
+    if (!id) return '';
+    const lower = id.toLowerCase();
+    if (lower === 'undefined' || lower === 'null') return '';
+    return id;
   }
 
   onFiltersChanged(): void {
@@ -164,31 +170,64 @@ export class PointsTable implements OnInit, OnChanges {
     this.error = null;
 
     this.tournamentService.getTournamentPointsTable(this.tournamentId).pipe(
-      timeout(6000)
+      timeout(6000),
+      catchError((err) => {
+        console.error('Failed to load points table', err);
+        this.error = 'Failed to load points table.';
+        return of(null);
+      }),
+      finalize(() => {
+        this.clearLoadingGuard();
+        this.loading = false;
+      })
     ).subscribe({
       next: (res: any) => {
-        const pools = Array.isArray(res?.pools) ? res.pools : [];
-        if (!pools.length) {
-          this.loadPointsTable();
+        if (!res) {
+          this.standingsByPool = [];
           return;
         }
-        // Use backend pools for team grouping, but always recompute standings
-        // from match data so PS-aware logic stays correct.
-        this.pools = pools.map((pool: any) => ({
-          name: (pool?.pool_name || pool?.name || 'Pool').toString(),
-          teams: Array.isArray(pool?.teams)
-            ? pool.teams.map((team: any) => ({
-                team_id: (team?.team_id || team?._id || '').toString(),
-                team_name: (team?.team_name || team?.teamName || team?.name || '').toString()
-              }))
-            : []
-        }));
-        this.loadMatchesForTournament();
-      },
-      error: () => {
-        this.loadPointsTable();
+        const pools = Array.isArray(res?.pools) ? res.pools : [];
+        const backendStandings = this.mapBackendPoolsToStandings(pools);
+        if (backendStandings.length) {
+          this.standingsByPool = backendStandings.map((pool) => {
+            const rows = [...pool.rows].sort((a, b) => this.sortRows(a, b));
+            rows.forEach((row, idx) => (row.position = idx + 1));
+            return { ...pool, rows };
+          });
+          return;
+        }
+        // No usable rows from backend -> stop loader and show empty state.
+        this.standingsByPool = [];
       }
     });
+  }
+
+  private mapBackendPoolsToStandings(pools: any[]): PoolStandings[] {
+    if (!Array.isArray(pools) || pools.length === 0) return [];
+
+    return pools
+      .map((pool: any) => {
+        const rowsRaw = Array.isArray(pool?.teams) ? pool.teams : [];
+        const rows: TeamStanding[] = rowsRaw.map((team: any, idx: number) => ({
+          position: Number(team?.position ?? idx + 1) || idx + 1,
+          teamName: String(team?.team_name || team?.teamName || team?.name || '').trim(),
+          played: Number(team?.played ?? team?.matches_played ?? 0) || 0,
+          won: Number(team?.won ?? team?.wins ?? 0) || 0,
+          draw: Number(team?.draw ?? team?.draws ?? 0) || 0,
+          lost: Number(team?.lost ?? team?.losses ?? 0) || 0,
+          scoredFor: Number(team?.scored_for ?? team?.scoredFor ?? team?.goals_for ?? 0) || 0,
+          scoredAgainst: Number(team?.scored_against ?? team?.scoredAgainst ?? team?.goals_against ?? 0) || 0,
+          goalDiff: Number(team?.goal_diff ?? team?.goalDiff ?? 0) || 0,
+          points: Number(team?.points ?? team?.pts ?? 0) || 0,
+          results: Array.isArray(team?.results) ? team.results.map((r: any) => String(r)) : []
+        })).filter((row) => !!row.teamName);
+
+        return {
+          poolName: String(pool?.pool_name || pool?.name || 'Pool'),
+          rows
+        };
+      })
+      .filter((pool: PoolStandings) => pool.rows.length > 0);
   }
 
   private loadMatchesForTournament(): void {
