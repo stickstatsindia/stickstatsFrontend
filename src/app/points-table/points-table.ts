@@ -220,7 +220,7 @@ export class PointsTable implements OnInit, OnChanges {
           goalDiff: Number(team?.goal_diff ?? team?.goalDiff ?? 0) || 0,
           points: Number(team?.points ?? team?.pts ?? 0) || 0,
           results: Array.isArray(team?.results) ? team.results.map((r: any) => String(r)) : []
-        })).filter((row) => !!row.teamName);
+        })).filter((row: TeamStanding) => !!row.teamName);
 
         return {
           poolName: String(pool?.pool_name || pool?.name || 'Pool'),
