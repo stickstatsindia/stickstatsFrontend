@@ -146,7 +146,11 @@
 
     <!-- POINTS TABLE TAB (preloaded) -->
     <div class="tab-content" [class.hidden]="selectedTab !== 'POINTS TABLE'">
-      <app-points-table [tournamentIdInput]="tournamentId" [embedded]="true"></app-points-table>
+      <app-points-table
+        *ngIf="tournamentId"
+        [tournamentIdInput]="tournamentId"
+        [embedded]="true">
+      </app-points-table>
     </div>
 
     <!-- MATCH SCHEDULE TAB -->

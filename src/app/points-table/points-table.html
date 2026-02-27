@@ -1,7 +1,7 @@
 <div class="points-table-outer" [class.embedded]="embedded">
   <div class="points-table-container">
     <div class="points-table-content">
-      <div *ngIf="loading && !embedded" class="message">Loading points table...</div>
+      <div *ngIf="loading" class="message">Loading points table...</div>
       <div *ngIf="!loading && error" class="message error">{{ error }}</div>
       <div *ngIf="!loading && !error && standingsByPool.length === 0" class="message">No pool data found for this tournament.</div>
 

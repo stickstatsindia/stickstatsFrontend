@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PoolService } from '../service/pool/pool';
 import { ScheduleService } from '../service/schedule.service';
 import { TournamentService } from '../service/tournament/tournament';
+import { timeout } from 'rxjs/operators';
 
 interface PoolTeam {
   team_id?: string;
@@ -57,6 +58,8 @@ export class PointsTable implements OnInit, OnChanges {
   standingsByPool: PoolStandings[] = [];
   private pools: PoolData[] = [];
   private allMatches: any[] = [];
+  private initialized = false;
+  private loadGuardTimer: any = null;
 
   constructor(
     private router: Router,
@@ -71,18 +74,39 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.resolveTournamentId();
-    if (!this.tournamentId) {
-      this.error = 'No tournament selected.';
-      return;
-    }
-    this.loadPointsTableFromBackend();
+    this.route.queryParamMap.subscribe((params) => {
+      const nextId =
+        (params.get('tournamentId') || params.get('tournament_id') || '').toString().trim();
+      if (!nextId) {
+        if (!this.initialized) {
+          this.resolveTournamentId();
+          if (this.tournamentId) {
+            this.error = null;
+            this.loadPointsTableFromBackend();
+          } else {
+            this.error = 'No tournament selected.';
+          }
+          this.initialized = true;
+        }
+        return;
+      }
+
+      const shouldReload =
+        nextId !== this.tournamentId ||
+        (!this.loading && this.standingsByPool.length === 0 && !this.error);
+      this.tournamentId = nextId;
+      this.initialized = true;
+      if (!shouldReload) return;
+      this.error = null;
+      this.loadPointsTableFromBackend();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['tournamentIdInput']) return;
     const nextId = (this.tournamentIdInput || '').toString().trim();
-    if (!nextId || nextId === this.tournamentId) return;
+    if (!nextId) return;
+    if (nextId === this.tournamentId && (this.loading || this.standingsByPool.length > 0)) return;
     this.tournamentId = nextId;
     this.error = null;
     this.loadPointsTableFromBackend();
@@ -94,7 +118,9 @@ export class PointsTable implements OnInit, OnChanges {
       return;
     }
     if (this.tournamentId) return;
+    const historyState = (typeof history !== 'undefined' ? history.state : null) as { tournamentId?: string } | null;
     this.tournamentId =
+      (historyState?.tournamentId || '').toString().trim() ||
       this.route.snapshot.queryParamMap.get('tournamentId') ||
       this.route.snapshot.queryParamMap.get('tournament_id') ||
       '';
@@ -113,10 +139,13 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   private loadPointsTable(): void {
+    this.startLoadingGuard();
     this.loading = true;
     this.error = null;
 
-    this.poolService.getPoolsByTournamentId(this.tournamentId).subscribe({
+    this.poolService.getPoolsByTournamentId(this.tournamentId).pipe(
+      timeout(6000)
+    ).subscribe({
       next: (poolRes: any) => {
         this.pools = Array.isArray(poolRes?.pools) ? poolRes.pools : [];
         this.loadMatchesForTournament();
@@ -130,10 +159,13 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   private loadPointsTableFromBackend(): void {
+    this.startLoadingGuard();
     this.loading = true;
     this.error = null;
 
-    this.tournamentService.getTournamentPointsTable(this.tournamentId).subscribe({
+    this.tournamentService.getTournamentPointsTable(this.tournamentId).pipe(
+      timeout(6000)
+    ).subscribe({
       next: (res: any) => {
         const pools = Array.isArray(res?.pools) ? res.pools : [];
         if (!pools.length) {
@@ -160,43 +192,76 @@ export class PointsTable implements OnInit, OnChanges {
   }
 
   private loadMatchesForTournament(): void {
-    this.tournamentService.getTournamentById(this.tournamentId).subscribe({
-      next: (t: any) => {
-        const tournamentName = t?.tournament_name || t?.name || '';
-        if (!tournamentName) {
-          this.loadMatchesByTournamentId();
+    // Prefer direct tournamentId-based endpoints for predictable preload.
+    this.loadMatchesByTournamentId();
+  }
+
+  private loadMatchesByTournamentId(): void {
+    this.scheduleService.getMatchesByTournament(this.tournamentId).pipe(
+      timeout(6000)
+    ).subscribe({
+      next: (matches: any[]) => {
+        const list = Array.isArray(matches) ? matches : [];
+        if (list.length > 0) {
+          this.allMatches = list;
+          this.safeRebuildAndComplete();
           return;
         }
-        this.scheduleService.getMatchLivesByTournamentName(tournamentName).subscribe({
-          next: (matches: any[]) => {
-            this.allMatches = Array.isArray(matches) ? matches : [];
-            this.rebuildStandings();
-            this.loading = false;
-          },
-          error: () => {
-            this.loadMatchesByTournamentId();
-          }
-        });
+        this.loadMatchesByTournamentIdLegacy();
       },
-      error: () => {
-        this.loadMatchesByTournamentId();
+      error: (err: any) => {
+        console.error('Failed to load matches', err);
+        this.loadMatchesByTournamentIdLegacy();
       }
     });
   }
 
-  private loadMatchesByTournamentId(): void {
-    this.scheduleService.getMatchesByTournament(this.tournamentId).subscribe({
+  private loadMatchesByTournamentIdLegacy(): void {
+    this.scheduleService.getMatchesByTournamentLegacy(this.tournamentId).pipe(
+      timeout(6000)
+    ).subscribe({
       next: (matches: any[]) => {
         this.allMatches = Array.isArray(matches) ? matches : [];
-        this.rebuildStandings();
-        this.loading = false;
+        this.safeRebuildAndComplete();
       },
       error: (err: any) => {
-        console.error('Failed to load matches', err);
+        console.error('Failed to load legacy matches', err);
+        this.clearLoadingGuard();
         this.loading = false;
         this.error = 'Failed to load match data.';
       }
     });
+  }
+
+  private safeRebuildAndComplete(): void {
+    try {
+      this.rebuildStandings();
+      if (!this.error && !this.standingsByPool.length) {
+        // Let template show "No pool data found..." instead of indefinite loader.
+        this.error = null;
+      }
+    } catch (err) {
+      console.error('Failed to build standings', err);
+      this.error = 'Failed to build points table.';
+    } finally {
+      this.clearLoadingGuard();
+      this.loading = false;
+    }
+  }
+
+  private startLoadingGuard(): void {
+    this.clearLoadingGuard();
+    this.loadGuardTimer = setTimeout(() => {
+      if (!this.loading) return;
+      this.loading = false;
+      this.error = 'Points table request timed out. Please try again.';
+    }, 12000);
+  }
+
+  private clearLoadingGuard(): void {
+    if (!this.loadGuardTimer) return;
+    clearTimeout(this.loadGuardTimer);
+    this.loadGuardTimer = null;
   }
 
   private rebuildStandings(): void {
