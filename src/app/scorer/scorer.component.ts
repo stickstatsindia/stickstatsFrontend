@@ -299,6 +299,16 @@ export class ScorerComponent {
       console.error('No penalty shootout player selected.');
       return;
     }
+
+    if (!this.penaltyShootoutTeam) {
+      console.error('No penalty shootout team selected.');
+      return;
+    }
+
+    if (!this.penaltyOutcome) {
+      console.error('No penalty shootout outcome selected.');
+      return;
+    }
     
     // ✅ Prevent recording penalties if match is finished
     if (this.matchFinished) {
@@ -306,12 +316,20 @@ export class ScorerComponent {
       return;
     }
     
+    const normalizedOutcome = String(this.penaltyOutcome).trim().toLowerCase();
+    const isScored = normalizedOutcome === 'goal' || normalizedOutcome === 'scored';
+    const isMissed = normalizedOutcome === 'missed' || normalizedOutcome === 'miss';
+    if (!isScored && !isMissed) {
+      console.error('Invalid penalty shootout outcome:', this.penaltyOutcome);
+      return;
+    }
+
     const event = {
       time: `${this.displayMinutes}:${this.displaySeconds}`,
       team: this.penaltyShootoutTeam,
       player_id: this.penaltyShootoutPlayer.player_id,
       player_name: this.penaltyShootoutPlayer.player_name,
-      type: 'Penalty Shootout' + " " + (this.penaltyOutcome),
+      type: isScored ? 'Penalty Shootout Scored' : 'Penalty Shootout Missed',
       quarter: this.currentQuarter
     };
     
@@ -328,7 +346,7 @@ export class ScorerComponent {
     this.socket.emit("eventAdded", { matchId: this.matchId, event });
 
     // If penalty was scored, update score
-    if (this.penaltyOutcome === 'goal') {
+    if (isScored) {
       if (this.penaltyShootoutTeam === this.team1Name) this.totalScore.team1++;
       else if (this.penaltyShootoutTeam === this.team2Name) this.totalScore.team2++;
 

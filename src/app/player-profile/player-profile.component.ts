@@ -30,6 +30,7 @@ interface PlayerStats {
   psScored: number;
 
   penaltyShootout: number;
+  penaltyShootoutMissed: number;
 
   redCards: number;
   yellowCards: number;
@@ -82,6 +83,7 @@ export class PlayerProfileComponent implements OnInit {
     psScored: 0,
 
     penaltyShootout: 0,
+    penaltyShootoutMissed: 0,
 
     redCards: 0,
     yellowCards: 0,
@@ -156,6 +158,8 @@ export class PlayerProfileComponent implements OnInit {
     });
 
     this.getPlayerStats(userId).subscribe(stats => {
+      const baseGoalScore = Number(stats.totalGoalScore || 0) || 0;
+      const shootoutGoals = Number(stats.penaltyShootout || 0) || 0;
 
       this.stats = {
         totalMatches: stats.totalMatches || 0,
@@ -169,12 +173,18 @@ export class PlayerProfileComponent implements OnInit {
         psScored: stats.psScored || 0,
 
         penaltyShootout: stats.penaltyShootout || 0,
+        penaltyShootoutMissed:
+          stats.penaltyShootoutMissed ||
+          stats.penalty_shootout_missed ||
+          stats.psMissed ||
+          stats.ps_missed ||
+          0,
 
         redCards: stats.redCards || 0,
         yellowCards: stats.yellowCards || 0,
         greenCards: stats.greenCards || 0,
 
-        totalGoalScore: stats.totalGoalScore || 0
+        totalGoalScore: baseGoalScore + shootoutGoals
       };
 
 
@@ -183,9 +193,54 @@ export class PlayerProfileComponent implements OnInit {
       this.profile.matches = this.stats.totalMatches;
       this.profile.runs = this.stats.totalGoalScore;
 
+      // Fallback: if backend doesn't provide penalty shootout missed,
+      // derive it from player's match events.
+      if (!this.stats.penaltyShootoutMissed) {
+        this.loadPenaltyShootoutMissedFromMatches(userId);
+      }
+
       this.cdr.detectChanges();
     });
 
+  }
+
+  private loadPenaltyShootoutMissedFromMatches(userId: string): void {
+    this.http.get<any[]>(`http://localhost:3000/api/matches`).subscribe({
+      next: (matches) => {
+        const list = Array.isArray(matches) ? matches : [];
+        let missed = 0;
+
+        for (const match of list) {
+          const events = Array.isArray(match?.match_events)
+            ? match.match_events
+            : Array.isArray(match?.matchEvents)
+            ? match.matchEvents
+            : Array.isArray(match?.events)
+            ? match.events
+            : [];
+          if (!events.length) continue;
+
+          for (const ev of events) {
+            const type = String(ev?.type ?? '').trim().toLowerCase();
+            const eventPlayerId = String(ev?.player_id ?? ev?.user_id ?? '').trim();
+            if (!type.includes('penalty shootout') || !type.includes('miss')) continue;
+
+            // Count only this player's missed shootouts.
+            if (eventPlayerId === userId) {
+              missed += 1;
+            }
+          }
+        }
+
+        if (missed > 0) {
+          this.stats.penaltyShootoutMissed = missed;
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => {
+        // Keep backend value if fallback fetch fails.
+      }
+    });
   }
 
   onTabSelect(tab: string): void {
