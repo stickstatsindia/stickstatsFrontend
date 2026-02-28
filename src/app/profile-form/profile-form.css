@@ -264,8 +264,9 @@ app-root {
 }
 
 .pf-btn--primary {
-  background: var(--accent);
-  color: #fff;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
   flex: 1;
   justify-content: center;
 }

@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth/auth.service';
 import { environment } from '../config/api.config';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-phone-auth',
@@ -46,7 +47,15 @@ export class AuthenticationComponent implements OnInit {
               this.router.navigate(['/search-tournaments']); // → SearchTournaments
             }
           },
-          error: () => alert('Authentication failed')
+          error: () => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Authentication Failed',
+              text: 'We could not sign you in. Please try again.',
+              confirmButtonText: 'Close',
+              confirmButtonColor: '#d33' // You can customize this to match your app's theme
+            });
+          }
         });
     };
   }
