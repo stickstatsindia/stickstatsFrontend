@@ -1,8 +1,8 @@
 // src/app/config/api.config.ts
 export const environment = {
   port: '3000',
-  baseUrl: 'http://localhost:3000',
-  socketUrl: 'http://localhost:3000',
+  baseUrl: 'https://stickstatsbackend.onrender.com',
+  socketUrl: 'https://stickstatsbackend.onrender.com',
   endpoints: {
     getTeams: '/api/teams',
     addTeam: '/api/tournament/:tournament_id/team',
