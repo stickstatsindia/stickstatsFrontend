@@ -194,6 +194,25 @@ export class ProfileForm implements OnInit {
     this.fetchLocationFromPin(this.user.zip);
   }
 
+  onFullNameChange(value: string): void {
+    const raw = (value || '').replace(/\s+/g, ' ');
+    const hasTrailingSpace = /\s$/.test(raw);
+    const trimmed = raw.trim();
+
+    if (!trimmed) {
+      this.user.full_name = '';
+      return;
+    }
+
+    const titleCased = trimmed
+      .split(' ')
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+
+    this.user.full_name = hasTrailingSpace ? `${titleCased} ` : titleCased;
+  }
+
   private fetchLocationFromPin(zip: string): void {
     this.lookupSub?.unsubscribe();
     const token = ++this.lookupToken;
