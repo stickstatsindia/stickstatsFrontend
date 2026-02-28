@@ -1,7 +1,7 @@
 // src/app/config/api.config.ts
 export const environment = {
   port: '3000',
-  baseUrl: 'https://stickstatsbackend.onrender.com/',
+  baseUrl: 'https://stickstatsbackend.onrender.com',
   socketUrl: 'https://stickstatsbackend.onrender.com',
   endpoints: {
     getTeams: '/api/teams',
