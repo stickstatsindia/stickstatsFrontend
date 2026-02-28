@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TournamentService } from '../service/tournament/tournament';
-import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { TournamentService } from '../service/tournament/tournament';
 
 interface Tournament {
   _id: string;
@@ -22,95 +21,91 @@ interface Tournament {
 
 @Component({
   selector: 'app-tournament-browse',
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './tournament-browse.html',
   styleUrls: ['./tournament-browse.css'],
 })
-export class TournamentBrowse implements OnInit, OnDestroy {
-  tournaments: Tournament[] = [];
+export class TournamentBrowse implements OnInit {
+
+  allTournaments: Tournament[] = [];
   filteredTournaments: Tournament[] = [];
-  loading = false;
-  searching = false;
+
   searchQuery: string = '';
-  hasSearched = false; // Track if user has performed a search
+  searching = false;
+  hasSearched = false;
 
   constructor(
     private tournamentService: TournamentService,
-    private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-    // Don't load tournaments initially - wait for user search
+  // ✅ Load all tournaments on page load
+  ngOnInit(): void {
+    this.loadTournaments();
   }
 
-  ngOnDestroy() {
-    // Cleanup if needed
+  // ✅ Fetch all tournaments
+  loadTournaments(): void {
+    this.searching = true;
+
+    this.tournamentService.getTournaments().subscribe({
+      next: (data: any) => {
+        this.allTournaments = Array.isArray(data) ? (data as Tournament[]) : [];
+        this.filteredTournaments = [...this.allTournaments];
+        this.searching = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load tournaments:', err);
+        this.allTournaments = [];
+        this.filteredTournaments = [];
+        this.searching = false;
+      },
+    });
   }
 
-  /**
-   * Search tournaments by name from backend API
-   */
-  searchTournaments() {
-    const query = this.searchQuery.trim();
+  // ✅ Search tournaments (frontend filtering)
+  searchTournaments(): void {
+    const query = this.searchQuery.trim().toLowerCase();
 
     if (!query) {
-      // Clear results if search is empty
-      this.filteredTournaments = [];
+      this.filteredTournaments = [...this.allTournaments];
       this.hasSearched = false;
       this.cdr.detectChanges();
       return;
     }
 
-    this.searching = true;
     this.hasSearched = true;
 
-    // Call backend search API with tournament name query
-    this.tournamentService.searchTournamentsByName(query).subscribe({
-      next: (data: any) => {
-        this.filteredTournaments = data as Tournament[];
-        this.searching = false;
-        console.log(`✅ Found ${this.filteredTournaments.length} tournaments`);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('❌ Search failed:', err);
-        this.filteredTournaments = [];
-        this.searching = false;
-        this.cdr.detectChanges();
-      },
-    });
+    this.filteredTournaments = this.allTournaments.filter((tournament) =>
+      tournament.tournament_name.toLowerCase().includes(query)
+    );
   }
 
-  /**
-   * Clear search and reset to initial state
-   */
-  clearSearch() {
+  // ✅ Clear search
+  clearSearch(): void {
     this.searchQuery = '';
-    this.filteredTournaments = [];
     this.hasSearched = false;
-    this.cdr.detectChanges();
+    this.filteredTournaments = [...this.allTournaments];
   }
 
-  /**
-   * Navigate to tournament details page
-   */
+  // ✅ Navigate to details page
   viewTournamentDetails(tournament: Tournament): void {
     this.router.navigate(['/tournament-details', tournament.tournament_id], {
       state: { tournamentId: tournament.tournament_id }
     });
   }
 
-  /**
-   * Format date for display
-   */
+  // ✅ Format date
   formatDate(date: string): string {
     if (!date) return '-';
     const d = new Date(date);
     return d.toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 }

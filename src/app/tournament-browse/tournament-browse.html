@@ -1,20 +1,21 @@
 <div class="tournament-browse-container">
+
   <!-- Header with Search -->
   <div class="browse-header">
     <h1>🏑 Browse Tournaments</h1>
-    
-    <!-- Search Box -->
+
     <div class="search-section">
       <div class="search-input-wrapper">
         <input
           type="text"
           [(ngModel)]="searchQuery"
-          (keyup)="searchTournaments()"
+          (ngModelChange)="searchTournaments()"
           placeholder="🔍 Search tournaments by name..."
           class="search-input"
         />
-        <button 
-          *ngIf="searchQuery" 
+
+        <button
+          *ngIf="searchQuery"
           (click)="clearSearch()"
           class="clear-btn"
           title="Clear search"
@@ -26,106 +27,124 @@
     </div>
   </div>
 
-  <!-- Initial State (No Search Yet) -->
-  <div *ngIf="!hasSearched" class="initial-state">
-    <div class="initial-content">
-      <p class="initial-icon">🔍</p>
-      <h2>Start Your Search</h2>
-      <p>Enter a tournament name above to find tournaments</p>
+  <!-- 🔄 Loading State -->
+  <div *ngIf="searching" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading tournaments...</p>
+  </div>
+
+  <!-- 🏟️ Tournaments Grid -->
+  <div *ngIf="!searching && filteredTournaments.length > 0">
+
+    <!-- Results Count -->
+    <div class="results-info">
+      <span>Found {{ filteredTournaments.length }} tournament(s)</span>
+    </div>
+
+    <div class="tournaments-grid">
+      <div
+        *ngFor="let tournament of filteredTournaments"
+        class="tournament-card"
+        (click)="viewTournamentDetails(tournament)"
+      >
+        <!-- Card Header -->
+        <div class="card-header">
+          <h2 class="tournament-name">
+            {{ tournament.tournament_name }}
+          </h2>
+
+          <span
+            class="category-badge"
+            [ngClass]="tournament.tournament_category.toLowerCase()">
+          >
+            {{ tournament.tournament_category }}
+          </span>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">Format:</span>
+              <span class="value">{{ tournament.format }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Match Type:</span>
+              <span class="value">{{ tournament.match_type }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">Ground Type:</span>
+              <span class="value">{{ tournament.ground_type }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">📍 Location:</span>
+              <span class="value">{{ tournament.location }}</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">📅 Start:</span>
+              <span class="value">
+                {{ formatDate(tournament.start_date) }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">📅 End:</span>
+              <span class="value">
+                {{ formatDate(tournament.end_date) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-item">
+              <span class="label">ID:</span>
+              <span class="value tournament-id">
+                {{ tournament.tournament_id }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+          <p class="view-hint">ℹ️ View-only mode</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Loading State (During Search) -->
-  <div *ngIf="searching && hasSearched" class="loading-state">
-    <div class="spinner"></div>
-    <p>Searching tournaments...</p>
-  </div>
-
-  <!-- Empty State (Search Completed, No Results) -->
-  <div *ngIf="!searching && hasSearched && filteredTournaments.length === 0" class="empty-state">
+  <!-- ❌ Empty State -->
+  <div
+    *ngIf="!searching && filteredTournaments.length === 0"
+    class="empty-state"
+  >
     <p class="empty-icon">🏑</p>
-    <h2>No tournaments found</h2>
-    <p>
+
+    <h2 *ngIf="searchQuery">No tournaments found</h2>
+    <h2 *ngIf="!searchQuery">No tournaments available</h2>
+
+    <p *ngIf="searchQuery">
       No tournaments match "<strong>{{ searchQuery }}</strong>"
     </p>
-    <button (click)="clearSearch()" class="back-btn">← Try Another Search</button>
-  </div>
 
-  <!-- Results Count -->
-  <div *ngIf="hasSearched && filteredTournaments.length > 0" class="results-info">
-    <span>Found {{ filteredTournaments.length }} tournament(s)</span>
-  </div>
-
-  <!-- Tournaments List -->
-  <div *ngIf="!searching && hasSearched && filteredTournaments.length > 0" class="tournaments-grid">
-    <div 
-      *ngFor="let tournament of filteredTournaments" 
-      class="tournament-card"
-      (click)="viewTournamentDetails(tournament)"
+    <button
+      *ngIf="searchQuery"
+      (click)="clearSearch()"
+      class="back-btn"
     >
-      <!-- Card Header -->
-      <div class="card-header">
-        <h2 class="tournament-name">{{ tournament.tournament_name }}</h2>
-        <span class="category-badge" [ngClass]="tournament.tournament_category.toLowerCase()">
-          {{ tournament.tournament_category }}
-        </span>
-      </div>
-
-      <!-- Card Body -->
-      <div class="card-body">
-        <!-- Format & Match Type Row -->
-        <div class="info-row">
-          <div class="info-item">
-            <span class="label">Format:</span>
-            <span class="value">{{ tournament.format }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Match Type:</span>
-            <span class="value">{{ tournament.match_type }}</span>
-          </div>
-        </div>
-
-        <!-- Ground Type -->
-        <div class="info-row">
-          <div class="info-item">
-            <span class="label">Ground Type:</span>
-            <span class="value">{{ tournament.ground_type }}</span>
-          </div>
-        </div>
-
-        <!-- Location -->
-        <div class="info-row">
-          <div class="info-item">
-            <span class="label">📍 Location:</span>
-            <span class="value">{{ tournament.location }}</span>
-          </div>
-        </div>
-
-        <!-- Dates -->
-        <div class="info-row">
-          <div class="info-item">
-            <span class="label">📅 Start:</span>
-            <span class="value">{{ formatDate(tournament.start_date) }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">📅 End:</span>
-            <span class="value">{{ formatDate(tournament.end_date) }}</span>
-          </div>
-        </div>
-
-        <!-- Tournament ID -->
-        <div class="info-row">
-          <div class="info-item">
-            <span class="label">ID:</span>
-            <span class="value tournament-id">{{ tournament.tournament_id }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card Footer (View-Only) -->
-      <div class="card-footer">
-        <p class="view-hint">ℹ️ View-only mode</p>
-      </div>
-    </div>
+      ← Clear Search
+    </button>
   </div>
+
 </div>
