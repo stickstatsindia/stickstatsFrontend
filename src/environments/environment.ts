@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
+  production: true,
   port: '3000',
-  baseUrl: 'http://localhost:3000',
-  socketUrl: 'http://localhost:3000'
+  baseUrl: 'https://stickstatsbackend.onrender.com',
+  socketUrl: 'https://stickstatsbackend.onrender.com'
 };
