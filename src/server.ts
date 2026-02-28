@@ -12,6 +12,51 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+app.use(express.json({ limit: '1mb' }));
+
+app.post('/proxy/auth/phone-email', async (req, res) => {
+  const backendBaseUrl = process.env['BACKEND_BASE_URL'] || 'https://stickstatsbackend.onrender.com';
+  const endpoints = [
+    `${backendBaseUrl}/api/auth/phone-email`,
+    `${backendBaseUrl}/auth/phone-email`,
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body ?? {}),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          continue;
+        }
+        const errorText = await response.text();
+        res.status(response.status).send(errorText);
+        return;
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await response.json();
+        res.status(response.status).json(data);
+      } else {
+        const text = await response.text();
+        res.status(response.status).send(text);
+      }
+      return;
+    } catch {
+      continue;
+    }
+  }
+
+  res.status(502).json({
+    error: 'Unable to reach authentication service',
+  });
+});
+
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
