@@ -1,8 +1,8 @@
 // src/app/config/api.config.ts
+import { environment as appEnvironment } from '../../environments/environment';
+
 export const environment = {
-  port: '3000',
-  baseUrl: 'http://localhost:3000',
-  socketUrl: 'http://localhost:3000',
+  ...appEnvironment,
   endpoints: {
     getTeams: '/api/teams',
     addTeam: '/api/tournament/:tournament_id/team',
