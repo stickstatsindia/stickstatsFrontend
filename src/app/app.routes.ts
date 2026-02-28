@@ -32,7 +32,7 @@ import { AuthGuard } from './service/auth/auth.guard';
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'profile-form', component: AuthenticationComponent },
-  { path: 'auth', component: Auth, canActivate: [AuthGuard] },
+  { path: 'auth', component: Auth },
   { path: 'about', component: About },
   { path: 'player-profile/:user_id', component: PlayerProfileComponent },
   { path: 'contact', component: Contact },
