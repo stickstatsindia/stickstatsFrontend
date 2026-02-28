@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../config/api.config';
@@ -10,17 +10,32 @@ import { environment } from '../config/api.config';
   templateUrl: './player-matches.html',
   styleUrls: ['./player-matches.css']
 })
-export class PlayerMatches implements OnInit {
+export class PlayerMatches implements OnInit, OnChanges {
 
   @Input() userId!: string;
   matches: any[] = [];
-  loading = true;
+  loading = false;
+  private lastLoadedUserId = '';
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.fetchMatchesIfNeeded();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['userId']) return;
+    this.fetchMatchesIfNeeded();
+  }
+
+  private fetchMatchesIfNeeded(): void {
+    const userId = String(this.userId || '').trim();
+    if (!userId || userId === this.lastLoadedUserId) return;
+
+    this.lastLoadedUserId = userId;
+    this.loading = true;
     this.http
-      .get<any[]>(`${environment.baseUrl}/api/player/${this.userId}/matches`)
+      .get<any[]>(`${environment.baseUrl}/api/player/${userId}/matches`)
       .subscribe({
         next: data => {
           this.matches = data;
@@ -32,7 +47,7 @@ export class PlayerMatches implements OnInit {
           this.loading = false;
         }
       });
-      this.cdr.markForCheck();
+    this.cdr.markForCheck();
   }
 
   getResult(match: any): string {

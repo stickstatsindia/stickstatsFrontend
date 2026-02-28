@@ -152,9 +152,11 @@ export class PlayerProfileComponent implements OnInit {
 
         this.profile.matches = this.stats.totalMatches;
         this.profile.runs = this.stats.totalGoalScore;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error fetching player profile', err);
+        this.cdr.detectChanges();
       }
     });
 
