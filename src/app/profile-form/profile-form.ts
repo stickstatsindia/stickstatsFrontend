@@ -110,7 +110,7 @@ export class ProfileForm implements OnInit {
           console.log('Profile updated successfully:', response);
           alert('Profile saved successfully!');
           // Redirect to dashboard after profile completion
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/search-tournaments']);
         },
         error: (error) => {
           console.error('Error updating profile:', error);
