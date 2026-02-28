@@ -180,7 +180,8 @@ export class ScheduleMatchTeamSelection {
     return parsed;
   }
 
-  // Validator that ensures the selected date is strictly in the future (not today)
+  // If tournament dates are available, range validator handles the rule (inclusive).
+  // Otherwise, do not allow past dates.
   private futureDateValidator(): ValidatorFn {
     return (control: AbstractControl) => {
       const val = control.value;
@@ -188,9 +189,14 @@ export class ScheduleMatchTeamSelection {
       // Normalize dates to midnight so time parts don't affect comparison
       const input = this.parseDateOnly(val);
       if (!input) return { invalidDate: true };
+
+      if (this.tournamentStartDate && this.tournamentEndDate) {
+        return null;
+      }
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      return input > today ? null : { notFuture: true };
+      return input >= today ? null : { notFuture: true };
     };
   }
 
@@ -295,7 +301,7 @@ export class ScheduleMatchTeamSelection {
       } else if (dateCtrl.hasError('outsideTournamentDates')) {
         alert('Match date must be within the official tournament dates');
       } else if (dateCtrl.hasError('notFuture')) {
-        alert('Match date must be in the future');
+        alert('Match date cannot be in the past');
       } else {
         alert('Match date is invalid');
       }
