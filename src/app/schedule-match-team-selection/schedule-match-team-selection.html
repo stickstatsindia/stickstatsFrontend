@@ -35,7 +35,7 @@
   <input id="match_date" type="date" formControlName="match_date" required />
           <div *ngIf="form.controls['match_date'].invalid && (form.controls['match_date'].touched || form.controls['match_date'].dirty)">
             <small class="error" *ngIf="form.controls['match_date'].hasError('required')">Match date is required.</small>
-            <small class="error" *ngIf="form.controls['match_date'].hasError('notFuture')">Match date must be in the future.</small>
+            <small class="error" *ngIf="form.controls['match_date'].hasError('notFuture')">Match date cannot be in the past.</small>
             <small class="error" *ngIf="form.controls['match_date'].hasError('outsideTournamentDates')">Match date must be within the official tournament dates.</small>
           </div>
       </div>
