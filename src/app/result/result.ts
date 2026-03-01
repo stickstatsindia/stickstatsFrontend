@@ -28,6 +28,8 @@ interface MatchData {
   status: string;
   events: any[];
   penaltyShootout?: any;
+  totalSeconds?: number;
+  total_seconds?: number; // for backward compatibility with different payloads
   eventsHome?: any[];
   eventsAway?: any[];
   home_team_name?: string;
@@ -69,6 +71,15 @@ export class Result implements OnInit, OnDestroy {
     { label: 'Yellow Cards', key: 'YellowCards' },
     { label: 'Red Cards', key: 'RedCards' }
   ];
+
+  // Add this inside your Result class
+  formatTime(seconds: number | undefined): string {
+    if (seconds === undefined || seconds === null) return '0:00';
+    
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
 
   // Template for stats - use this to initialize both team stats
   private readonly statsTemplate = {
@@ -154,6 +165,7 @@ export class Result implements OnInit, OnDestroy {
         const socketMatchId = data?.match_id || data?.matchId;
         if (data && socketMatchId === this.matchId && this.matchData) {
           this.matchData.status = data.status || this.matchData.status;
+          this.matchData.totalSeconds = data.total_seconds;
           this.syncQuarterScoresFromPayload(this.matchData, data);
           this.syncPenaltyShootoutFromPayload(this.matchData, data);
           this.syncTotalScoreFromPayload(this.matchData, data);
@@ -165,6 +177,7 @@ export class Result implements OnInit, OnDestroy {
       this.socket.on("timerUpdated", (data) => {
         if (data && data.match_id === this.matchId && this.matchData) {
           this.matchData.status = data.status || this.matchData.status;
+          this.matchData.totalSeconds = data.total_seconds || 0;
           this.cdr.detectChanges();
         }
       });
@@ -594,6 +607,7 @@ export class Result implements OnInit, OnDestroy {
           tournament: data.tournament_name || 'Default Tournament',
           tournamentId: data.tournament_id || data.tournamentId || data.id || '',
           status: data.status || 'Upcoming',
+          totalSeconds: Number(data.total_seconds) || 0,
           score: {
             home: Number(data.team1_score ?? data.team1Score ?? data.home_score ?? data.homeScore ?? 0) || 0,
             away: Number(data.team2_score ?? data.team2Score ?? data.away_score ?? data.awayScore ?? 0) || 0

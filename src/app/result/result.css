@@ -17,6 +17,27 @@
   }
 }
 
+/* Timer Display */
+
+.timer-display {
+  background-color: #000;
+  color: #ff0; /* Bright yellow/gold like a scoreboard */
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 1px solid #333;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* Optional: Make it blink slightly if match is live */
+.timer-display {
+  box-shadow: 0 0 5px rgba(255, 255, 0, 0.2);
+}
+
+
 /* Header Section */
 .match-header {
   text-align: center;

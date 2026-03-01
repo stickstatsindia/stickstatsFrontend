@@ -195,22 +195,28 @@ export class ProfileForm implements OnInit {
   }
 
   onFullNameChange(value: string): void {
-    const raw = (value || '').replace(/\s+/g, ' ');
-    const hasTrailingSpace = /\s$/.test(raw);
-    const trimmed = raw.trim();
-
-    if (!trimmed) {
+    if (!value) {
       this.user.full_name = '';
       return;
     }
 
-    const titleCased = trimmed
+    // 1. Capture if there's a trailing space so we don't "eat" it 
+    // (otherwise the user can't type a second word)
+    const endsWithSpace = value.endsWith(' ');
+
+    // 2. Capitalize every word
+    const titleCased = value
       .split(' ')
-      .filter(Boolean)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map(word => {
+        if (word.length === 0) return '';
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
       .join(' ');
 
-    this.user.full_name = hasTrailingSpace ? `${titleCased} ` : titleCased;
+    // 3. Update the model
+    // We trim and re-add the space only if it was there, 
+    // preventing double-spaces and keeping the flow natural.
+    this.user.full_name = endsWithSpace ? titleCased.trimEnd() + ' ' : titleCased;
   }
 
   private fetchLocationFromPin(zip: string): void {

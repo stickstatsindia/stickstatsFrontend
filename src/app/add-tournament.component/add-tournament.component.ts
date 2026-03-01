@@ -150,7 +150,7 @@ patchFormData(data: any, startDate: string, endDate: string): void {
     
     // Tomorrow is the earliest allowed start date
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setDate(tomorrow.getDate());
 
     if (!start || !end) return null;
 

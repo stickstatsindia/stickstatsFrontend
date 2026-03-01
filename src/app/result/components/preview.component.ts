@@ -5,6 +5,7 @@ import { MembersService } from '../../service/members/members-service';
 import { TournamentService } from '../../service/tournament/tournament';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-preview',
@@ -23,7 +24,8 @@ export class PreviewComponent implements OnInit, OnChanges {
   constructor(
     private membersService: MembersService,
     private tournamentService: TournamentService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class PreviewComponent implements OnInit, OnChanges {
       const players = this.normalizePlayers(res);
       this.hydrateJerseyNumbers(players).subscribe((hydrated) => {
         this.data.teams.home.players = hydrated;
+        this.cdr.markForCheck();
       });
       this.data.teams.home.staff = {
         headCoach: this.resolveHeadCoachName(res, homeId)
@@ -67,6 +70,7 @@ export class PreviewComponent implements OnInit, OnChanges {
       const players = this.normalizePlayers(res);
       this.hydrateJerseyNumbers(players).subscribe((hydrated) => {
         this.data.teams.away.players = hydrated;
+        this.cdr.markForCheck();
       });
       this.data.teams.away.staff = {
         headCoach: this.resolveHeadCoachName(res, awayId)

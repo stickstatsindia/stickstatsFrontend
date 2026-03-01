@@ -56,10 +56,13 @@ export class PlayerMatches implements OnInit, OnChanges {
     const ps = this.readPenaltyScores(match);
 
     if (ps) {
-      const team1Final = team1 + ps.team1;
-      const team2Final = team2 + ps.team2;
-      if (team1Final > team2Final) return 'WIN';
-      if (team1Final < team2Final) return 'LOSS';
+      // const team1Final = team1 + ps.team1;
+      // const team2Final = team2 + ps.team2;
+      // if (team1Final > team2Final) return 'WIN';
+      // if (team1Final < team2Final) return 'LOSS';
+      // Regular time must have been a draw — decide purely on PS
+      if (ps.team1 > ps.team2) return 'WIN';
+      if (ps.team1 < ps.team2) return 'LOSS';
       return 'DRAW';
     }
 

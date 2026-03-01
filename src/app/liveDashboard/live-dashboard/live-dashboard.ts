@@ -172,9 +172,30 @@ export class LiveDashboardComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private refreshVisibleMatches(): void {
-    this.visibleMatches = this.matches.filter(
+    // 1. Filter matches by the selected tab status
+    const filtered = this.matches.filter(
       (match) => this.normalizeStatus(match?.status, match) === this.selectedTab
     );
+
+    // 2. Sort the filtered results
+    this.visibleMatches = filtered.sort((a, b) => {
+      // Combine Date and Time strings into a comparable number (timestamp)
+      // Adjust these property names if your backend uses different keys
+      const timeA = new Date(`${a.matchDate} ${a.matchTime}`).getTime();
+      const timeB = new Date(`${b.matchDate} ${b.matchTime}`).getTime();
+
+      // Handle invalid dates (fallback to 0)
+      const valA = isNaN(timeA) ? 0 : timeA;
+      const valB = isNaN(timeB) ? 0 : timeB;
+
+      if (this.selectedTab === 'Finished') {
+        // Newest finished matches at the top
+        return valB - valA;
+      } else {
+        // Soonest upcoming/live matches at the top
+        return valA - valB;
+      }
+    });
   }
 
   private ensureVisibleTabHasData(): void {
