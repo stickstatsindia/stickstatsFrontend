@@ -105,6 +105,24 @@
       <button mat-stroked-button color="warn" (click)="addEvent('Yellow Card')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Yellow Card</button>
       <button mat-stroked-button color="warn" (click)="addEvent('Red Card')" [disabled]="regularControlsDisabled || currentQuarterCompleted">Red Card</button>
     </div>
+    <div class="row mt-2">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Additional Event</mat-label>
+          <mat-select [(ngModel)]="selectedAdditionalEventType" [disabled]="regularControlsDisabled || currentQuarterCompleted">
+            <mat-option *ngFor="let eventType of additionalEventTypes" [value]="eventType">
+              {{ eventType }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-auto d-flex align-items-center">
+        <button mat-raised-button color="primary" (click)="addSelectedAdditionalEvent()"
+          [disabled]="regularControlsDisabled || currentQuarterCompleted || !selectedAdditionalEventType">
+          Add Event
+        </button>
+      </div>
+    </div>
   </mat-card>
 
   <!-- Match Events -->
