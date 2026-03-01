@@ -24,6 +24,32 @@
   border-bottom: 2px solid transparent;
 }
 
+.navbar-brand img {
+  /* Set a base height that looks good in your navbar */
+  height: 40px; 
+  width: auto; /* Maintain aspect ratio */
+  
+  /* Ensure it doesn't exceed the viewport width on tiny phones */
+  max-width: 100%;
+  
+  /* Smooth scaling */
+  object-fit: contain;
+  
+  /* Optional: filter to make it stand out against navbar-dark if needed */
+  transition: transform 0.3s ease;
+}
+
+/* On very small screens, you might want it even smaller */
+@media (max-width: 576px) {
+  .navbar-brand img {
+    height: 30px;
+  }
+}
+
+.navbar-brand img:hover {
+  transform: scale(1.05);
+}
+
 .navbar a:hover {
   color: #1abc9c;
   border-bottom: 2px solid #1abc9c;
