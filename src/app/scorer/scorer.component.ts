@@ -85,6 +85,24 @@ export class ScorerComponent {
   penaltyShootoutTeam = '';
   penaltyShootoutPlayer: { player_id: string; player_name: string } | null = null;
   penaltyOutcome = '';
+  selectedAdditionalEventType = '';
+  additionalEventTypes: string[] = [
+    'Backstick',
+    'Stick Tackle (Illegal)',
+    'Hooking',
+    'Dangerous Stick',
+    'High Stick',
+    'Foot',
+    'Body Obstruction',
+    'Shoulder Charge',
+    'Push',
+    'Hold',
+    'Dangerous Lift',
+    'Raised Ball (Unsafe)',
+    'Slide Tackle',
+    'Swinging Stick',
+    '3 Meter Violation'
+  ];
 
   private readonly matchesApiBase = `${environment.baseUrl}/api/matches`;
 
@@ -666,6 +684,13 @@ export class ScorerComponent {
         team2_score: this.totalScore.team2
       });
     }
+  }
+
+  addSelectedAdditionalEvent(): void {
+    const type = (this.selectedAdditionalEventType || '').trim();
+    if (!type) return;
+    this.addEvent(type);
+    this.selectedAdditionalEventType = '';
   }
 }
 
