@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   templateUrl: './authentication.component.html'
 })
 export class AuthenticationComponent implements OnInit {
+  isReady = false;
 
   constructor(
     private http: HttpClient, 
@@ -24,8 +25,18 @@ export class AuthenticationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.loadPhoneEmailScript();
+    // 1. Check local storage immediately (Synchronous)
+    const token = localStorage.getItem('your_token_key'); 
+
+    if (token) {
+      // User is already here? Send them away instantly.
+      this.router.navigate(['/search-tournaments']);
+    } else {
+      // 2. No session? Now we show the login UI and load the script.
+      this.isReady = true;
+      if (isPlatformBrowser(this.platformId)) {
+        this.loadPhoneEmailScript();
+      }
     }
   }
 
