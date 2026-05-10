@@ -1,0 +1,10 @@
+/* Hide the login container by default */
+.auth-container {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+/* Show it only when we confirm the user needs to sign in */
+.auth-ready {
+  opacity: 1;
+}
