@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core'; // 1. Import NgZone
 import { HttpClient } from '@angular/common/http';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth/auth.service';
 import { environment } from '../config/api.config';
@@ -15,7 +14,14 @@ import Swal from 'sweetalert2';
 })
 export class AuthenticationComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router, @Inject(DOCUMENT) private document: Document, @Inject(PLATFORM_ID) private platformId: Object, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private ngZone: NgZone, // 2. Inject NgZone
+    @Inject(DOCUMENT) private document: Document, 
+    @Inject(PLATFORM_ID) private platformId: Object, 
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -30,33 +36,31 @@ export class AuthenticationComponent implements OnInit {
     this.document.body.appendChild(script);
 
     (window as any).phoneEmailListener = (userObj: any) => {
-      const { user_json_url } = userObj;
+      // 3. Wrap the logic in ngZone.run
+      this.ngZone.run(() => {
+        const { user_json_url } = userObj;
 
-      this.http.post<any>(`${environment.baseUrl}/auth/phone-email`, { user_json_url })
-        .subscribe({
-          next: (res) => {
-            console.log('Response from backend:', res);         // 👈 Check this
-            console.log('isNewUser value:', res.isNewUser);
+        this.http.post<any>(`${environment.baseUrl}/auth/phone-email`, { user_json_url })
+          .subscribe({
+            next: (res) => {
+              this.authService.login(res.token, res.user_id, res.phone_number);
 
-            // Use auth service to store token and notify subscribers
-            this.authService.login(res.token, res.user_id, res.phone_number);
-
-            if (res.isNewUser) {
-              this.router.navigate(['/profile-form']); // → ProfileForm
-            } else {
-              this.router.navigate(['/search-tournaments']); // → SearchTournaments
+              if (res.isNewUser) {
+                this.router.navigate(['/profile-form']);
+              } else {
+                this.router.navigate(['/search-tournaments']);
+              }
+            },
+            error: () => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Authentication Failed',
+                text: 'We could not sign you in.',
+                confirmButtonColor: '#d33'
+              });
             }
-          },
-          error: () => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Authentication Failed',
-              text: 'We could not sign you in. Please try again.',
-              confirmButtonText: 'Close',
-              confirmButtonColor: '#d33' // You can customize this to match your app's theme
-            });
-          }
-        });
+          });
+      });
     };
   }
 }
