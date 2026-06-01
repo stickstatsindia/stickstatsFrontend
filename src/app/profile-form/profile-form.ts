@@ -87,10 +87,16 @@ export class ProfileForm implements OnInit {
 
     if (!isPlatformBrowser(this.platformId)) return;
     
-    if (this.locationValidationStatus !== 'valid') {
-      alert('Please enter a valid 6-digit PIN to auto-fetch location.');
+    // if (this.locationValidationStatus !== 'valid') {
+    //   alert('Please enter a valid 6-digit PIN to auto-fetch location.');
+    //   return;
+    // }
+
+    if (!this.user.address?.trim()) {
+      alert('Please enter your location.');
       return;
     }
+
 
     this.isUserRegistered = true;
 
