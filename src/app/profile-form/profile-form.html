@@ -203,19 +203,18 @@
             <span *ngIf="zip.errors?.['required']">PIN is required.</span>
             <span *ngIf="zip.errors?.['pattern']">PIN must be 6 digits.</span>
           </div>
-          <div *ngIf="isFetchingLocation" class="pf-hint">Fetching location…</div>
+          <!-- <div *ngIf="isFetchingLocation" class="pf-hint">Fetching location…</div>
           <div *ngIf="locationValidationStatus === 'invalid'" class="pf-error">PIN lookup failed.</div>
-          <div *ngIf="locationValidationStatus === 'valid'" class="pf-success">Location fetched ✓</div>
+          <div *ngIf="locationValidationStatus === 'valid'" class="pf-success">Location fetched ✓</div> -->
         </div>
 
         <div class="pf-field">
           <label class="pf-label">Location</label>
           <input
-            class="pf-input pf-input--locked"
+            class="pf-input"
             name="address"
             [(ngModel)]="user.address"
             required
-            readonly
             #address="ngModel"
             placeholder="Auto-filled from PIN"
           />
