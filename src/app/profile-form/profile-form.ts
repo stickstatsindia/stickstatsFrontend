@@ -20,7 +20,7 @@ export class ProfileForm implements OnInit {
   isProfileSaved = false;
   isUserRegistered=false;
   locationValidationStatus: 'pending' | 'valid' | 'invalid' = 'pending';
-  isFetchingLocation = false;
+  // isFetchingLocation = false;
   private lastLookupZip = '';
   private lookupSub: Subscription | null = null;
   private lookupToken = 0;
@@ -177,21 +177,35 @@ export class ProfileForm implements OnInit {
     this.isLoggedIn = true;
   }
 
+  // onZipChange(zip: string): void {
+  //   this.user.zip = (zip || '').replace(/\D/g, '').slice(0, 6);
+
+  //   if (this.user.zip.length < 6) {
+  //     this.locationValidationStatus = 'pending';
+  //     this.lastLookupZip = '';
+  //     this.user.address = '';
+  //     return;
+  //   }
+
+  //   if (this.user.zip === this.lastLookupZip) {
+  //     return;
+  //   }
+
+  //   this.fetchLocationFromPin(this.user.zip);
+  // }
+
   onZipChange(zip: string): void {
     this.user.zip = (zip || '').replace(/\D/g, '').slice(0, 6);
-
+  
     if (this.user.zip.length < 6) {
       this.locationValidationStatus = 'pending';
       this.lastLookupZip = '';
       this.user.address = '';
       return;
     }
-
-    if (this.user.zip === this.lastLookupZip) {
-      return;
-    }
-
-    this.fetchLocationFromPin(this.user.zip);
+  
+    // Mark as valid once 6 digits are entered — no auto-fetch
+    this.locationValidationStatus = 'valid';
   }
 
   onFullNameChange(value: string): void {
