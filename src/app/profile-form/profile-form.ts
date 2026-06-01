@@ -239,38 +239,38 @@ export class ProfileForm implements OnInit {
     this.user.full_name = endsWithSpace ? titleCased.trimEnd() + ' ' : titleCased;
   }
 
-  private fetchLocationFromPin(zip: string): void {
-    this.lookupSub?.unsubscribe();
-    const token = ++this.lookupToken;
+  // private fetchLocationFromPin(zip: string): void {
+  //   this.lookupSub?.unsubscribe();
+  //   const token = ++this.lookupToken;
 
-    this.isFetchingLocation = true;
-    this.locationValidationStatus = 'pending';
-    this.lookupSub = this.http.get<any[]>(`https://api.postalpincode.in/pincode/${zip}`).subscribe({
-      next: (response) => {
-        const address = this.extractAddressFromPostalApi(response);
-        if (token !== this.lookupToken) return;
+  //   this.isFetchingLocation = true;
+  //   this.locationValidationStatus = 'pending';
+  //   this.lookupSub = this.http.get<any[]>(`https://api.postalpincode.in/pincode/${zip}`).subscribe({
+  //     next: (response) => {
+  //       const address = this.extractAddressFromPostalApi(response);
+  //       if (token !== this.lookupToken) return;
 
-        this.isFetchingLocation = false;
-        this.lastLookupZip = zip;
+  //       this.isFetchingLocation = false;
+  //       this.lastLookupZip = zip;
 
-        if (!address) {
-          this.locationValidationStatus = 'invalid';
-          this.user.address = '';
-          return;
-        }
+  //       if (!address) {
+  //         this.locationValidationStatus = 'invalid';
+  //         this.user.address = '';
+  //         return;
+  //       }
 
-        this.user.address = address;
-        this.locationValidationStatus = 'valid';
-      },
-      error: () => {
-        if (token !== this.lookupToken) return;
+  //       this.user.address = address;
+  //       this.locationValidationStatus = 'valid';
+  //     },
+  //     error: () => {
+  //       if (token !== this.lookupToken) return;
 
-        this.isFetchingLocation = false;
-        this.locationValidationStatus = 'invalid';
-        this.user.address = '';
-      }
-    });
-  }
+  //       this.isFetchingLocation = false;
+  //       this.locationValidationStatus = 'invalid';
+  //       this.user.address = '';
+  //     }
+  //   });
+  // }
 
   private extractAddressFromPostalApi(response: any[]): string {
     const first = Array.isArray(response) ? response[0] : null;
