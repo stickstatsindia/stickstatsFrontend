@@ -216,7 +216,7 @@
             [(ngModel)]="user.address"
             required
             #address="ngModel"
-            placeholder="Auto-filled from PIN"
+            placeholder="Enter Location"
           />
           <div *ngIf="address.invalid && (address.dirty || address.touched)" class="pf-error">
             Location is required.
