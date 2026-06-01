@@ -272,23 +272,23 @@ export class ProfileForm implements OnInit {
   //   });
   // }
 
-  private extractAddressFromPostalApi(response: any[]): string {
-    const first = Array.isArray(response) ? response[0] : null;
-    const offices = first?.PostOffice;
+  // private extractAddressFromPostalApi(response: any[]): string {
+  //   const first = Array.isArray(response) ? response[0] : null;
+  //   const offices = first?.PostOffice;
 
-    if (!first || first.Status !== 'Success' || !Array.isArray(offices) || !offices.length) {
-      return '';
-    }
+  //   if (!first || first.Status !== 'Success' || !Array.isArray(offices) || !offices.length) {
+  //     return '';
+  //   }
 
-    const district = this.getMostFrequentValue(
-      offices.map((o: any) => (o?.District || '').toString().trim())
-    );
-    const state = this.getMostFrequentValue(
-      offices.map((o: any) => (o?.State || '').toString().trim())
-    );
+  //   const district = this.getMostFrequentValue(
+  //     offices.map((o: any) => (o?.District || '').toString().trim())
+  //   );
+  //   const state = this.getMostFrequentValue(
+  //     offices.map((o: any) => (o?.State || '').toString().trim())
+  //   );
 
-    return [district, state].filter(Boolean).join(', ');
-  }
+  //   return [district, state].filter(Boolean).join(', ');
+  // }
 
   private getMostFrequentValue(values: string[]): string {
     const cleaned = values.filter(Boolean);
